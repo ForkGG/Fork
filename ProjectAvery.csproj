@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Adapters" />
+      <Folder Include="Logic\Managers" />
+      <Folder Include="Logic\Persistence" />
+      <Folder Include="Logic\Services" />
+    </ItemGroup>
+
+</Project>
