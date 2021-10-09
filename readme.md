@@ -112,7 +112,7 @@ Because the communication of Avery is open to all connections and any 3rd party 
 
 In this part we will cover the basics of how the authorization system works
 
-#### Privilege structure
+#### 1. Privilege structure
 
 Privileges are based on a tree like structure that decides what a token is able to do and what information it can access.     
 The full tree:
@@ -166,7 +166,7 @@ Granting access to the `Read AppSettings` node will also only allow to read, but
 Granting access to the `AppSettings` node will allow read and write access to all AppSettings  
 Granting access to the `Read AppSettings` node and the `Write Discord Bot` node will allow the token to read all settings, but only modify the Discord Bot settings  
 
-#### The token
+#### 2. The token
 
 The token is a key part of how the authorization works and is used to authenticate against the application. The token should be kept secret from all non authorized people, this means that the token should never be shared and all communication with the app should be done over https.  
 
@@ -176,7 +176,7 @@ There are some basic priciples for tokens:
 
 ### How it works
 
-#### Getting a token
+#### 1. Getting a token
 
 As localhost:  
 There is a local token created while installing Avery, that automatically has `Admin` priviledges. This token is stored in the installation path of Avery, so everyone with access to that directory has access to that token!  
@@ -185,17 +185,17 @@ As remote:
 The preferred approach is to make an input field for the user to input a token before connecting to the app. Be carefull when storing the token somewhere!
 
 
-#### Communication Protocol
+#### 2. Communication
 
 For local applications you can just read the local `Admin` token and the settings of Avery to get the ports for API and WebSocket. To connect to Avery you use `localhost:port`.  
 
-For remote applications this is a bit more complex, as you need a way to find IP-Adress and Ports for a connection. For this reason you can use the public Avery API, where each token is registered with the according IP, API-Port and WebSocket-Port. 
+For remote applications this is a bit more complex, as you need a way to find IP-Adress and Ports for a connection. For this reason you can use the public Avery API, where each token is registered with the according IP, API-Port and WebSocket-Port.  
 :construction: TODO CKE more infos about that service :construction:
 
 ---
 
 ## Useful Resources :construction:
 
-Website
-Frontend
-API
+Website  
+Frontend  
+API  
