@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectAvery", "ProjectAvery.csproj", "{1D5B0E89-6389-4670-8AA7-64FC6C130B77}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectAveryCommon", "..\ProjectAveryCommon\ProjectAveryCommon.csproj", "{9F8FC6DA-C151-4511-AB17-0E1224A75691}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{1D5B0E89-6389-4670-8AA7-64FC6C130B77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D5B0E89-6389-4670-8AA7-64FC6C130B77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D5B0E89-6389-4670-8AA7-64FC6C130B77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F8FC6DA-C151-4511-AB17-0E1224A75691}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F8FC6DA-C151-4511-AB17-0E1224A75691}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F8FC6DA-C151-4511-AB17-0E1224A75691}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F8FC6DA-C151-4511-AB17-0E1224A75691}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ProjectAvery.Logic.Persistence;
 
 namespace ProjectAvery
 {
@@ -13,7 +17,35 @@ namespace ProjectAvery
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            //Migrate
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    string persistencePath = Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                        "Avery", "persistence");
+                    var persistenceDir = new DirectoryInfo(persistencePath);
+                    if (!persistenceDir.Exists)
+                        persistenceDir.Create();
+                    var databaseFile = new FileInfo(Path.Combine(persistencePath, "app.db"));
+                    if (!databaseFile.Exists)
+                        databaseFile.Create().Close();
+                    using var context = services.GetService<ApplicationDbContext>();
+                    context.Database.Migrate();
+                }
+                catch (Exception e)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError("Error while migrating database! Aborting...\n" + e.StackTrace);
+                    return;
+                }
+            }
+
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

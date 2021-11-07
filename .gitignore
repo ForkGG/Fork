@@ -1,5 +1,9 @@
-bin/
-obj/
-/packages/
-riderModule.iml
-/_ReSharper.Caches/
+.vs
+.idea
+bin
+obj
+UpgradeLog.htm
+*.html
+NihilusInstaller
+*.user
+Properties/PublishProfiles
