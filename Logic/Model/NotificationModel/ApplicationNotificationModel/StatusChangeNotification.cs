@@ -4,7 +4,7 @@ namespace ProjectAvery.Logic.Model.NotificationModel.ApplicationNotificationMode
 {
     public class StateChangeNotification
     {
-        public ApplicationState OldState { get; set; }
-        public ApplicationState NewState { get; set; }
+        public ApplicationStatus OldStatus { get; set; }
+        public ApplicationStatus NewStatus { get; set; }
     }
 }

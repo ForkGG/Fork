@@ -5,6 +5,6 @@ namespace ProjectAvery.Notification
 {
     public interface INotificationCenter
     {
-        Task SendApplicationStateChangedNotification(ApplicationState oldState, ApplicationState newState);
+        Task SendApplicationStateChangedNotification(ApplicationStatus oldStatus, ApplicationStatus newStatus);
     }
 }

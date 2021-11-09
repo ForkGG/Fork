@@ -27,9 +27,9 @@ namespace ProjectAvery.Notification
             _applicationNotifications = new ApplicationNotifications();
         }
 
-        public async Task SendApplicationStateChangedNotification(ApplicationState oldState, ApplicationState newState)
+        public async Task SendApplicationStateChangedNotification(ApplicationStatus oldStatus, ApplicationStatus newStatus)
         {
-            string notification = _applicationNotifications.ApplicationStateChangedNotification(oldState, newState);
+            string notification = _applicationNotifications.ApplicationStateChangedNotification(oldStatus, newStatus);
             await BroadcastNotification(notification);
         }
 

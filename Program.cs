@@ -40,7 +40,7 @@ namespace ProjectAvery
                 catch (Exception e)
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError("Error while migrating database! Aborting...\n" + e.StackTrace);
+                    logger.LogError("Error while migrating database! Aborting...\n" + e);
                     return;
                 }
             }

@@ -1,9 +1,12 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ProjectAvery.Logic.Model.ApplicationModel;
+using ProjectAvery.Logic.Persistence;
 using ProjectAvery.Notification;
 using ProjectAvery.Notification.Notifications;
+using ProjectAveryCommon.Model.Application;
 
 namespace ProjectAvery.Controllers
 {
@@ -13,24 +16,28 @@ namespace ProjectAvery.Controllers
     /// </summary>
     public class ApplicationController : AbstractRestController
     {
+        private readonly ApplicationDbContext _context;
         private readonly INotificationCenter _notificationCenter;
 
-        public ApplicationController(ILogger<ApplicationController> logger, INotificationCenter notificationCenter) : base(logger)
+        public ApplicationController(ILogger<ApplicationController> logger, ApplicationDbContext context, INotificationCenter notificationCenter) : base(logger)
         {
+            _context = context;
             _notificationCenter = notificationCenter;
         }
 
-        [HttpGet("ping")]
-        public string Ping()
+        [HttpGet("state")]
+        public State State()
         {
-            _logger.LogDebug("Received Ping from "+Request.HttpContext.Connection.RemoteIpAddress);
-            return "Pong";
+            LogRequest();
+            //TODO create caller object with permissions from header token in each request
+            return _context.GenerateStateObject();
         }
 
+        [Obsolete]
         [HttpPost("updateState")]
-        public void ChangeApplicationState(ApplicationState state)
+        public void ChangeApplicationState(ApplicationStatus status)
         {
-            _notificationCenter.SendApplicationStateChangedNotification(ApplicationState.STOPPED, state);
+            _notificationCenter.SendApplicationStateChangedNotification(ApplicationStatus.STOPPED, status);
         }
     }
 }

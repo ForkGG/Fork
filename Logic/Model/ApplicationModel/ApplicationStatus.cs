@@ -6,7 +6,7 @@ namespace ProjectAvery.Logic.Model.ApplicationModel
     /// The states the application can have
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum ApplicationState
+    public enum ApplicationStatus
     {
         // Application is stopped (only here to complete the list)
         STOPPED,

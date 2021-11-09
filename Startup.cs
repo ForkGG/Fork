@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using ProjectAvery.Logic.Persistence;
 using ProjectAvery.Notification;
 
@@ -32,6 +33,15 @@ namespace ProjectAvery
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //TODO CKE Add proper CORS policy
+            services.AddCors(policy =>
+            {
+                policy.AddPolicy("CorsPolicy", opt => opt
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
+            });
+            
             var builder = new SqliteConnectionStringBuilder(Configuration.GetConnectionString("DefaultConnection"));
             builder.DataSource = builder.DataSource.Replace("|datadirectory|",
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Avery", "persistence"));
@@ -40,7 +50,10 @@ namespace ProjectAvery
             //services.AddDbContext<ApplicationDbContext>(options =>
             //     options.UseLazyLoadingProxies().UseSqlite(builder.ToString()).UseLoggerFactory(MyLoggerFactory).EnableSensitiveDataLogging());
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(opt =>
+            {
+                opt.SerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
+            });
             services.AddSingleton<INotificationCenter, DefaultNotificationCenter>();
             services.AddSwaggerGen(c =>
             {
@@ -59,7 +72,9 @@ namespace ProjectAvery
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProjectAvery v1"));
             }
 
-            app.UseHttpsRedirection();
+            // TODO CKE enable https with self generated certificate
+            //app.UseHttpsRedirection();
+            app.UseCors("CorsPolicy");
 
             app.UseRouting();
 

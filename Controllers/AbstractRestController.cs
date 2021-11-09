@@ -13,5 +13,10 @@ namespace ProjectAvery.Controllers
         {
             _logger = logger;
         }
+
+        protected void LogRequest()
+        {
+            _logger.LogInformation($"New request: {Request.Method} {Request.Path}");
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using ProjectAvery.Logic.Model.ApplicationModel;
 using ProjectAvery.Logic.Model.NotificationModel.ApplicationNotificationModel;
-using ProjectAvery.Util.ExtensionMethods;
+using ProjectAveryCommon.ExtensionMethods;
 
 namespace ProjectAvery.Notification.Notifications
 {
@@ -9,9 +9,9 @@ namespace ProjectAvery.Notification.Notifications
     /// </summary>
     public class ApplicationNotifications : NotificationBase
     {
-        public string ApplicationStateChangedNotification(ApplicationState oldState, ApplicationState newState)
+        public string ApplicationStateChangedNotification(ApplicationStatus oldStatus, ApplicationStatus newStatus)
         {
-            var notification = new StateChangeNotification{NewState = newState, OldState = oldState};
+            var notification = new StateChangeNotification{NewStatus = newStatus, OldStatus = oldStatus};
             return notification.ToJson();
         }
     }
