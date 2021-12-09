@@ -6,6 +6,7 @@ using ProjectAvery.Logic.Model.ApplicationModel;
 using ProjectAvery.Notification.Notifications;
 using ProjectAveryCommon.ExtensionMethods;
 using ProjectAveryCommon.Model.Notifications;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace ProjectAvery.Notification
 {
@@ -27,8 +28,14 @@ namespace ProjectAvery.Notification
         {
             _logger = logger;
 
+            FleckLog.LogAction = (level, message, exception) =>
+            {
+                _logger.Log(MapLogLevel(level), exception, message);
+            };
+
             _server = new WebSocketServer("ws://0.0.0.0:35566");
             _connections = new List<IWebSocketConnection>();
+            _server.RestartAfterListenError = true;
             _server.Start(socket =>
             {
                 socket.OnOpen = () =>
@@ -55,6 +62,18 @@ namespace ProjectAvery.Notification
             foreach (IWebSocketConnection connection in _connections)
             {
                 await connection.Send(message);
+            }
+        }
+
+        private LogLevel MapLogLevel(Fleck.LogLevel logLevel)
+        {
+            switch (logLevel)
+            {
+                case Fleck.LogLevel.Debug: return LogLevel.Debug;
+                case Fleck.LogLevel.Info: return LogLevel.Information;
+                case Fleck.LogLevel.Warn: return LogLevel.Warning;
+                case Fleck.LogLevel.Error: return LogLevel.Error;
+                default: return LogLevel.None;
             }
         }
     }
