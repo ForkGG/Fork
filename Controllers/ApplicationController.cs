@@ -37,7 +37,7 @@ namespace ProjectAvery.Controllers
         [HttpPost("updateState")]
         public void ChangeApplicationState(ApplicationStatus status)
         {
-            _notificationCenter.SendApplicationStateChangedNotification(ApplicationStatus.STOPPED, status);
+            //_notificationCenter.SendApplicationStateChangedNotification(ApplicationStatus.STOPPED, status);
         }
     }
 }

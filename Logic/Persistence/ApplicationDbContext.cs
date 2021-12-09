@@ -29,6 +29,9 @@ namespace ProjectAvery.Logic.Persistence
             JavaSettings dummyJavaSettings = new JavaSettings { JavaPath = "java", MaxRam = 2048, StartupParameters = "" };
             Server dummyServer = new Server("Dummy Server", dummyVersion, new VanillaSettings("world"), dummyJavaSettings);
             result.Entities.Add(dummyServer);
+            Server dummyServer2 = new Server("Dummy Server 2", dummyVersion, new VanillaSettings("world"),
+                dummyJavaSettings);
+            result.Entities.Add(dummyServer2);
 
             return result;
         }

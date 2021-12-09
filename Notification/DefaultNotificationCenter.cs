@@ -1,7 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Fleck;
 using Microsoft.Extensions.Logging;
 using ProjectAvery.Logic.Model.ApplicationModel;
 using ProjectAvery.Notification.Notifications;
+using ProjectAveryCommon.ExtensionMethods;
+using ProjectAveryCommon.Model.Notifications;
 
 namespace ProjectAvery.Notification
 {
@@ -16,27 +20,42 @@ namespace ProjectAvery.Notification
     {
         private readonly ILogger<DefaultNotificationCenter> _logger;
         private readonly ApplicationNotifications _applicationNotifications;
+        private readonly WebSocketServer _server;
+        private readonly List<IWebSocketConnection> _connections;
 
         public DefaultNotificationCenter(ILogger<DefaultNotificationCenter> logger)
         {
             _logger = logger;
 
-            //TODO CKE try to start WebSocket here
+            _server = new WebSocketServer("ws://0.0.0.0:35566");
+            _connections = new List<IWebSocketConnection>();
+            _server.Start(socket =>
+            {
+                socket.OnOpen = () =>
+                {
+                    _logger.LogInformation($"New WebSocket connection from {socket.ConnectionInfo.Host}");
+                    _connections.Add(socket);
+                };
+                socket.OnClose = () =>
+                {
+                    _logger.LogInformation($"Websocket connection closed: {socket.ConnectionInfo.Headers}");
+                    _connections.Remove(socket);
+                };
+            });
             
             // Initialize Notification Creators
             _applicationNotifications = new ApplicationNotifications();
         }
 
-        public async Task SendApplicationStateChangedNotification(ApplicationStatus oldStatus, ApplicationStatus newStatus)
+        public async Task BroadcastNotification(AbstractNotification notification)
         {
-            string notification = _applicationNotifications.ApplicationStateChangedNotification(oldStatus, newStatus);
-            await BroadcastNotification(notification);
-        }
-
-        private async Task BroadcastNotification(string notification)
-        {
-            //TODO CKE broadcast this notification to all subscribers
-            _logger.LogDebug("New notification: "+notification);
+            //TODO CKE only notify clients with the according permissions
+            string message = notification.ToJson();
+            _logger.LogDebug($"Sending notification to {_connections.Count} clients: {message}");
+            foreach (IWebSocketConnection connection in _connections)
+            {
+                await connection.Send(message);
+            }
         }
     }
 }

@@ -18,6 +18,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using ProjectAvery.Logic.Persistence;
 using ProjectAvery.Notification;
+using ProjectAvery.Util;
 
 namespace ProjectAvery
 {
@@ -50,7 +51,7 @@ namespace ProjectAvery
             //services.AddDbContext<ApplicationDbContext>(options =>
             //     options.UseLazyLoadingProxies().UseSqlite(builder.ToString()).UseLoggerFactory(MyLoggerFactory).EnableSensitiveDataLogging());
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddControllers().AddNewtonsoftJson(opt =>
+            services.AddControllers(o => o.InputFormatters.Add(new TextPlainInputFormatter())).AddNewtonsoftJson(opt =>
             {
                 opt.SerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
             });
