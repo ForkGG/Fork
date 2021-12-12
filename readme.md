@@ -122,7 +122,7 @@ Admin
 │   ├── Create Entity
 │   ├── Delete Entity
 │   ├── Rename Entity
-│   └── Stop Application
+│   └── Update Application (Stops all servers)
 ├── AppSettings
 │   ├── Read AppSettings
 │   │   ├── Read General
@@ -132,18 +132,19 @@ Admin
 │   └── Write AppSettings
 │       ├── Write General
 │       ├── Write Discord Bot
-│       ├── Write Tokens
+│       ├── Write Tokens (This can be used to gain admin!)
 │       └── Write Advanced
 └── Entity (One Node for each entity)
     ├── Read Entity
     │   ├── Read ConsoleTab
+    │   │   ├── Read Console
     │   │   ├── Read Playerlist
     │   │   ├── Read Banlist
     │   │   └── Read Whitelist
     │   ├── Read SettingsTab
     │   │   ├── Read Settings
     │   │   ├── Read server.properties
-    │   │   └── Read ... (One entry for each settings file)
+    │   │   └── Read version specific files
     │   ├── Read WorldsTab
     │   ├── Read PluginsTab (only if available)
     │   └── Read ModsTab (only if available)
@@ -152,7 +153,7 @@ Admin
         ├── Write SettingsTab
         │   ├── Write Settings
         │   ├── Write server.properties
-        │   └── Write ... (One entry for each settings file)
+        │   └── Write version specific files
         ├── Write WorldsTab
         ├── Write PluginsTab (only if available)
         └── Write ModsTab (only if available)
