@@ -1,11 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Net.Http;
-using System.Net.Mime;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ProjectAvery.Logic.Model;
+using ProjectAvery.Logic.Model.Enums;
 using ProjectAvery.Notification;
 using ProjectAveryCommon.Model.Entity.Enums.Console;
 using ProjectAveryCommon.Model.Entity.Transient.Console;
@@ -28,6 +25,7 @@ namespace ProjectAvery.Controllers
 
         [Consumes("text/plain")]
         [HttpPost("consoleIn")]
+        [Privileges(Privilege.WriteConsoleTab)]
         public async Task<StatusCodeResult> ConsoleIn([FromBody] string message)
         {
             if (string.IsNullOrEmpty(message) || message == "/")

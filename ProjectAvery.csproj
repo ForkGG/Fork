@@ -22,9 +22,7 @@
 
     <ItemGroup>
       <Folder Include="Adapters" />
-      <Folder Include="Logic\Managers" />
-      <Folder Include="Logic\Services" />
-      <Folder Include="Util\ExtensionMethods" />
+      <Folder Include="Logic\Model" />
     </ItemGroup>
 
     <ItemGroup>

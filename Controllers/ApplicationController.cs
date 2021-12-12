@@ -2,10 +2,8 @@
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Model.ApplicationModel;
 using ProjectAvery.Logic.Persistence;
 using ProjectAvery.Notification;
-using ProjectAvery.Notification.Notifications;
 using ProjectAveryCommon.Model.Application;
 
 namespace ProjectAvery.Controllers
@@ -31,13 +29,6 @@ namespace ProjectAvery.Controllers
             LogRequest();
             //TODO create caller object with permissions from header token in each request
             return _context.GenerateStateObject();
-        }
-
-        [Obsolete]
-        [HttpPost("updateState")]
-        public void ChangeApplicationState(ApplicationStatus status)
-        {
-            //_notificationCenter.SendApplicationStateChangedNotification(ApplicationStatus.STOPPED, status);
         }
     }
 }

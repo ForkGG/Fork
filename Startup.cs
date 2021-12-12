@@ -1,24 +1,23 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using ProjectAvery.Logic.Managers;
 using ProjectAvery.Logic.Persistence;
 using ProjectAvery.Notification;
 using ProjectAvery.Util;
+using ProjectAvery.Util.ExtensionMethods;
+using ProjectAvery.Util.SwaggerUtils;
+using AuthenticationService = ProjectAvery.Logic.Services.Authentication.AuthenticationService;
+using IAuthenticationService = ProjectAvery.Logic.Services.Authentication.IAuthenticationService;
 
 namespace ProjectAvery
 {
@@ -55,10 +54,26 @@ namespace ProjectAvery
             {
                 opt.SerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
             });
+            
+            // Singletons
             services.AddSingleton<INotificationCenter, DefaultNotificationCenter>();
+            services.AddSingleton<ITokenManager, TokenManager>();
+            
+            // Scoped
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            
+            // Transient
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "ProjectAvery", Version = "v1"});
+                c.OperationFilter<TokenSecurityFilter>();
+                c.AddSecurityDefinition("Fork Token", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
             });
             services.Configure<RouteOptions>(o => o.LowercaseUrls = true);
         }
@@ -81,7 +96,7 @@ namespace ProjectAvery
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthenticationMiddleware();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

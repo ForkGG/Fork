@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Fleck;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Model.ApplicationModel;
-using ProjectAvery.Notification.Notifications;
+using ProjectAvery.Logic.Managers;
+using ProjectAvery.Logic.Model;
+using ProjectAvery.Logic.Model.Enums;
 using ProjectAveryCommon.ExtensionMethods;
 using ProjectAveryCommon.Model.Notifications;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
@@ -20,49 +23,73 @@ namespace ProjectAvery.Notification
     public class DefaultNotificationCenter : INotificationCenter
     {
         private readonly ILogger<DefaultNotificationCenter> _logger;
-        private readonly ApplicationNotifications _applicationNotifications;
         private readonly WebSocketServer _server;
-        private readonly List<IWebSocketConnection> _connections;
+        private readonly Dictionary<IWebSocketConnection, IReadOnlySet<Privilege>> _privilegesByConnection;
+        private readonly ITokenManager _tokenManager;
 
-        public DefaultNotificationCenter(ILogger<DefaultNotificationCenter> logger)
+        public DefaultNotificationCenter(ILogger<DefaultNotificationCenter> logger, ITokenManager tokenManager)
         {
             _logger = logger;
+            _tokenManager = tokenManager;
 
             FleckLog.LogAction = (level, message, exception) =>
             {
                 _logger.Log(MapLogLevel(level), exception, message);
             };
 
+            _logger.LogDebug("test");
             _server = new WebSocketServer("ws://0.0.0.0:35566");
-            _connections = new List<IWebSocketConnection>();
+            // A Dictionary containing all active sockets and their privileges (or null if no token was provided yet)
+            _privilegesByConnection = new Dictionary<IWebSocketConnection, IReadOnlySet<Privilege>>();
             _server.RestartAfterListenError = true;
             _server.Start(socket =>
             {
                 socket.OnOpen = () =>
                 {
                     _logger.LogInformation($"New WebSocket connection from {socket.ConnectionInfo.Host}");
-                    _connections.Add(socket);
+                    if (_privilegesByConnection.ContainsKey(socket))
+                    {
+                        _privilegesByConnection.Remove(socket);
+                    }
+                    _privilegesByConnection.Add(socket, null);
                 };
                 socket.OnClose = () =>
                 {
                     _logger.LogInformation($"Websocket connection closed: {socket.ConnectionInfo.Headers}");
-                    _connections.Remove(socket);
+                    _privilegesByConnection.Remove(socket);
+                };
+                socket.OnMessage = message =>
+                {
+                    if (!_privilegesByConnection.ContainsKey(socket))
+                    {
+                        socket.Close(1);
+                    }
+                    _privilegesByConnection[socket] = _tokenManager.GetPrivilegesForToken(message);
                 };
             });
-            
-            // Initialize Notification Creators
-            _applicationNotifications = new ApplicationNotifications();
         }
 
         public async Task BroadcastNotification(AbstractNotification notification)
         {
-            //TODO CKE only notify clients with the according permissions
             string message = notification.ToJson();
-            _logger.LogDebug($"Sending notification to {_connections.Count} clients: {message}");
-            foreach (IWebSocketConnection connection in _connections)
+            _logger.LogDebug($"Sending notification to {_privilegesByConnection.Count} clients: {message}");
+            int actualMessagesSent = 0; 
+            foreach (var privilegeByConnection in _privilegesByConnection)
             {
-                await connection.Send(message);
+                // If the socket has not provided a valid token don't send any messages
+                if (privilegeByConnection.Value != null)
+                {
+                    // If Notification requires privilege(s) and the socket has all of them broadcast the message
+                    if (Attribute.GetCustomAttributes(notification.GetType()).All(a =>
+                            a is not PrivilegesAttribute || a is PrivilegesAttribute p &&
+                            privilegeByConnection.Value.Contains(p.Privilege)))
+                    {
+                        await privilegeByConnection.Key.Send(message);
+                        actualMessagesSent++;
+                    }
+                }
             }
+            _logger.LogDebug($"Notification was actually sent to {actualMessagesSent} clients: {message}");
         }
 
         private LogLevel MapLogLevel(Fleck.LogLevel logLevel)
