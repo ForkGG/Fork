@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using ProjectAvery.Logic.Managers;
-using ProjectAvery.Logic.Model.Enums;
+using ProjectAveryCommon.Model.Privileges;
 
 namespace ProjectAvery.Logic.Services.Authentication;
 
@@ -17,7 +18,7 @@ public class AuthenticationService : IAuthenticationService
         _tokenManager = tokenManager;
     }
     
-    private IReadOnlySet<Privilege> Privileges { get; set; }
+    public IReadOnlySet<IPrivilege> Privileges { get; private set; }
 
     public void AuthenticateToken(string token)
     {
@@ -25,13 +26,24 @@ public class AuthenticationService : IAuthenticationService
         Privileges = _tokenManager.GetPrivilegesForToken(token);
     }
 
-    public bool IsAuthenticated(Privilege privilege)
+    public bool IsAuthenticated(Type privilegeType) 
     {
         if (Privileges == null)
         {
             throw new UnauthorizedAccessException("Each Request needs to be authorized!");
         }
 
-        return Privileges.Contains(privilege);
+        // IPrivilege means that any privilege is enough to authenticate
+        if (privilegeType == typeof(IPrivilege))
+        {
+            return Privileges.Any();
+        }
+
+        if (!typeof(IPrivilege).IsAssignableFrom(privilegeType))
+        {
+            throw new ArgumentException("The required privilege needs to be an IPrivilege");
+        }
+
+        return Privileges.Any(p => p.GetType().IsAssignableFrom(privilegeType) || p.GetType() == privilegeType);
     }
 }

@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Model;
-using ProjectAvery.Logic.Model.Enums;
 using ProjectAvery.Notification;
 using ProjectAveryCommon.Model.Entity.Enums.Console;
 using ProjectAveryCommon.Model.Entity.Transient.Console;
 using ProjectAveryCommon.Model.Notifications.EntityNotifications;
+using ProjectAveryCommon.Model.Privileges;
+using ProjectAveryCommon.Model.Privileges.Entity.WriteEntity.WriteConsoleTab;
 
 namespace ProjectAvery.Controllers
 {
@@ -25,7 +25,7 @@ namespace ProjectAvery.Controllers
 
         [Consumes("text/plain")]
         [HttpPost("consoleIn")]
-        [Privileges(Privilege.WriteConsoleTab)]
+        [Privileges(typeof(WriteConsoleTabPrivilege))]
         public async Task<StatusCodeResult> ConsoleIn([FromBody] string message)
         {
             if (string.IsNullOrEmpty(message) || message == "/")

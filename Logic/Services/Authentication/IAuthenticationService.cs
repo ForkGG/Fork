@@ -1,4 +1,6 @@
-﻿using ProjectAvery.Logic.Model.Enums;
+﻿using System;
+using System.Collections.Generic;
+using ProjectAveryCommon.Model.Privileges;
 
 namespace ProjectAvery.Logic.Services.Authentication;
 
@@ -7,6 +9,8 @@ namespace ProjectAvery.Logic.Services.Authentication;
 /// </summary>
 public interface IAuthenticationService
 {
+    public IReadOnlySet<IPrivilege> Privileges { get; }
+
     void AuthenticateToken(string token);
-    bool IsAuthenticated(Privilege privilege);
+    bool IsAuthenticated(Type privilegeType);
 }

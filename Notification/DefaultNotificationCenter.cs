@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 using Fleck;
 using Microsoft.Extensions.Logging;
 using ProjectAvery.Logic.Managers;
-using ProjectAvery.Logic.Model;
-using ProjectAvery.Logic.Model.Enums;
 using ProjectAveryCommon.ExtensionMethods;
 using ProjectAveryCommon.Model.Notifications;
+using ProjectAveryCommon.Model.Privileges;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace ProjectAvery.Notification
@@ -24,7 +23,7 @@ namespace ProjectAvery.Notification
     {
         private readonly ILogger<DefaultNotificationCenter> _logger;
         private readonly WebSocketServer _server;
-        private readonly Dictionary<IWebSocketConnection, IReadOnlySet<Privilege>> _privilegesByConnection;
+        private readonly Dictionary<IWebSocketConnection, IReadOnlySet<IPrivilege>> _privilegesByConnection;
         private readonly ITokenManager _tokenManager;
 
         public DefaultNotificationCenter(ILogger<DefaultNotificationCenter> logger, ITokenManager tokenManager)
@@ -40,7 +39,7 @@ namespace ProjectAvery.Notification
             _logger.LogDebug("test");
             _server = new WebSocketServer("ws://0.0.0.0:35566");
             // A Dictionary containing all active sockets and their privileges (or null if no token was provided yet)
-            _privilegesByConnection = new Dictionary<IWebSocketConnection, IReadOnlySet<Privilege>>();
+            _privilegesByConnection = new Dictionary<IWebSocketConnection, IReadOnlySet<IPrivilege>>();
             _server.RestartAfterListenError = true;
             _server.Start(socket =>
             {
@@ -82,7 +81,7 @@ namespace ProjectAvery.Notification
                     // If Notification requires privilege(s) and the socket has all of them broadcast the message
                     if (Attribute.GetCustomAttributes(notification.GetType()).All(a =>
                             a is not PrivilegesAttribute || a is PrivilegesAttribute p &&
-                            privilegeByConnection.Value.Contains(p.Privilege)))
+                            privilegeByConnection.Value.Any(ip => p.Privilege.IsSubclassOf(ip.GetType()) || p.Privilege == ip.GetType())))
                     {
                         await privilegeByConnection.Key.Send(message);
                         actualMessagesSent++;

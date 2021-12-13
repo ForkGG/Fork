@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using ProjectAvery.Logic.Managers;
 using ProjectAvery.Logic.Persistence;
 using ProjectAvery.Notification;
@@ -53,6 +54,7 @@ namespace ProjectAvery
             services.AddControllers(o => o.InputFormatters.Add(new TextPlainInputFormatter())).AddNewtonsoftJson(opt =>
             {
                 opt.SerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
+                opt.SerializerSettings.Converters.Add(new FriendlyStringEnumConverter());
             });
             
             // Singletons

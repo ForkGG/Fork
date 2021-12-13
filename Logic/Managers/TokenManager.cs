@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Model.Enums;
 using ProjectAveryCommon.ExtensionMethods;
+using ProjectAveryCommon.Model.Privileges;
 
 namespace ProjectAvery.Logic.Managers;
 
@@ -18,9 +18,9 @@ public class TokenManager : ITokenManager
     /// Get a Set of all privileges of a given token
     /// </summary>
     /// <returns>Set of privileges or <c>null</c> if the token is not valid</returns>
-    public IReadOnlySet<Privilege> GetPrivilegesForToken(string token)
+    public IReadOnlySet<IPrivilege> GetPrivilegesForToken(string token)
     {
         // TODO CKE
-        return new HashSet<Privilege>(EnumExtensions.GetValues<Privilege>());
+        return new HashSet<IPrivilege>{new AdminPrivilege()};
     }
 }

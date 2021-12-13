@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Model;
 using ProjectAvery.Logic.Services.Authentication;
+using ProjectAveryCommon.Model.Privileges;
 
 namespace ProjectAvery.Util;
 
@@ -35,9 +35,9 @@ public class AuthenticationMiddleware
         {
             authenticationService.AuthenticateToken(token);
             bool authenticated = true;
-            var metadata = context.GetEndpoint().Metadata.GetMetadata<ControllerActionDescriptor>();
-            authenticated = metadata.EndpointMetadata
-                .All(a => a is not PrivilegesAttribute || a is PrivilegesAttribute p && authenticationService.IsAuthenticated(p.Privilege));
+            var metadata = context.GetEndpoint()!.Metadata.GetMetadata<ControllerActionDescriptor>();
+            authenticated = metadata!.EndpointMetadata
+                .All(a => a is not PrivilegesAttribute || a is PrivilegesAttribute p && authenticationService.IsAuthenticated(p.GetType()));
             if (!authenticated)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;

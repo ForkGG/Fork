@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ProjectAvery.Logic.Model.Enums;
+using ProjectAveryCommon.Model.Privileges;
 
 namespace ProjectAvery.Logic.Managers;
 
@@ -8,5 +8,5 @@ namespace ProjectAvery.Logic.Managers;
 /// </summary>
 public interface ITokenManager
 {
-    IReadOnlySet<Privilege> GetPrivilegesForToken(string token);
+    IReadOnlySet<IPrivilege> GetPrivilegesForToken(string token);
 }
