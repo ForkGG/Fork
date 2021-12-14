@@ -37,7 +37,7 @@ public class AuthenticationMiddleware
             bool authenticated = true;
             var metadata = context.GetEndpoint()!.Metadata.GetMetadata<ControllerActionDescriptor>();
             authenticated = metadata!.EndpointMetadata
-                .All(a => a is not PrivilegesAttribute || a is PrivilegesAttribute p && authenticationService.IsAuthenticated(p.GetType()));
+                .All(a => a is not PrivilegesAttribute || a is PrivilegesAttribute p && authenticationService.IsAuthenticated(p.Privilege));
             if (!authenticated)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;

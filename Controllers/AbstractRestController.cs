@@ -12,7 +12,6 @@ namespace ProjectAvery.Controllers
         public AbstractRestController(ILogger logger)
         {
             _logger = logger;
-            LogRequest();
         }
 
         protected void LogRequest()
