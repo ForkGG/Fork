@@ -31,6 +31,7 @@ namespace ProjectAvery.Logic.Persistence
             result.Entities.Add(dummyServer);
             Server dummyServer2 = new Server("Dummy Server 2", dummyVersion, new VanillaSettings("world"),
                 dummyJavaSettings);
+            dummyServer2.Id = 1;
             result.Entities.Add(dummyServer2);
 
             return result;

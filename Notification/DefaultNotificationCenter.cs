@@ -65,6 +65,10 @@ namespace ProjectAvery.Notification
                     }
                     _privilegesByConnection[socket] = _tokenManager.GetPrivilegesForToken(message);
                 };
+                socket.OnBinary = bytes =>
+                {
+                    _logger.LogWarning($"Received binary WebSocket message (Not supported!)");
+                };
             });
         }
 
@@ -81,7 +85,7 @@ namespace ProjectAvery.Notification
                     // If Notification requires privilege(s) and the socket has all of them broadcast the message
                     if (Attribute.GetCustomAttributes(notification.GetType()).All(a =>
                             a is not PrivilegesAttribute || a is PrivilegesAttribute p &&
-                            privilegeByConnection.Value.Any(ip => p.Privilege.IsSubclassOf(ip.GetType()) || p.Privilege == ip.GetType())))
+                            privilegeByConnection.Value.Any(ip => ip is AdminPrivilege || ip.GetType().IsAssignableFrom(p.Privilege) || p.Privilege == ip.GetType())))
                     {
                         await privilegeByConnection.Key.Send(message);
                         actualMessagesSent++;

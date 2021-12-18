@@ -44,6 +44,6 @@ public class AuthenticationService : IAuthenticationService
             throw new ArgumentException("The required privilege needs to be an IPrivilege");
         }
 
-        return Privileges.Any(p => p.GetType().IsAssignableFrom(privilegeType) || p.GetType() == privilegeType);
+        return Privileges.Any(p => p is AdminPrivilege || p.GetType().IsAssignableFrom(privilegeType) || p.GetType() == privilegeType);
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ProjectAvery.Notification;
+using ProjectAveryCommon.Model.Entity.Enums;
 using ProjectAveryCommon.Model.Entity.Enums.Console;
 using ProjectAveryCommon.Model.Entity.Transient.Console;
 using ProjectAveryCommon.Model.Notifications.EntityNotifications;
@@ -14,6 +15,7 @@ namespace ProjectAvery.Controllers
     /// Controller for requests that affect a single entity
     /// i.e: start/stop server, change server settings,...
     /// </summary>
+    [Route("v1/entity/{entityId}")]
     public class EntityController : AbstractRestController
     {
         private readonly INotificationCenter _notificationCenter;
@@ -26,7 +28,7 @@ namespace ProjectAvery.Controllers
         [Consumes("text/plain")]
         [HttpPost("consoleIn")]
         [Privileges(typeof(WriteConsoleTabPrivilege))]
-        public async Task<StatusCodeResult> ConsoleIn([FromBody] string message)
+        public async Task<StatusCodeResult> ConsoleIn([FromBody] string message, [FromRoute] ulong entityId)
         {
             if (string.IsNullOrEmpty(message) || message == "/")
             {
@@ -34,6 +36,7 @@ namespace ProjectAvery.Controllers
             }
             ConsoleAddNotification notification = new ConsoleAddNotification();
             notification.NewConsoleMessage = new ConsoleMessage(message, ConsoleMessageType.UserInput);
+            notification.EntityId = entityId;
             await _notificationCenter.BroadcastNotification(notification);
             return Ok();
         }
