@@ -10,7 +10,7 @@ using ProjectAveryCommon.Model.Notifications;
 using ProjectAveryCommon.Model.Privileges;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
-namespace ProjectAvery.Notification
+namespace ProjectAvery.Logic.Notification
 {
     /// <summary>
     /// <b>Default implementation of the NotificationCenter</b>
@@ -36,7 +36,6 @@ namespace ProjectAvery.Notification
                 _logger.Log(MapLogLevel(level), exception, message);
             };
 
-            _logger.LogDebug("test");
             _server = new WebSocketServer("ws://0.0.0.0:35566");
             // A Dictionary containing all active sockets and their privileges (or null if no token was provided yet)
             _privilegesByConnection = new Dictionary<IWebSocketConnection, IReadOnlySet<IPrivilege>>();

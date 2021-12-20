@@ -16,6 +16,19 @@ namespace ProjectAvery.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.10");
 
+            modelBuilder.Entity("ProjectAveryCommon.Model.Application.SettingsKeyValue", b =>
+                {
+                    b.Property<string>("Key")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Key");
+
+                    b.ToTable("AppSettingsSet");
+                });
+
             modelBuilder.Entity("ProjectAveryCommon.Model.Entity.Pocos.Automation.AutomationTime", b =>
                 {
                     b.Property<ulong>("Id")

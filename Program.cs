@@ -23,11 +23,12 @@ namespace ProjectAvery
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
+                var logger = services.GetRequiredService<ILogger<Program>>();
                 try
                 {
                     string persistencePath = Path.Combine(
                         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                        "Avery", "persistence");
+                        "ForkApp", "persistence");
                     var persistenceDir = new DirectoryInfo(persistencePath);
                     if (!persistenceDir.Exists)
                         persistenceDir.Create();
@@ -36,10 +37,10 @@ namespace ProjectAvery
                         databaseFile.Create().Close();
                     using var context = services.GetService<ApplicationDbContext>();
                     context.Database.Migrate();
+                    logger.LogInformation("Finished database migration");
                 }
                 catch (Exception e)
                 {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError("Error while migrating database! Aborting...\n" + e);
                     return;
                 }

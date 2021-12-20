@@ -23,6 +23,7 @@
     <ItemGroup>
       <Folder Include="Adapters" />
       <Folder Include="Logic\Model" />
+      <Folder Include="Migrations" />
     </ItemGroup>
 
     <ItemGroup>

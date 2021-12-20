@@ -13,8 +13,11 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using ProjectAvery.Logic.Managers;
+using ProjectAvery.Logic.Notification;
 using ProjectAvery.Logic.Persistence;
-using ProjectAvery.Notification;
+using ProjectAvery.Logic.Services.EntityServices;
+using ProjectAvery.Logic.Services.FileServices;
+using ProjectAvery.Logic.Services.WebServices;
 using ProjectAvery.Util;
 using ProjectAvery.Util.ExtensionMethods;
 using ProjectAvery.Util.SwaggerUtils;
@@ -46,29 +49,44 @@ namespace ProjectAvery
             
             var builder = new SqliteConnectionStringBuilder(Configuration.GetConnectionString("DefaultConnection"));
             builder.DataSource = builder.DataSource.Replace("|datadirectory|",
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Avery", "persistence"));
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ForkApp", "persistence"));
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseLazyLoadingProxies().UseSqlite(builder.ToString()));
+                options.UseSqlite(builder.ToString()));
             //services.AddDbContext<ApplicationDbContext>(options =>
             //     options.UseLazyLoadingProxies().UseSqlite(builder.ToString()).UseLoggerFactory(MyLoggerFactory).EnableSensitiveDataLogging());
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddControllers(o => o.InputFormatters.Add(new TextPlainInputFormatter())).AddNewtonsoftJson(opt =>
+            services.AddControllers(o =>
             {
+                o.InputFormatters.Add(new TextPlainInputFormatter());
+                o.Filters.Add<ForkExceptionFilterAttribute>();
+            }).AddNewtonsoftJson(opt =>
+            {
+                opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 opt.SerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
                 opt.SerializerSettings.Converters.Add(new StringEnumConverter
-                { 
+                {
                     NamingStrategy = new CamelCaseNamingStrategy()
                 });
             });
-            
+
+
             // Singletons
+            services.AddSingleton<IApplicationManager, ApplicationManager>();
             services.AddSingleton<INotificationCenter, DefaultNotificationCenter>();
             services.AddSingleton<ITokenManager, TokenManager>();
-            
+            services.AddSingleton<IEntityManager, EntityManager>();
+
             // Scoped
             services.AddScoped<IAuthenticationService, AuthenticationService>();
-            
+
             // Transient
+            services.AddTransient<IDownloadService, DownloadService>();
+            services.AddTransient<IConsoleService, ConsoleService>();
+            services.AddTransient<IServerService, ServerService>();
+            services.AddTransient<IEntityService, EntityService>();
+            services.AddTransient<IFileWriterService, FileWriterService>();
+            services.AddTransient<IFileReaderService, FileReaderService>();
+            services.AddTransient<IEntityPostProcessingService, EntityPostProcessingService>();
             
             services.AddSwaggerGen(c =>
             {

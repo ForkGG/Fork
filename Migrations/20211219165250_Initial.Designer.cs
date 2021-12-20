@@ -9,7 +9,7 @@ using ProjectAvery.Logic.Persistence;
 namespace ProjectAvery.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211010094739_Initial")]
+    [Migration("20211219165250_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -17,6 +17,19 @@ namespace ProjectAvery.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.10");
+
+            modelBuilder.Entity("ProjectAveryCommon.Model.Application.SettingsKeyValue", b =>
+                {
+                    b.Property<string>("Key")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Key");
+
+                    b.ToTable("AppSettingsSet");
+                });
 
             modelBuilder.Entity("ProjectAveryCommon.Model.Entity.Pocos.Automation.AutomationTime", b =>
                 {

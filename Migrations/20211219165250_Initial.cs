@@ -8,6 +8,18 @@ namespace ProjectAvery.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "AppSettingsSet",
+                columns: table => new
+                {
+                    Key = table.Column<string>(type: "TEXT", nullable: false),
+                    Value = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppSettingsSet", x => x.Key);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "JavaSettings",
                 columns: table => new
                 {
@@ -58,14 +70,14 @@ namespace ProjectAvery.Migrations
                 {
                     Id = table.Column<ulong>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    AutoSetSha1 = table.Column<bool>(type: "INTEGER", nullable: false),
+                    ResourcePackHashAge = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
                     VersionId = table.Column<ulong>(type: "INTEGER", nullable: true),
                     JavaSettingsId = table.Column<ulong>(type: "INTEGER", nullable: true),
                     Initialized = table.Column<bool>(type: "INTEGER", nullable: false),
                     StartWithFork = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AutoSetSha1 = table.Column<bool>(type: "INTEGER", nullable: false),
-                    ServerIconId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ResourcePackHashAge = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    ServerIconId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -135,6 +147,9 @@ namespace ProjectAvery.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AppSettingsSet");
+
             migrationBuilder.DropTable(
                 name: "AutomationTime");
 
