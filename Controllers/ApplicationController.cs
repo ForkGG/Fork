@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ProjectAvery.Logic.Managers;
 using ProjectAvery.Logic.Persistence;
-using ProjectAvery.Logic.Services.Authentication;
+using ProjectAvery.Logic.Services.AuthenticationServices;
+using ProjectAvery.Logic.Services.StateServices;
 using ProjectAveryCommon.Model.Application;
 using ProjectAveryCommon.Model.Privileges;
 
@@ -14,22 +17,23 @@ namespace ProjectAvery.Controllers
     /// </summary>
     public class ApplicationController : AbstractRestController
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IApplicationStateService _applicationState;
         private readonly IAuthenticationService _authentication;
 
-        public ApplicationController(ILogger<ApplicationController> logger, ApplicationDbContext context, IAuthenticationService authentication) : base(logger)
+        public ApplicationController(ILogger<ApplicationController> logger, IApplicationStateService applicationState, IAuthenticationService authentication) : base(logger)
         {
-            _context = context;
+            _applicationState = applicationState;
             _authentication = authentication;
         }
 
         [HttpGet("state")]
         [Privileges(typeof(IPrivilege))]
-        public State State()
+        public async Task<State> State()
         {
+            // TODO automatically call this with each request
             LogRequest();
             //TODO create caller object with permissions from header token in each request
-            return _context.GenerateStateObject();
+            return await _applicationState.BuildAppState();
         }
 
         [HttpGet("privileges")]

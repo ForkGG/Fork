@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using ProjectAvery.Logic.Managers;
 using ProjectAveryCommon.Model.Privileges;
 
-namespace ProjectAvery.Logic.Services.Authentication;
+namespace ProjectAvery.Logic.Services.AuthenticationServices;
 
 public class AuthenticationService : IAuthenticationService
 {

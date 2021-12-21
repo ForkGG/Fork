@@ -30,15 +30,6 @@ namespace ProjectAvery.Logic.Persistence
             _fileReader = fileReader;
         }
 
-        //TODO CKE check permission before adding stuff
-        //TODO CKE fill with actual stuff
-        public State GenerateStateObject()
-        {
-            State result = new State();
-            result.Entities = ServerSet.ToList<IEntity>();
-            return result;
-        }
-
         public async Task<AppSettings> ReadAppSettings()
         {
             AppSettings result = new AppSettings();

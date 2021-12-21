@@ -64,4 +64,18 @@ public class EntityManager : IEntityManager
             return entity;
         }
     }
+
+    public List<IEntity> ListAllEntities()
+    {
+        List<IEntity> result = new List<IEntity>();
+        
+        using var scope = _scopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        foreach (ulong serverId in context.ServerSet.Select(s => s.Id))
+        {
+            result.Add(EntityById(serverId));
+        }
+
+        return result;
+    }
 }

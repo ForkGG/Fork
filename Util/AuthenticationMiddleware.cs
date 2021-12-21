@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Services.Authentication;
+using ProjectAvery.Logic.Services.AuthenticationServices;
 using ProjectAveryCommon.Model.Privileges;
 
 namespace ProjectAvery.Util;

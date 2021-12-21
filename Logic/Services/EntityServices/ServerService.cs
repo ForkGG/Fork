@@ -165,11 +165,7 @@ public class ServerService : IServerService
         await _console.BindProcessToConsole(server, process.StandardOutput, process.StandardError, this);
         server.ConsoleHandler = delegate(string line)
         {
-            _notificationCenter.BroadcastNotification(
-                new ConsoleAddNotification
-                {
-                    EntityId = server.Id, NewConsoleMessage = new ConsoleMessage(line, ConsoleMessageType.UserInput)
-                });
+            _console.WriteLine(server, line, ConsoleMessageType.UserInput);
             process.StandardInput.WriteLineAsync(line);
         };
 

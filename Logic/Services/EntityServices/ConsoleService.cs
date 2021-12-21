@@ -105,7 +105,7 @@ public class ConsoleService : IConsoleService
                         //serverViewModel.RoleInputHandler(line);
                     }
 
-                    await WriteLine(entity, line, isSuccess ? ConsoleMessageType.Success : ConsoleMessageType.Default);
+                    await WriteLine(entity, line, isSuccess ? ConsoleMessageType.Success : ConsoleMessageType.Error);
                 }
             }
         }

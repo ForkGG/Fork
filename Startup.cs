@@ -17,12 +17,13 @@ using ProjectAvery.Logic.Notification;
 using ProjectAvery.Logic.Persistence;
 using ProjectAvery.Logic.Services.EntityServices;
 using ProjectAvery.Logic.Services.FileServices;
+using ProjectAvery.Logic.Services.StateServices;
 using ProjectAvery.Logic.Services.WebServices;
 using ProjectAvery.Util;
 using ProjectAvery.Util.ExtensionMethods;
 using ProjectAvery.Util.SwaggerUtils;
-using AuthenticationService = ProjectAvery.Logic.Services.Authentication.AuthenticationService;
-using IAuthenticationService = ProjectAvery.Logic.Services.Authentication.IAuthenticationService;
+using AuthenticationService = ProjectAvery.Logic.Services.AuthenticationServices.AuthenticationService;
+using IAuthenticationService = ProjectAvery.Logic.Services.AuthenticationServices.IAuthenticationService;
 
 namespace ProjectAvery
 {
@@ -87,6 +88,7 @@ namespace ProjectAvery
             services.AddTransient<IFileWriterService, FileWriterService>();
             services.AddTransient<IFileReaderService, FileReaderService>();
             services.AddTransient<IEntityPostProcessingService, EntityPostProcessingService>();
+            services.AddTransient<IApplicationStateService, ApplicationStateService>();
             
             services.AddSwaggerGen(c =>
             {
