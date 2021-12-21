@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using ProjectAvery.Logic.Notification;
@@ -13,6 +14,9 @@ namespace ProjectAvery.Logic.Services.EntityServices;
 
 public class ConsoleService : IConsoleService
 {
+    private const string WARN_REGEX = @"^\[(?:[0-9]{1,2}:){2}[0-9]{1,2}\] \[.*\/WARN\]:.*";
+    private const string WERROR_REGEX = @"^\[(?:[0-9]{1,2}:){2}[0-9]{1,2}\] \[.*\/ERROR\]:.*";
+    
     private readonly INotificationCenter _notificationCenter;
 
     public ConsoleService(INotificationCenter notificationCenter)
@@ -58,14 +62,18 @@ public class ConsoleService : IConsoleService
                         continue;
                     }
 
-                    //bool used to generate green success message in console
-                    bool isSuccess = false;
+                    ConsoleMessageType messageType = ConsoleMessageType.Default;
+                    if (Regex.IsMatch(line, WARN_REGEX))
+                        messageType = ConsoleMessageType.Warning;
+                    if (Regex.IsMatch(line, WERROR_REGEX))
+                        messageType = ConsoleMessageType.Error;
+                    
                     if (entity is Server server)
                     {
                         if (line.Contains("For help, type \"help\""))
                         {
                             entityStatusUpdateAction.Invoke(EntityStatus.Started);
-                            isSuccess = true;
+                            messageType = ConsoleMessageType.Success;
                         }
                         //TODO CKE handle Players
                         // serverViewModel.RoleInputHandler(line);
@@ -81,7 +89,7 @@ public class ConsoleService : IConsoleService
                         }
                     }*/
 
-                    await WriteLine(entity, line, isSuccess ? ConsoleMessageType.Success : ConsoleMessageType.Default);
+                    await WriteLine(entity, line, messageType);
                 }
             }
         }
