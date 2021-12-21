@@ -26,6 +26,7 @@ public class AuthenticationService : IAuthenticationService
         Privileges = _tokenManager.GetPrivilegesForToken(token);
     }
 
+    // TODO CKE ask for entityId if entity right is asked for (maybe rework whole privilege system)
     public bool IsAuthenticated(Type privilegeType) 
     {
         if (Privileges == null)

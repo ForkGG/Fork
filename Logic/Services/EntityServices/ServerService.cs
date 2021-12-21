@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ProjectAvery.Logic.Managers;
+using ProjectAvery.Logic.Notification;
 using ProjectAvery.Logic.Persistence;
 using ProjectAvery.Logic.Services.FileServices;
 using ProjectAvery.Logic.Services.WebServices;
@@ -18,8 +19,11 @@ using ProjectAvery.Util.ExtensionMethods;
 using ProjectAvery.Util.JavaUtils;
 using ProjectAveryCommon.Model.Application.Exceptions;
 using ProjectAveryCommon.Model.Entity.Enums;
+using ProjectAveryCommon.Model.Entity.Enums.Console;
 using ProjectAveryCommon.Model.Entity.Pocos;
 using ProjectAveryCommon.Model.Entity.Pocos.ServerSettings;
+using ProjectAveryCommon.Model.Entity.Transient.Console;
+using ProjectAveryCommon.Model.Notifications.EntityNotifications;
 
 namespace ProjectAvery.Logic.Services.EntityServices;
 
@@ -31,9 +35,10 @@ public class ServerService : IServerService
     private readonly IConsoleService _console;
     private readonly IDownloadService _download;
     private readonly IFileWriterService _fileWriter;
+    private readonly INotificationCenter _notificationCenter;
 
     public ServerService(ILogger<ServerService> logger, ApplicationDbContext context, IApplicationManager application,
-        IConsoleService console, IDownloadService download, IFileWriterService fileWriter)
+        IConsoleService console, IDownloadService download, IFileWriterService fileWriter, INotificationCenter notificationCenter)
     {
         _logger = logger;
         _context = context;
@@ -41,6 +46,7 @@ public class ServerService : IServerService
         _console = console;
         _download = download;
         _fileWriter = fileWriter;
+        _notificationCenter = notificationCenter;
     }
 
 
@@ -93,6 +99,7 @@ public class ServerService : IServerService
             throw new ForkException($"This service can only handle servers. Supplied type was {entity.GetType()}");
         }
 
+        await ChangeEntityStatusAsync(server, EntityStatus.Starting);
         _logger.LogInformation($"Starting server {server.Name} on world {server.VanillaSettings.LevelName}");
 
         // Get server directory
@@ -155,9 +162,16 @@ public class ServerService : IServerService
         process.StartInfo = startInfo;
         process.Start();
         // TODO CKE Task.Run(() => { viewModel.TrackPerformance(process); });
-        server.Status = EntityStatus.Starting;
-        await _console.BindProcessToConsole(server, process.StandardOutput, process.StandardError);
-        server.ConsoleHandler = delegate(string line) { process.StandardInput.WriteLineAsync(line); };
+        await _console.BindProcessToConsole(server, process.StandardOutput, process.StandardError, this);
+        server.ConsoleHandler = delegate(string line)
+        {
+            _notificationCenter.BroadcastNotification(
+                new ConsoleAddNotification
+                {
+                    EntityId = server.Id, NewConsoleMessage = new ConsoleMessage(line, ConsoleMessageType.UserInput)
+                });
+            process.StandardInput.WriteLineAsync(line);
+        };
 
         //TODO CKE add server automation
         //ServerAutomationManager.Instance.UpdateAutomation(viewModel);
@@ -169,7 +183,7 @@ public class ServerService : IServerService
 
             await process.WaitForExitAsync();
             //TODO determine crash and normal stop
-            server.Status = EntityStatus.Stopped;
+            await ChangeEntityStatusAsync(server, EntityStatus.Stopped);
 
             //TODO CKE stop performance tracking here
             // worker.Dispose();
@@ -204,6 +218,13 @@ public class ServerService : IServerService
     {
         // TODO CKE
         throw new System.NotImplementedException();
+    }
+
+    public async Task ChangeEntityStatusAsync(IEntity entity, EntityStatus newStatus)
+    {
+        entity.Status = newStatus;
+        await _notificationCenter.BroadcastNotification(new EntityStatusChangedNotification
+            { EntityId = entity.Id, NewEntityStatus = newStatus });
     }
 
     private string RefineName(string rawName)

@@ -74,7 +74,7 @@ namespace ProjectAvery.Logic.Notification
         public async Task BroadcastNotification(AbstractNotification notification)
         {
             string message = notification.ToJson();
-            _logger.LogDebug($"Sending notification to {_privilegesByConnection.Count} clients: {message}");
+            _logger.LogTrace($"Sending notification to {_privilegesByConnection.Count} clients: {message}");
             int actualMessagesSent = 0; 
             foreach (var privilegeByConnection in _privilegesByConnection)
             {
@@ -91,7 +91,7 @@ namespace ProjectAvery.Logic.Notification
                     }
                 }
             }
-            _logger.LogDebug($"Notification was actually sent to {actualMessagesSent} clients: {message}");
+            _logger.LogTrace($"Notification was actually sent to {actualMessagesSent} clients: {message}");
         }
 
         private LogLevel MapLogLevel(Fleck.LogLevel logLevel)

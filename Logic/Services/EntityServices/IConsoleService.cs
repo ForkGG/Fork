@@ -13,5 +13,5 @@ public interface IConsoleService
     public Task WriteSuccess(IEntity entity, string message);
 
 
-    public Task BindProcessToConsole(IEntity entity, StreamReader stdOut, StreamReader errOut);
+    public Task BindProcessToConsole(IEntity entity, StreamReader stdOut, StreamReader errOut, IEntityService entityService);
 }

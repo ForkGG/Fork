@@ -42,7 +42,7 @@ public class ConsoleService : IConsoleService
         await WriteLine(entity, message, ConsoleMessageType.Success);
     }
 
-    public async Task BindProcessToConsole(IEntity entity, StreamReader stdOut, StreamReader errOut)
+    public async Task BindProcessToConsole(IEntity entity, StreamReader stdOut, StreamReader errOut, IEntityService entityService)
     {
         async void HandleStdOut()
         {
@@ -62,7 +62,7 @@ public class ConsoleService : IConsoleService
                     {
                         if (line.Contains("For help, type \"help\""))
                         {
-                            server.Status = EntityStatus.Started;
+                            await entityService.ChangeEntityStatusAsync(entity, EntityStatus.Started);
                             isSuccess = true;
                         }
                         //TODO CKE handle Players
@@ -95,7 +95,7 @@ public class ConsoleService : IConsoleService
                     // For early minecraft versions
                     if (line.Contains("For help, type \"help\""))
                     {
-                        entity.Status = EntityStatus.Started;
+                        await entityService.ChangeEntityStatusAsync(entity, EntityStatus.Started);
                         isSuccess = true;
                     }
 
