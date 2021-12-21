@@ -1,15 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ProjectAvery.Logic.Managers;
-using ProjectAvery.Logic.Notification;
 using ProjectAvery.Logic.Services.EntityServices;
-using ProjectAveryCommon.Model.Entity.Enums.Console;
 using ProjectAveryCommon.Model.Entity.Transient.Console;
-using ProjectAveryCommon.Model.Notifications.EntityNotifications;
 using ProjectAveryCommon.Model.Payloads.Entity;
 using ProjectAveryCommon.Model.Privileges;
 using ProjectAveryCommon.Model.Privileges.Application;
+using ProjectAveryCommon.Model.Privileges.Entity.ReadEntity.ReadConsoleTab;
 using ProjectAveryCommon.Model.Privileges.Entity.WriteEntity.WriteConsoleTab;
 
 namespace ProjectAvery.Controllers
@@ -21,20 +22,15 @@ namespace ProjectAvery.Controllers
     public class EntityController : AbstractRestController
     {
         private readonly IEntityManager _entityManager;
-        private readonly INotificationCenter _notificationCenter;
         private readonly IEntityService _entityService;
         private readonly IServerService _serverService;
-        private readonly IEntityPostProcessingService _entityPostProcessing;
 
         public EntityController(ILogger<EntityController> logger, IEntityManager entityManager,
-            INotificationCenter notificationCenter, IEntityService entityService, IServerService serverService,
-            IEntityPostProcessingService entityPostProcessing) : base(logger)
+            IEntityService entityService, IServerService serverService) : base(logger)
         {
-            _notificationCenter = notificationCenter;
             _entityManager = entityManager;
             _entityService = entityService;
             _serverService = serverService;
-            _entityPostProcessing = entityPostProcessing;
         }
 
         [HttpPost("createServer")]
@@ -57,9 +53,35 @@ namespace ProjectAvery.Controllers
                 return BadRequest();
             }
 
-            await _entityPostProcessing.PostProcessEntity(entity);
-
             await _entityService.StartEntityAsync(entity);
+            return Ok();
+        }
+
+        [HttpPost("{entityId}/stop")]
+        [Privileges(typeof(WriteConsoleTabPrivilege))]
+        public async Task<StatusCodeResult> StopEntity([FromRoute] ulong entityId)
+        {
+            var entity = _entityManager.EntityById(entityId);
+            if (entity == null)
+            {
+                return BadRequest();
+            }
+
+            await _entityService.StopEntityAsync(entity);
+            return Ok();
+        }
+
+        [HttpPost("{entityId}/restart")]
+        [Privileges(typeof(WriteConsoleTabPrivilege))]
+        public async Task<StatusCodeResult> RestartEntity([FromRoute] ulong entityId)
+        {
+            var entity = _entityManager.EntityById(entityId);
+            if (entity == null)
+            {
+                return BadRequest();
+            }
+
+            await _entityService.RestartEntityAsync(entity);
             return Ok();
         }
 
@@ -74,22 +96,31 @@ namespace ProjectAvery.Controllers
             }
 
             var entity = _entityManager.EntityById(entityId);
+            if (entity == null)
+            {
+                return BadRequest();
+            }
 
             if (entity.ConsoleHandler != null)
             {
                 entity.ConsoleHandler.Invoke(message);
                 return Ok();
             }
-            else
+            return StatusCode(400);
+        }
+
+        [HttpGet("{entityId}/console")]
+        [Privileges(typeof(ReadConsoleConsoleTabPrivilege))]
+        public async Task<List<ConsoleMessage>> Console([FromRoute] ulong entityId)
+        {
+            var entity = _entityManager.EntityById(entityId);
+            if (entity == null)
             {
-                return StatusCode(400);
+                return new List<ConsoleMessage>();
             }
 
-            ConsoleAddNotification notification = new ConsoleAddNotification();
-            notification.NewConsoleMessage = new ConsoleMessage(message, ConsoleMessageType.UserInput);
-            notification.EntityId = entityId;
-            await _notificationCenter.BroadcastNotification(notification);
-            return Ok();
+            int amountOfMessages = Math.Min(entity.ConsoleMessages.Count, 1000);
+            return entity.ConsoleMessages.GetRange(entity.ConsoleMessages.Count - amountOfMessages, amountOfMessages);
         }
     }
 }

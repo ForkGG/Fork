@@ -89,24 +89,22 @@ public class ServerService : IServerService
         return server.Id;
     }
 
-    //TODO CKE add a lock to the server so it is locked while starting etc.
-    public async Task StartEntityAsync(IEntity entity)
+    public async Task StartServerAsync(Server server)
     {
-        if (entity is not Server server)
+        if (server.Status != EntityStatus.Stopped)
         {
-            await _console.WriteError(entity,
-                $"Oops something went wrong while starting this server. More about the issue is in the logs");
-            throw new ForkException($"This service can only handle servers. Supplied type was {entity.GetType()}");
+            await _console.WriteError(server, "Can't start server that was not properly stopped");
+            throw new ForkException("Only stopped servers can be started");
         }
-
-        await ChangeEntityStatusAsync(server, EntityStatus.Starting);
+        await ChangeServerStatusAsync(server, EntityStatus.Starting);
         _logger.LogInformation($"Starting server {server.Name} on world {server.VanillaSettings.LevelName}");
 
         // Get server directory
         DirectoryInfo serverDirectory = new DirectoryInfo(server.GetPath(_application));
         if (!serverDirectory.Exists)
         {
-            await _console.WriteError(entity,
+            await ChangeServerStatusAsync(server, EntityStatus.Stopped);
+            await _console.WriteError(server,
                 $"This server has no directory for some reason. The path that was searched was:\n{server.GetPath(_application)}");
             throw new ForkException($"Supplied server \"{server.Name}\" has no directory!");
         }
@@ -114,7 +112,8 @@ public class ServerService : IServerService
         JavaVersion javaVersion = JavaVersionUtils.GetInstalledJavaVersion(server.JavaSettings.JavaPath);
         if (javaVersion == null)
         {
-            await _console.WriteError(entity,
+            await ChangeServerStatusAsync(server, EntityStatus.Stopped);
+            await _console.WriteError(server,
                 $"No valid Java installation was found for the configured java path:\n{server.JavaSettings.JavaPath}");
             throw new ForkException(
                 $"No valid Java installation was found for the configured java path:\n{server.JavaSettings.JavaPath}");
@@ -122,7 +121,7 @@ public class ServerService : IServerService
 
         if (!javaVersion.Is64Bit)
         {
-            await _console.WriteWarning(entity,
+            await _console.WriteWarning(server,
                 "The Java installation selected for this server is a 32-bit version, which can cause errors and limits the RAM usage to 2GB");
         }
 
@@ -130,13 +129,14 @@ public class ServerService : IServerService
         {
             if (new ServerVersion { Version = "1.17" }.CompareTo(server.Version) <= 0)
             {
-                await _console.WriteError(entity,
+                await ChangeServerStatusAsync(server, EntityStatus.Stopped);
+                await _console.WriteError(server,
                     "The Java installation selected for this server is outdated. Please update Java to version 16 or higher.");
                 throw new ForkException(
                     "The Java installation selected for this server is outdated. Please update Java to version 16 or higher.");
             }
 
-            await _console.WriteWarning(entity,
+            await _console.WriteWarning(server,
                 "WARN: The Java installation selected for this server is outdated. Please update Java to version 16 or higher.");
         }
 
@@ -162,7 +162,8 @@ public class ServerService : IServerService
         process.StartInfo = startInfo;
         process.Start();
         // TODO CKE Task.Run(() => { viewModel.TrackPerformance(process); });
-        await _console.BindProcessToConsole(server, process.StandardOutput, process.StandardError, this);
+        await _console.BindProcessToConsole(server, process.StandardOutput, process.StandardError,
+            status => _ = ChangeServerStatusAsync(server, status));
         server.ConsoleHandler = delegate(string line)
         {
             _console.WriteLine(server, line, ConsoleMessageType.UserInput);
@@ -179,7 +180,7 @@ public class ServerService : IServerService
 
             await process.WaitForExitAsync();
             //TODO determine crash and normal stop
-            await ChangeEntityStatusAsync(server, EntityStatus.Stopped);
+            await ChangeServerStatusAsync(server, EntityStatus.Stopped);
 
             //TODO CKE stop performance tracking here
             // worker.Dispose();
@@ -204,23 +205,62 @@ public class ServerService : IServerService
         });
     }
 
-    public Task StopEntityAsync(IEntity entity)
+    public async Task StopServerAsync(Server server)
     {
-        // TODO CKE
-        throw new System.NotImplementedException();
+        if (server.Status != EntityStatus.Started)
+        {
+            await _console.WriteError(server, "Can't stop server that was not properly started yet");
+            throw new ForkException("Only started servers can be stopped");
+        }
+        
+        if (server.ConsoleHandler == null)
+        {
+            throw new ForkException("Can't stop server with no active input handler");
+        }
+
+        await ChangeServerStatusAsync(server, EntityStatus.Stopping);
+        server.ConsoleHandler.Invoke("/stop");
+
+        /*
+         TODO CKE add playerlist
+         foreach (ServerPlayer serverPlayer in serverViewModel.PlayerList)
+        {
+            serverPlayer.IsOnline = false;
+        }
+
+        serverViewModel.RefreshPlayerList();
+        */
     }
 
-    public Task RestartEntityAsync(IEntity entity)
+    public async Task RestartServerAsync(Server server)
     {
-        // TODO CKE
-        throw new System.NotImplementedException();
+        await StopServerAsync(server);
+        while (server.Status != EntityStatus.Stopped)
+        {
+            await Task.Delay(250);
+        }
+
+        try
+        {
+            await StartServerAsync(server);
+        }
+        catch (Exception e)
+        {
+            _logger.LogDebug($"Failed to start server.\n{e.Message}\nAborting...");
+            // Make sure status is stopped after starting fails
+            if (server.Status != EntityStatus.Stopped)
+            {
+                await ChangeServerStatusAsync(server, EntityStatus.Stopped);
+            }
+            throw;
+        }
     }
 
-    public async Task ChangeEntityStatusAsync(IEntity entity, EntityStatus newStatus)
+    public async Task ChangeServerStatusAsync(Server server, EntityStatus newStatus)
     {
-        entity.Status = newStatus;
+        server.Status = newStatus;
         await _notificationCenter.BroadcastNotification(new EntityStatusChangedNotification
-            { EntityId = entity.Id, NewEntityStatus = newStatus });
+            { EntityId = server.Id, NewEntityStatus = newStatus });
     }
 
     private string RefineName(string rawName)

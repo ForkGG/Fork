@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using ProjectAvery.Logic.Notification;
@@ -42,7 +43,8 @@ public class ConsoleService : IConsoleService
         await WriteLine(entity, message, ConsoleMessageType.Success);
     }
 
-    public async Task BindProcessToConsole(IEntity entity, StreamReader stdOut, StreamReader errOut, IEntityService entityService)
+    public async Task BindProcessToConsole(IEntity entity, StreamReader stdOut, StreamReader errOut,
+        Action<EntityStatus> entityStatusUpdateAction)
     {
         async void HandleStdOut()
         {
@@ -62,7 +64,7 @@ public class ConsoleService : IConsoleService
                     {
                         if (line.Contains("For help, type \"help\""))
                         {
-                            await entityService.ChangeEntityStatusAsync(entity, EntityStatus.Started);
+                            entityStatusUpdateAction.Invoke(EntityStatus.Started);
                             isSuccess = true;
                         }
                         //TODO CKE handle Players
@@ -95,7 +97,7 @@ public class ConsoleService : IConsoleService
                     // For early minecraft versions
                     if (line.Contains("For help, type \"help\""))
                     {
-                        await entityService.ChangeEntityStatusAsync(entity, EntityStatus.Started);
+                        entityStatusUpdateAction.Invoke(EntityStatus.Started);
                         isSuccess = true;
                     }
 

@@ -86,7 +86,14 @@ namespace ProjectAvery.Logic.Notification
                             a is not PrivilegesAttribute || a is PrivilegesAttribute p &&
                             privilegeByConnection.Value.Any(ip => ip is AdminPrivilege || ip.GetType().IsAssignableFrom(p.Privilege) || p.Privilege == ip.GetType())))
                     {
-                        await privilegeByConnection.Key.Send(message);
+                        try
+                        {
+                            await privilegeByConnection.Key.Send(message);
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogError(e, "Error while sending notification");
+                        }
                         actualMessagesSent++;
                     }
                 }

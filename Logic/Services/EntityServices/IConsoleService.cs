@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
+using ProjectAveryCommon.Model.Entity.Enums;
 using ProjectAveryCommon.Model.Entity.Enums.Console;
 using ProjectAveryCommon.Model.Entity.Pocos;
 
@@ -13,5 +15,5 @@ public interface IConsoleService
     public Task WriteSuccess(IEntity entity, string message);
 
 
-    public Task BindProcessToConsole(IEntity entity, StreamReader stdOut, StreamReader errOut, IEntityService entityService);
+    public Task BindProcessToConsole(IEntity entity, StreamReader stdOut, StreamReader errOut, Action<EntityStatus> entityStatusUpdateAction);
 }
