@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
+using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ProjectAvery.Logic.Persistence;
 using ProjectAveryCommon.Model.Application;
+using ProjectAveryCommon.Model.Entity.Pocos.Player;
 
 namespace ProjectAvery.Logic.Managers;
 
@@ -16,7 +18,7 @@ public class ApplicationManager : IApplicationManager
     private readonly IConfiguration _configuration;
 
     public ApplicationManager(ILogger<ApplicationManager> logger, IServiceScopeFactory scopeFactory,
-        IConfiguration configuration)
+        IConfiguration configuration, IObjectCache objectCache)
     {
         _logger = logger;
         _scopeFactory = scopeFactory;
@@ -38,6 +40,14 @@ public class ApplicationManager : IApplicationManager
 #pragma warning disable CS4014
                 dbContext.WriteAppSettings(AppSettings);
 #pragma warning restore CS4014
+            }
+
+            {
+                objectCache.PlayersByUid = new Dictionary<string, Player>();
+                foreach (var player in dbContext.PlayerSet.Where(p => p.IsOfflinePlayer == false))
+                {
+                    objectCache.PlayersByUid.Add(player.Uid, player);
+                }
             }
         }
 

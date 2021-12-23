@@ -19,7 +19,7 @@ public class ApplicationStateService : IApplicationStateService
     public async Task<State> BuildAppState()
     {
         State result = new State();
-        result.Entities = _entityManager.ListAllEntities();
+        result.Entities = await _entityManager.ListAllEntities();
         return result;
     }
 }

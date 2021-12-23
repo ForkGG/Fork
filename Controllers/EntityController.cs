@@ -47,7 +47,7 @@ namespace ProjectAvery.Controllers
         [Privileges(typeof(WriteConsoleTabPrivilege))]
         public async Task<StatusCodeResult> StartEntity([FromRoute] ulong entityId)
         {
-            var entity = _entityManager.EntityById(entityId);
+            var entity = await _entityManager.EntityById(entityId);
             if (entity == null)
             {
                 return BadRequest();
@@ -61,7 +61,7 @@ namespace ProjectAvery.Controllers
         [Privileges(typeof(WriteConsoleTabPrivilege))]
         public async Task<StatusCodeResult> StopEntity([FromRoute] ulong entityId)
         {
-            var entity = _entityManager.EntityById(entityId);
+            var entity = await _entityManager.EntityById(entityId);
             if (entity == null)
             {
                 return BadRequest();
@@ -75,7 +75,7 @@ namespace ProjectAvery.Controllers
         [Privileges(typeof(WriteConsoleTabPrivilege))]
         public async Task<StatusCodeResult> RestartEntity([FromRoute] ulong entityId)
         {
-            var entity = _entityManager.EntityById(entityId);
+            var entity = await _entityManager.EntityById(entityId);
             if (entity == null)
             {
                 return BadRequest();
@@ -95,7 +95,7 @@ namespace ProjectAvery.Controllers
                 return BadRequest();
             }
 
-            var entity = _entityManager.EntityById(entityId);
+            var entity = await _entityManager.EntityById(entityId);
             if (entity == null)
             {
                 return BadRequest();
@@ -113,7 +113,7 @@ namespace ProjectAvery.Controllers
         [Privileges(typeof(ReadConsoleConsoleTabPrivilege))]
         public async Task<List<ConsoleMessage>> Console([FromRoute] ulong entityId)
         {
-            var entity = _entityManager.EntityById(entityId);
+            var entity = await _entityManager.EntityById(entityId);
             if (entity == null)
             {
                 return new List<ConsoleMessage>();

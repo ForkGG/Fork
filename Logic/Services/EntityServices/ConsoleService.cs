@@ -14,14 +14,17 @@ namespace ProjectAvery.Logic.Services.EntityServices;
 
 public class ConsoleService : IConsoleService
 {
+    private const string WATERFALL_STARTED_REGEX = @"\[([0-9]+:?)* INFO\]: Listening on /.*$";
     private const string WARN_REGEX = @"^\[(?:[0-9]{1,2}:){2}[0-9]{1,2}\] \[.*\/WARN\]:.*";
     private const string WERROR_REGEX = @"^\[(?:[0-9]{1,2}:){2}[0-9]{1,2}\] \[.*\/ERROR\]:.*";
-    
-    private readonly INotificationCenter _notificationCenter;
 
-    public ConsoleService(INotificationCenter notificationCenter)
+    private readonly INotificationCenter _notificationCenter;
+    private readonly IConsoleInterpreter _consoleInterpreter;
+
+    public ConsoleService(INotificationCenter notificationCenter, IConsoleInterpreter consoleInterpreter)
     {
         _notificationCenter = notificationCenter;
+        _consoleInterpreter = consoleInterpreter;
     }
 
     public async Task WriteLine(IEntity entity, string message, ConsoleMessageType type = ConsoleMessageType.Default)
@@ -67,27 +70,13 @@ public class ConsoleService : IConsoleService
                         messageType = ConsoleMessageType.Warning;
                     if (Regex.IsMatch(line, WERROR_REGEX))
                         messageType = ConsoleMessageType.Error;
-                    
-                    if (entity is Server server)
-                    {
-                        if (line.Contains("For help, type \"help\""))
-                        {
-                            entityStatusUpdateAction.Invoke(EntityStatus.Started);
-                            messageType = ConsoleMessageType.Success;
-                        }
-                        //TODO CKE handle Players
-                        // serverViewModel.RoleInputHandler(line);
-                    }
 
-                    // TODO CKE once we got networks
-                    /* if (entity is Network network)
+                    if (line.Contains("For help, type \"help\"") || Regex.IsMatch(line, WATERFALL_STARTED_REGEX))
                     {
-                        if (waterfallStarted.Match(line).Success)
-                        {
-                            networkViewModel.CurrentStatus = ServerStatus.RUNNING;
-                            isSuccess = true;
-                        }
-                    }*/
+                        entityStatusUpdateAction.Invoke(EntityStatus.Started);
+                        messageType = ConsoleMessageType.Success;
+                    }
+                    await _consoleInterpreter.InterpretLine(entity, line);
 
                     await WriteLine(entity, line, messageType);
                 }
@@ -108,12 +97,7 @@ public class ConsoleService : IConsoleService
                         entityStatusUpdateAction.Invoke(EntityStatus.Started);
                         isSuccess = true;
                     }
-
-                    if (entity is Server server)
-                    {
-                        //TODO CKE handle Players
-                        //serverViewModel.RoleInputHandler(line);
-                    }
+                    await _consoleInterpreter.InterpretLine(entity, line);
 
                     await WriteLine(entity, line, isSuccess ? ConsoleMessageType.Success : ConsoleMessageType.Error);
                 }

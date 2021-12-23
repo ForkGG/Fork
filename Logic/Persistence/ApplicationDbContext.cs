@@ -12,6 +12,7 @@ using ProjectAveryCommon.Model.Application;
 using ProjectAveryCommon.Model.Entity.Enums;
 using ProjectAveryCommon.Model.Entity.Pocos;
 using ProjectAveryCommon.Model.Entity.Pocos.Automation;
+using ProjectAveryCommon.Model.Entity.Pocos.Player;
 using ProjectAveryCommon.Model.Entity.Pocos.ServerSettings;
 
 namespace ProjectAvery.Logic.Persistence
@@ -22,6 +23,7 @@ namespace ProjectAvery.Logic.Persistence
         private readonly IFileReaderService _fileReader;
 
         public DbSet<Server> ServerSet { get; set; }
+        public DbSet<Player> PlayerSet { get; set; }
         public DbSet<SettingsKeyValue> AppSettingsSet { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ILogger<ApplicationDbContext> logger, IFileReaderService fileReader) : base(options)

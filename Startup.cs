@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using ProjectAvery.Logic;
 using ProjectAvery.Logic.Managers;
 using ProjectAvery.Logic.Notification;
 using ProjectAvery.Logic.Persistence;
@@ -76,6 +77,7 @@ namespace ProjectAvery
             services.AddSingleton<INotificationCenter, DefaultNotificationCenter>();
             services.AddSingleton<ITokenManager, TokenManager>();
             services.AddSingleton<IEntityManager, EntityManager>();
+            services.AddSingleton<IObjectCache, ObjectCache>();
 
             // Scoped
             services.AddScoped<IAuthenticationService, AuthenticationService>();
@@ -89,6 +91,10 @@ namespace ProjectAvery
             services.AddTransient<IFileReaderService, FileReaderService>();
             services.AddTransient<IEntityPostProcessingService, EntityPostProcessingService>();
             services.AddTransient<IApplicationStateService, ApplicationStateService>();
+            services.AddTransient<IPlayerService, PlayerService>();
+            services.AddTransient<IConsoleInterpreter, ConsoleInterpreter>(); 
+            // Transient adapters
+            services.AddTransient<IMojangApiAdapter, MojangApiAdapter>();
             
             services.AddSwaggerGen(c =>
             {
