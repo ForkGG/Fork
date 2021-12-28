@@ -17,11 +17,11 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Adapters" />
       <Folder Include="Migrations" />
     </ItemGroup>
 
@@ -29,4 +29,10 @@
       <ProjectReference Include="..\ProjectAveryCommon\ProjectAveryCommon.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Resources\DefaultHead.png" />
+      <Content Include="Resources\DefaultHead.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
 </Project>

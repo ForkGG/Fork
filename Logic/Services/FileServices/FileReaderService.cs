@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ProjectAveryCommon.Model.Entity.Pocos.ServerSettings;
 
 namespace ProjectAvery.Logic.Services.FileServices;
@@ -162,13 +164,15 @@ public class FileReaderService : IFileReaderService
             }
         }
 
-        dynamic players = JsonConvert.DeserializeObject(json);
-        List<string> names = new List<string>();
-        if (players is List<dynamic> playerList)
+        dynamic deserialized = JsonConvert.DeserializeObject(json);
+        List<string> uuids = new List<string>();
+        if (deserialized is JArray deserializedArray)
         {
-            names.AddRange(playerList.Select(player => player.uuid).Cast<string>());
+            dynamic[] players = deserializedArray.ToObject<dynamic[]>();
+            uuids.AddRange(players?.Select(player => player.uuid.Value as string) ?? Array.Empty<string>());
         }
+        
 
-        return names;
+        return uuids;
     }
 }

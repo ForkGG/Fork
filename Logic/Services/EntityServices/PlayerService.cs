@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using ProjectAvery.Adapters.Mojang;
 using ProjectAvery.Logic.Managers;
 using ProjectAvery.Logic.Persistence;
 using ProjectAvery.Logic.Services.WebServices;
@@ -71,13 +72,17 @@ public class PlayerService : IPlayerService
                 {
                     Name = playerProfile.Name, 
                     Uid = playerProfile.Id, 
-                    Head = "TODO", 
+                    Head = await _mojangApi.Base64HeadFromTextureProperty(playerProfile.Properties.Where(p => p.Name == "textures").Select(p => p.Value).FirstOrDefault()), 
                     LastUpdated = DateTime.Now,
                     IsOfflinePlayer = false
                 };
                 if (PlayersByUid.ContainsKey(uid))
                 {
-                    PlayersByUid[uid] = result;
+                    // TODO CKE Add these changes to the DB!!
+                    PlayersByUid[uid].Head = result.Head;
+                    PlayersByUid[uid].Name = result.Name;
+                    PlayersByUid[uid].IsOfflinePlayer = false;
+                    PlayersByUid[uid].LastUpdated = DateTime.Now;
                 }
                 else
                 {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,8 +19,8 @@ namespace ProjectAvery.Logic.Managers;
 
 public class EntityManager : IEntityManager
 {
-    private static object _lockObj = new ();
-    
+    private static readonly SemaphoreSlim _semaphore = new(1);
+
     private readonly ILogger<EntityManager> _logger;
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IEntityPostProcessingService _postProcessing;
@@ -27,7 +28,8 @@ public class EntityManager : IEntityManager
     // This contains all loaded entities (Database cache and state keeping)
     private readonly Dictionary<ulong, IEntity> _entities;
 
-    public EntityManager(ILogger<EntityManager> logger, IServiceScopeFactory scopeFactory, IEntityPostProcessingService postProcessing)
+    public EntityManager(ILogger<EntityManager> logger, IServiceScopeFactory scopeFactory,
+        IEntityPostProcessingService postProcessing)
     {
         _logger = logger;
         _scopeFactory = scopeFactory;
@@ -40,49 +42,49 @@ public class EntityManager : IEntityManager
     /// </summary>
     public async Task<IEntity> EntityById(ulong entityId)
     {
-        IEntity result;
-        ApplicationDbContext context;
         using var scope = _scopeFactory.CreateScope();
 
         // We need a lock here to ensure that we don't get multiple instances of the same entity
-        lock (_lockObj)
+        await _semaphore.WaitAsync();
+        if (_entities.ContainsKey(entityId))
         {
-            if (_entities.ContainsKey(entityId))
-            {
-                return _entities[entityId];
-            }
+            _semaphore.Release();
+            return _entities[entityId];
+        }
 
-            // TODO extend once we got networks
-            context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            result = context.ServerSet.Where(s => s.Id == entityId)
-                .Include(s => s.AutomationTimes)
-                .ThenInclude(a => a.Time)
-                .Include(s => s.JavaSettings)
-                .Include(s => s.Version)
-                .FirstOrDefault();
-            
-            if (result != null)
-            {
-                _entities.Add(entityId, result);
-                
-            }
+        // TODO extend once we got networks
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        IEntity result = await context.ServerSet.Where(s => s.Id == entityId)
+            .Include(s => s.AutomationTimes)
+            .ThenInclude(a => a.Time)
+            .Include(s => s.JavaSettings)
+            .Include(s => s.Version)
+            .Include(s => s.ServerPlayers)
+            .ThenInclude(s => s.Player)
+            .FirstOrDefaultAsync();
+
+        if (result != null)
+        {
+            _entities.Add(entityId, result);
         }
 
         // Post processing can be done without the lock
         await _postProcessing.PostProcessEntity(result);
         await context.SaveChangesAsync();
+        _semaphore.Release();
         return result;
     }
 
     public async Task<List<IEntity>> ListAllEntities()
     {
         List<IEntity> result = new List<IEntity>();
-        
+
         using var scope = _scopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         foreach (ulong serverId in context.ServerSet.Select(s => s.Id))
         {
-            result.Add(await EntityById(serverId));
+            var entity = await EntityById(serverId);
+            result.Add(entity);
         }
 
         return result;
@@ -111,7 +113,7 @@ public class EntityManager : IEntityManager
         await context.SaveChangesAsync();
 
         // Send notification
-        var notification = new UpdatePlayerNotification{EntityId = server.Id, ServerPlayer = player};
+        var notification = new UpdatePlayerNotification { EntityId = server.Id, ServerPlayer = player };
         var notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
         await notificationCenter.BroadcastNotification(notification);
     }
@@ -123,7 +125,8 @@ public class EntityManager : IEntityManager
             case PlayerlistUpdateType.Add:
                 if (server.Whitelist.Any(p => p.Uid == player.Uid))
                 {
-                    _logger.LogWarning("Adding player to the whitelist which is already present. Updating old entry...");
+                    _logger.LogWarning(
+                        "Adding player to the whitelist which is already present. Updating old entry...");
                     updateType = PlayerlistUpdateType.Update;
                     UpdatePlayerOnList(player, server.Whitelist);
                 }
@@ -131,6 +134,7 @@ public class EntityManager : IEntityManager
                 {
                     server.Whitelist.Add(player);
                 }
+
                 break;
             case PlayerlistUpdateType.Update:
                 var existingPlayer = server.Whitelist.FirstOrDefault(p => p.Uid == player.Uid);
@@ -144,6 +148,7 @@ public class EntityManager : IEntityManager
                 {
                     UpdatePlayerOnList(player, server.Whitelist);
                 }
+
                 break;
             case PlayerlistUpdateType.Remove:
                 server.Whitelist.RemoveAll(p => p.Uid == player.Uid);
@@ -151,7 +156,8 @@ public class EntityManager : IEntityManager
             default: throw new ArgumentException($"Unknown update type {updateType}");
         }
 
-        var notification = new UpdateWhitelistPlayerNotification { EntityId = server.Id, Player = player, UpdateType = updateType};
+        var notification = new UpdateWhitelistPlayerNotification
+            { EntityId = server.Id, Player = player, UpdateType = updateType };
         using var scope = _scopeFactory.CreateScope();
         var notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
         await notificationCenter.BroadcastNotification(notification);

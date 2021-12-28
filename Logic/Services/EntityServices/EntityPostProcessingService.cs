@@ -100,7 +100,7 @@ public class EntityPostProcessingService : IEntityPostProcessingService
             var opListUids = await _fileReader.ReadOpListJson(serverPath);
             foreach (string opUid in opListUids)
             {
-                var serverPlayer = server.ServerPlayers.FirstOrDefault(p => p.Player.Uid == opUid);
+                var serverPlayer = server.ServerPlayers.FirstOrDefault(p => p.Player.Uid == opUid.Replace("-",""));
                 if (serverPlayer != null)
                 {
                     serverPlayer.IsOp = true;

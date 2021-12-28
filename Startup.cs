@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using ProjectAvery.Adapters.Mojang;
 using ProjectAvery.Logic;
 using ProjectAvery.Logic.Managers;
 using ProjectAvery.Logic.Notification;
