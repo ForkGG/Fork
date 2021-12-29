@@ -96,7 +96,7 @@ namespace ProjectAvery
             services.AddTransient<IConsoleInterpreter, ConsoleInterpreter>(); 
             // Transient adapters
             services.AddTransient<IMojangApiAdapter, MojangApiAdapter>();
-            
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "ProjectAvery", Version = "v1"});
@@ -108,6 +108,7 @@ namespace ProjectAvery
                     Type = SecuritySchemeType.ApiKey
                 });
             });
+            services.AddSwaggerGenNewtonsoftSupport();
             services.Configure<RouteOptions>(o => o.LowercaseUrls = true);
         }
 
