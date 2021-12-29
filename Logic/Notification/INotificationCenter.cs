@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using ProjectAveryCommon.Model.Notifications;
+using ForkCommon.Model.Notifications;
 
-namespace ProjectAvery.Logic.Notification
+namespace Fork.Logic.Notification
 {
     public interface INotificationCenter
     {

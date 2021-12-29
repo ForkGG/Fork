@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace ProjectAvery.Util.ExtensionMethods;
+namespace Fork.Util.ExtensionMethods;
 
 public static class ApplicationBuilderExtensions
 {

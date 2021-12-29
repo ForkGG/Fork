@@ -3,14 +3,14 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using ProjectAvery.Logic.Notification;
-using ProjectAveryCommon.Model.Entity.Enums;
-using ProjectAveryCommon.Model.Entity.Enums.Console;
-using ProjectAveryCommon.Model.Entity.Pocos;
-using ProjectAveryCommon.Model.Entity.Transient.Console;
-using ProjectAveryCommon.Model.Notifications.EntityNotifications;
+using Fork.Logic.Notification;
+using ForkCommon.Model.Entity.Enums;
+using ForkCommon.Model.Entity.Enums.Console;
+using ForkCommon.Model.Entity.Pocos;
+using ForkCommon.Model.Entity.Transient.Console;
+using ForkCommon.Model.Notifications.EntityNotifications;
 
-namespace ProjectAvery.Logic.Services.EntityServices;
+namespace Fork.Logic.Services.EntityServices;
 
 public class ConsoleService : IConsoleService
 {

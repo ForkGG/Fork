@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Managers;
-using ProjectAveryCommon.Model.Privileges;
+using Fork.Logic.Managers;
+using ForkCommon.Model.Privileges;
 
-namespace ProjectAvery.Logic.Services.AuthenticationServices;
+namespace Fork.Logic.Services.AuthenticationServices;
 
 public class AuthenticationService : IAuthenticationService
 {

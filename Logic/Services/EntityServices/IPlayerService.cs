@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ProjectAveryCommon.Model.Entity.Pocos.Player;
+using ForkCommon.Model.Entity.Pocos.Player;
 
-namespace ProjectAvery.Logic.Services.EntityServices;
+namespace Fork.Logic.Services.EntityServices;
 
 /// <summary>
 /// Service to get player information from the Mojang servers

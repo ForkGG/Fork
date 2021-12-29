@@ -4,16 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Managers;
-using ProjectAvery.Logic.Services.EntityServices;
-using ProjectAveryCommon.Model.Entity.Transient.Console;
-using ProjectAveryCommon.Model.Payloads.Entity;
-using ProjectAveryCommon.Model.Privileges;
-using ProjectAveryCommon.Model.Privileges.Application;
-using ProjectAveryCommon.Model.Privileges.Entity.ReadEntity.ReadConsoleTab;
-using ProjectAveryCommon.Model.Privileges.Entity.WriteEntity.WriteConsoleTab;
+using Fork.Logic.Managers;
+using Fork.Logic.Services.EntityServices;
+using ForkCommon.Model.Entity.Transient.Console;
+using ForkCommon.Model.Payloads.Entity;
+using ForkCommon.Model.Privileges;
+using ForkCommon.Model.Privileges.Application;
+using ForkCommon.Model.Privileges.Entity.ReadEntity.ReadConsoleTab;
+using ForkCommon.Model.Privileges.Entity.WriteEntity.WriteConsoleTab;
 
-namespace ProjectAvery.Controllers
+namespace Fork.Controllers
 {
     /// <summary>
     /// Controller for requests that affect a single entity

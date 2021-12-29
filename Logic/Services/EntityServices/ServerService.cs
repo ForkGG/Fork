@@ -10,22 +10,22 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Managers;
-using ProjectAvery.Logic.Notification;
-using ProjectAvery.Logic.Persistence;
-using ProjectAvery.Logic.Services.FileServices;
-using ProjectAvery.Logic.Services.WebServices;
-using ProjectAvery.Util.ExtensionMethods;
-using ProjectAvery.Util.JavaUtils;
-using ProjectAveryCommon.Model.Application.Exceptions;
-using ProjectAveryCommon.Model.Entity.Enums;
-using ProjectAveryCommon.Model.Entity.Enums.Console;
-using ProjectAveryCommon.Model.Entity.Pocos;
-using ProjectAveryCommon.Model.Entity.Pocos.ServerSettings;
-using ProjectAveryCommon.Model.Entity.Transient.Console;
-using ProjectAveryCommon.Model.Notifications.EntityNotifications;
+using Fork.Logic.Managers;
+using Fork.Logic.Notification;
+using Fork.Logic.Persistence;
+using Fork.Logic.Services.FileServices;
+using Fork.Logic.Services.WebServices;
+using Fork.Util.ExtensionMethods;
+using Fork.Util.JavaUtils;
+using ForkCommon.Model.Application.Exceptions;
+using ForkCommon.Model.Entity.Enums;
+using ForkCommon.Model.Entity.Enums.Console;
+using ForkCommon.Model.Entity.Pocos;
+using ForkCommon.Model.Entity.Pocos.ServerSettings;
+using ForkCommon.Model.Entity.Transient.Console;
+using ForkCommon.Model.Notifications.EntityNotifications;
 
-namespace ProjectAvery.Logic.Services.EntityServices;
+namespace Fork.Logic.Services.EntityServices;
 
 public class ServerService : IServerService
 {

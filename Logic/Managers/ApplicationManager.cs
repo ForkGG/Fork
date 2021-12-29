@@ -5,11 +5,11 @@ using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Persistence;
-using ProjectAveryCommon.Model.Application;
-using ProjectAveryCommon.Model.Entity.Pocos.Player;
+using Fork.Logic.Persistence;
+using ForkCommon.Model.Application;
+using ForkCommon.Model.Entity.Pocos.Player;
 
-namespace ProjectAvery.Logic.Managers;
+namespace Fork.Logic.Managers;
 
 public class ApplicationManager : IApplicationManager
 {

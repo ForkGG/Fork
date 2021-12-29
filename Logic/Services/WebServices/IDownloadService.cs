@@ -2,9 +2,9 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using ProjectAveryCommon.Model.Entity.Pocos;
+using ForkCommon.Model.Entity.Pocos;
 
-namespace ProjectAvery.Logic.Services.WebServices;
+namespace Fork.Logic.Services.WebServices;
 
 public interface IDownloadService
 {

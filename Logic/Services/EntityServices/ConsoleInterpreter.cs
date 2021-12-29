@@ -2,12 +2,12 @@
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Managers;
-using ProjectAveryCommon.Model.Entity.Enums.Player;
-using ProjectAveryCommon.Model.Entity.Pocos;
-using ProjectAveryCommon.Model.Entity.Pocos.Player;
+using Fork.Logic.Managers;
+using ForkCommon.Model.Entity.Enums.Player;
+using ForkCommon.Model.Entity.Pocos;
+using ForkCommon.Model.Entity.Pocos.Player;
 
-namespace ProjectAvery.Logic.Services.EntityServices;
+namespace Fork.Logic.Services.EntityServices;
 
 public class ConsoleInterpreter : IConsoleInterpreter
 {

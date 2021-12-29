@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using ProjectAveryCommon.Model.Entity.Pocos.ServerSettings;
+using ForkCommon.Model.Entity.Pocos.ServerSettings;
 
-namespace ProjectAvery.Logic.Services.FileServices;
+namespace Fork.Logic.Services.FileServices;
 
 public class FileReaderService : IFileReaderService
 {

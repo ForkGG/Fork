@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ProjectAvery.Logic.Model.Web.Mojang;
+namespace Fork.Logic.Model.Web.Mojang;
 
 public class PlayerProfile
 {

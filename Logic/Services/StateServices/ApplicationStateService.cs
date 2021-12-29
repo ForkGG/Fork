@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using ProjectAvery.Logic.Managers;
-using ProjectAveryCommon.Model.Application;
+using Fork.Logic.Managers;
+using ForkCommon.Model.Application;
 
-namespace ProjectAvery.Logic.Services.StateServices;
+namespace Fork.Logic.Services.StateServices;
 
 public class ApplicationStateService : IApplicationStateService
 {

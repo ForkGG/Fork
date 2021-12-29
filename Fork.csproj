@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ProjectAveryCommon\ProjectAveryCommon.csproj" />
+      <ProjectReference Include="..\ForkCommon\ForkCommon.csproj" />
     </ItemGroup>
 
     <ItemGroup>

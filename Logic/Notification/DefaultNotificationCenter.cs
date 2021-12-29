@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Fleck;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Managers;
-using ProjectAveryCommon.ExtensionMethods;
-using ProjectAveryCommon.Model.Notifications;
-using ProjectAveryCommon.Model.Privileges;
+using Fork.Logic.Managers;
+using ForkCommon.ExtensionMethods;
+using ForkCommon.Model.Notifications;
+using ForkCommon.Model.Privileges;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
-namespace ProjectAvery.Logic.Notification
+namespace Fork.Logic.Notification
 {
     /// <summary>
     /// <b>Default implementation of the NotificationCenter</b>

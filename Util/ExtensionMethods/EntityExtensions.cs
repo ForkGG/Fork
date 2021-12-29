@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using ProjectAvery.Logic.Managers;
-using ProjectAveryCommon.Model.Entity.Pocos;
+using Fork.Logic.Managers;
+using ForkCommon.Model.Entity.Pocos;
 
-namespace ProjectAvery.Util.ExtensionMethods;
+namespace Fork.Util.ExtensionMethods;
 
 public static class EntityExtensions
 {

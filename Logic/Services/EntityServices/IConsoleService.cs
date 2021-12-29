@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using ProjectAveryCommon.Model.Entity.Enums;
-using ProjectAveryCommon.Model.Entity.Enums.Console;
-using ProjectAveryCommon.Model.Entity.Pocos;
+using ForkCommon.Model.Entity.Enums;
+using ForkCommon.Model.Entity.Enums.Console;
+using ForkCommon.Model.Entity.Pocos;
 
-namespace ProjectAvery.Logic.Services.EntityServices;
+namespace Fork.Logic.Services.EntityServices;
 
 public interface IConsoleService
 {

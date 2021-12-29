@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ProjectAvery.Migrations
+namespace Fork.Migrations
 {
     public partial class PlayerLogic : Migration
     {

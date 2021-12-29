@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ProjectAveryCommon.Model.Entity.Enums.Player;
-using ProjectAveryCommon.Model.Entity.Pocos;
-using ProjectAveryCommon.Model.Entity.Pocos.Player;
+using ForkCommon.Model.Entity.Enums.Player;
+using ForkCommon.Model.Entity.Pocos;
+using ForkCommon.Model.Entity.Pocos.Player;
 
-namespace ProjectAvery.Logic.Managers;
+namespace Fork.Logic.Managers;
 
 public interface IEntityManager
 {

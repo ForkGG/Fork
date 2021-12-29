@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using ProjectAveryCommon.Model.Entity.Enums;
-using ProjectAveryCommon.Model.Entity.Pocos;
-using ProjectAveryCommon.Model.Entity.Pocos.ServerSettings;
+using ForkCommon.Model.Entity.Enums;
+using ForkCommon.Model.Entity.Pocos;
+using ForkCommon.Model.Entity.Pocos.ServerSettings;
 
-namespace ProjectAvery.Logic.Services.EntityServices;
+namespace Fork.Logic.Services.EntityServices;
 
 public interface IServerService
 {

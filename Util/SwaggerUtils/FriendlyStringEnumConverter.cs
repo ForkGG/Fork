@@ -3,9 +3,9 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Utilities;
-using ProjectAveryCommon.ExtensionMethods;
+using ForkCommon.ExtensionMethods;
 
-namespace ProjectAvery.Util.SwaggerUtils;
+namespace Fork.Util.SwaggerUtils;
 
 public class FriendlyStringEnumConverter : StringEnumConverter
 {

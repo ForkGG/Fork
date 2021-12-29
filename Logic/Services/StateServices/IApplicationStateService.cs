@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using ProjectAveryCommon.Model.Application;
+using ForkCommon.Model.Application;
 
-namespace ProjectAvery.Logic.Services.StateServices;
+namespace Fork.Logic.Services.StateServices;
 
 public interface IApplicationStateService
 {

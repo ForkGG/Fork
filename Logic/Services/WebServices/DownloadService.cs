@@ -4,11 +4,11 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Managers;
-using ProjectAveryCommon.ExtensionMethods;
-using ProjectAveryCommon.Model.Entity.Pocos;
+using Fork.Logic.Managers;
+using ForkCommon.ExtensionMethods;
+using ForkCommon.Model.Entity.Pocos;
 
-namespace ProjectAvery.Logic.Services.WebServices;
+namespace Fork.Logic.Services.WebServices;
 
 public class DownloadService : IDownloadService
 {

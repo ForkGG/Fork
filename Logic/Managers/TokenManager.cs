@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using ProjectAveryCommon.ExtensionMethods;
-using ProjectAveryCommon.Model.Privileges;
+using ForkCommon.ExtensionMethods;
+using ForkCommon.Model.Privileges;
 
-namespace ProjectAvery.Logic.Managers;
+namespace Fork.Logic.Managers;
 
 public class TokenManager : ITokenManager
 {

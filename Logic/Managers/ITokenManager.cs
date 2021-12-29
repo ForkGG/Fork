@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using ProjectAveryCommon.Model.Privileges;
+using ForkCommon.Model.Privileges;
 
-namespace ProjectAvery.Logic.Managers;
+namespace Fork.Logic.Managers;
 
 /// <summary>
 /// Central unit for managing tokens and privileges for authentication

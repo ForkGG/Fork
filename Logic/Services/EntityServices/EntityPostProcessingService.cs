@@ -3,14 +3,14 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Managers;
-using ProjectAvery.Logic.Services.FileServices;
-using ProjectAveryCommon.Model.Entity.Enums;
-using ProjectAveryCommon.Model.Entity.Pocos;
-using ProjectAveryCommon.Model.Entity.Pocos.Player;
-using ProjectAveryCommon.Model.Entity.Pocos.ServerSettings;
+using Fork.Logic.Managers;
+using Fork.Logic.Services.FileServices;
+using ForkCommon.Model.Entity.Enums;
+using ForkCommon.Model.Entity.Pocos;
+using ForkCommon.Model.Entity.Pocos.Player;
+using ForkCommon.Model.Entity.Pocos.ServerSettings;
 
-namespace ProjectAvery.Logic.Services.EntityServices;
+namespace Fork.Logic.Services.EntityServices;
 
 public class EntityPostProcessingService : IEntityPostProcessingService
 {

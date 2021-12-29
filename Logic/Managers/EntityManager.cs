@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Notification;
-using ProjectAvery.Logic.Persistence;
-using ProjectAvery.Logic.Services.EntityServices;
-using ProjectAveryCommon.Model.Entity.Enums.Player;
-using ProjectAveryCommon.Model.Entity.Pocos;
-using ProjectAveryCommon.Model.Entity.Pocos.Player;
-using ProjectAveryCommon.Model.Notifications.EntityNotifications.PlayerNotifications;
+using Fork.Logic.Notification;
+using Fork.Logic.Persistence;
+using Fork.Logic.Services.EntityServices;
+using ForkCommon.Model.Entity.Enums.Player;
+using ForkCommon.Model.Entity.Pocos;
+using ForkCommon.Model.Entity.Pocos.Player;
+using ForkCommon.Model.Notifications.EntityNotifications.PlayerNotifications;
 
-namespace ProjectAvery.Logic.Managers;
+namespace Fork.Logic.Managers;
 
 public class EntityManager : IEntityManager
 {

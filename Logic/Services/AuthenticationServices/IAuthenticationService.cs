@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using ProjectAveryCommon.Model.Privileges;
+using ForkCommon.Model.Privileges;
 
-namespace ProjectAvery.Logic.Services.AuthenticationServices;
+namespace Fork.Logic.Services.AuthenticationServices;
 
 /// <summary>
 /// A scoped service interface for handling authentication with tokens

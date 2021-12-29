@@ -9,9 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Persistence;
+using Fork.Logic.Persistence;
 
-namespace ProjectAvery
+namespace Fork
 {
     public class Program
     {

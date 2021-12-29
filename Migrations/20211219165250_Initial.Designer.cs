@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ProjectAvery.Logic.Persistence;
+using Fork.Logic.Persistence;
 
-namespace ProjectAvery.Migrations
+namespace Fork.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20211219165250_Initial")]
@@ -18,7 +18,7 @@ namespace ProjectAvery.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.10");
 
-            modelBuilder.Entity("ProjectAveryCommon.Model.Application.SettingsKeyValue", b =>
+            modelBuilder.Entity("ForkCommon.Model.Application.SettingsKeyValue", b =>
                 {
                     b.Property<string>("Key")
                         .HasColumnType("TEXT");
@@ -31,7 +31,7 @@ namespace ProjectAvery.Migrations
                     b.ToTable("AppSettingsSet");
                 });
 
-            modelBuilder.Entity("ProjectAveryCommon.Model.Entity.Pocos.Automation.AutomationTime", b =>
+            modelBuilder.Entity("ForkCommon.Model.Entity.Pocos.Automation.AutomationTime", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,7 +58,7 @@ namespace ProjectAvery.Migrations
                     b.ToTable("AutomationTime");
                 });
 
-            modelBuilder.Entity("ProjectAveryCommon.Model.Entity.Pocos.Automation.SimpleTime", b =>
+            modelBuilder.Entity("ForkCommon.Model.Entity.Pocos.Automation.SimpleTime", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
@@ -75,7 +75,7 @@ namespace ProjectAvery.Migrations
                     b.ToTable("SimpleTime");
                 });
 
-            modelBuilder.Entity("ProjectAveryCommon.Model.Entity.Pocos.JavaSettings", b =>
+            modelBuilder.Entity("ForkCommon.Model.Entity.Pocos.JavaSettings", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
@@ -95,7 +95,7 @@ namespace ProjectAvery.Migrations
                     b.ToTable("JavaSettings");
                 });
 
-            modelBuilder.Entity("ProjectAveryCommon.Model.Entity.Pocos.Server", b =>
+            modelBuilder.Entity("ForkCommon.Model.Entity.Pocos.Server", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
@@ -134,7 +134,7 @@ namespace ProjectAvery.Migrations
                     b.ToTable("ServerSet");
                 });
 
-            modelBuilder.Entity("ProjectAveryCommon.Model.Entity.Pocos.ServerVersion", b =>
+            modelBuilder.Entity("ForkCommon.Model.Entity.Pocos.ServerVersion", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
@@ -157,15 +157,15 @@ namespace ProjectAvery.Migrations
                     b.ToTable("ServerVersion");
                 });
 
-            modelBuilder.Entity("ProjectAveryCommon.Model.Entity.Pocos.Automation.AutomationTime", b =>
+            modelBuilder.Entity("ForkCommon.Model.Entity.Pocos.Automation.AutomationTime", b =>
                 {
-                    b.HasOne("ProjectAveryCommon.Model.Entity.Pocos.Server", "Server")
+                    b.HasOne("ForkCommon.Model.Entity.Pocos.Server", "Server")
                         .WithMany("AutomationTimes")
                         .HasForeignKey("ServerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ProjectAveryCommon.Model.Entity.Pocos.Automation.SimpleTime", "Time")
+                    b.HasOne("ForkCommon.Model.Entity.Pocos.Automation.SimpleTime", "Time")
                         .WithMany()
                         .HasForeignKey("TimeId");
 
@@ -174,13 +174,13 @@ namespace ProjectAvery.Migrations
                     b.Navigation("Time");
                 });
 
-            modelBuilder.Entity("ProjectAveryCommon.Model.Entity.Pocos.Server", b =>
+            modelBuilder.Entity("ForkCommon.Model.Entity.Pocos.Server", b =>
                 {
-                    b.HasOne("ProjectAveryCommon.Model.Entity.Pocos.JavaSettings", "JavaSettings")
+                    b.HasOne("ForkCommon.Model.Entity.Pocos.JavaSettings", "JavaSettings")
                         .WithMany()
                         .HasForeignKey("JavaSettingsId");
 
-                    b.HasOne("ProjectAveryCommon.Model.Entity.Pocos.ServerVersion", "Version")
+                    b.HasOne("ForkCommon.Model.Entity.Pocos.ServerVersion", "Version")
                         .WithMany()
                         .HasForeignKey("VersionId");
 
@@ -189,7 +189,7 @@ namespace ProjectAvery.Migrations
                     b.Navigation("Version");
                 });
 
-            modelBuilder.Entity("ProjectAveryCommon.Model.Entity.Pocos.Server", b =>
+            modelBuilder.Entity("ForkCommon.Model.Entity.Pocos.Server", b =>
                 {
                     b.Navigation("AutomationTimes");
                 });

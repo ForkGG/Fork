@@ -12,22 +12,22 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using ProjectAvery.Adapters.Mojang;
-using ProjectAvery.Logic;
-using ProjectAvery.Logic.Managers;
-using ProjectAvery.Logic.Notification;
-using ProjectAvery.Logic.Persistence;
-using ProjectAvery.Logic.Services.EntityServices;
-using ProjectAvery.Logic.Services.FileServices;
-using ProjectAvery.Logic.Services.StateServices;
-using ProjectAvery.Logic.Services.WebServices;
-using ProjectAvery.Util;
-using ProjectAvery.Util.ExtensionMethods;
-using ProjectAvery.Util.SwaggerUtils;
-using AuthenticationService = ProjectAvery.Logic.Services.AuthenticationServices.AuthenticationService;
-using IAuthenticationService = ProjectAvery.Logic.Services.AuthenticationServices.IAuthenticationService;
+using Fork.Adapters.Mojang;
+using Fork.Logic;
+using Fork.Logic.Managers;
+using Fork.Logic.Notification;
+using Fork.Logic.Persistence;
+using Fork.Logic.Services.EntityServices;
+using Fork.Logic.Services.FileServices;
+using Fork.Logic.Services.StateServices;
+using Fork.Logic.Services.WebServices;
+using Fork.Util;
+using Fork.Util.ExtensionMethods;
+using Fork.Util.SwaggerUtils;
+using AuthenticationService = Fork.Logic.Services.AuthenticationServices.AuthenticationService;
+using IAuthenticationService = Fork.Logic.Services.AuthenticationServices.IAuthenticationService;
 
-namespace ProjectAvery
+namespace Fork
 {
     public class Startup
     {
@@ -99,7 +99,7 @@ namespace ProjectAvery
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "ProjectAvery", Version = "v1"});
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Fork", Version = "v1"});
                 c.OperationFilter<TokenSecurityFilter>();
                 c.AddSecurityDefinition("Fork Token", new OpenApiSecurityScheme
                 {
@@ -121,7 +121,7 @@ namespace ProjectAvery
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProjectAvery v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Fork v1"));
             }
 
             // TODO CKE enable https with self generated certificate

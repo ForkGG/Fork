@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using ProjectAveryCommon.Model.Application.Exceptions;
-using ProjectAveryCommon.Model.Entity.Enums;
-using ProjectAveryCommon.Model.Entity.Pocos;
+using ForkCommon.Model.Application.Exceptions;
+using ForkCommon.Model.Entity.Enums;
+using ForkCommon.Model.Entity.Pocos;
 
-namespace ProjectAvery.Logic.Services.EntityServices;
+namespace Fork.Logic.Services.EntityServices;
 
 public class EntityService : IEntityService
 {

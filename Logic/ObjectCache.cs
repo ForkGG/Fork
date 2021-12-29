@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using ProjectAveryCommon.Model.Entity.Pocos.Player;
+using ForkCommon.Model.Entity.Pocos.Player;
 
-namespace ProjectAvery.Logic;
+namespace Fork.Logic;
 
 public class ObjectCache : IObjectCache
 {

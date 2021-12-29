@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
-using ProjectAveryCommon.ExtensionMethods;
-using ProjectAveryCommon.Model.Privileges;
+using ForkCommon.ExtensionMethods;
+using ForkCommon.Model.Privileges;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace ProjectAvery.Util.SwaggerUtils;
+namespace Fork.Util.SwaggerUtils;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 // This is instantiated by Swashbuckle

@@ -5,17 +5,17 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Services.FileServices;
-using ProjectAvery.Util.ExtensionMethods;
-using ProjectAveryCommon.ExtensionMethods;
-using ProjectAveryCommon.Model.Application;
-using ProjectAveryCommon.Model.Entity.Enums;
-using ProjectAveryCommon.Model.Entity.Pocos;
-using ProjectAveryCommon.Model.Entity.Pocos.Automation;
-using ProjectAveryCommon.Model.Entity.Pocos.Player;
-using ProjectAveryCommon.Model.Entity.Pocos.ServerSettings;
+using Fork.Logic.Services.FileServices;
+using Fork.Util.ExtensionMethods;
+using ForkCommon.ExtensionMethods;
+using ForkCommon.Model.Application;
+using ForkCommon.Model.Entity.Enums;
+using ForkCommon.Model.Entity.Pocos;
+using ForkCommon.Model.Entity.Pocos.Automation;
+using ForkCommon.Model.Entity.Pocos.Player;
+using ForkCommon.Model.Entity.Pocos.ServerSettings;
 
-namespace ProjectAvery.Logic.Persistence
+namespace Fork.Logic.Persistence
 {
     public class ApplicationDbContext : DbContext
     {

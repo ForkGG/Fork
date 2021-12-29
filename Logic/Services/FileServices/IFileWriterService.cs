@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ProjectAvery.Logic.Services.FileServices;
+namespace Fork.Logic.Services.FileServices;
 
 public interface IFileWriterService
 {

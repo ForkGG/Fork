@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace ProjectAvery.Util.ExtensionMethods;
+namespace Fork.Util.ExtensionMethods;
 
 public static class StreamExtensions
 {

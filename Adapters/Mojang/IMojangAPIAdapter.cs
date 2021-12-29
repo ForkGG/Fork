@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using ProjectAvery.Logic.Model.Web.Mojang;
+using Fork.Logic.Model.Web.Mojang;
 
-namespace ProjectAvery.Adapters.Mojang;
+namespace Fork.Adapters.Mojang;
 
 public interface IMojangApiAdapter
 {

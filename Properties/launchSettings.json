@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "ProjectAvery": {
+    "Fork": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": false,

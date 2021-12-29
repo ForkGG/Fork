@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Formatters;
 
-namespace ProjectAvery.Util;
+namespace Fork.Util;
 
 public class TextPlainInputFormatter : InputFormatter
 {

@@ -6,14 +6,13 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using ProjectAvery.Logic.Model.Web.Mojang;
-using ProjectAvery.Util.ExtensionMethods;
-using ProjectAveryCommon.Model.Application.Exceptions;
+using Fork.Logic.Model.Web.Mojang;
+using Fork.Util.ExtensionMethods;
+using ForkCommon.Model.Application.Exceptions;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 
-namespace ProjectAvery.Adapters.Mojang;
+namespace Fork.Adapters.Mojang;
 
 public class MojangApiAdapter : IMojangApiAdapter
 {

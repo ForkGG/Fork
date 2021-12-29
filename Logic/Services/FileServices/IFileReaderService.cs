@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ProjectAveryCommon.Model.Entity.Pocos;
+using ForkCommon.Model.Entity.Pocos;
 
-namespace ProjectAvery.Logic.Services.FileServices;
+namespace Fork.Logic.Services.FileServices;
 
 public interface IFileReaderService
 {

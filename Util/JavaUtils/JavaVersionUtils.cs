@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using ProjectAveryCommon.Model.Entity.Pocos;
+using ForkCommon.Model.Entity.Pocos;
 
-namespace ProjectAvery.Util.JavaUtils;
+namespace Fork.Util.JavaUtils;
 
 public class JavaVersionUtils
 {

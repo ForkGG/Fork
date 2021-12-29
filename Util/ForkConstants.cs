@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace ProjectAvery.Util;
+namespace Fork.Util;
 
 public static class ForkConstants
 {

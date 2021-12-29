@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Logic.Services.AuthenticationServices;
-using ProjectAveryCommon.Model.Privileges;
+using Fork.Logic.Services.AuthenticationServices;
+using ForkCommon.Model.Privileges;
 
-namespace ProjectAvery.Util;
+namespace Fork.Util;
 
 public class AuthenticationMiddleware
 {

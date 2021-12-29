@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using ProjectAveryCommon.Model.Application;
+using ForkCommon.Model.Application;
 
-namespace ProjectAvery.Logic.Managers;
+namespace Fork.Logic.Managers;
 
 public interface IApplicationManager
 {

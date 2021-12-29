@@ -4,15 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using ProjectAvery.Adapters.Mojang;
-using ProjectAvery.Logic.Managers;
-using ProjectAvery.Logic.Persistence;
-using ProjectAvery.Logic.Services.WebServices;
-using ProjectAveryCommon.ExtensionMethods;
-using ProjectAveryCommon.Model.Application.Exceptions;
-using ProjectAveryCommon.Model.Entity.Pocos.Player;
+using Fork.Adapters.Mojang;
+using Fork.Logic.Managers;
+using Fork.Logic.Persistence;
+using Fork.Logic.Services.WebServices;
+using ForkCommon.ExtensionMethods;
+using ForkCommon.Model.Application.Exceptions;
+using ForkCommon.Model.Entity.Pocos.Player;
 
-namespace ProjectAvery.Logic.Services.EntityServices;
+namespace Fork.Logic.Services.EntityServices;
 
 public class PlayerService : IPlayerService
 {

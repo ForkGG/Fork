@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
-using ProjectAveryCommon.ExtensionMethods;
-using ProjectAveryCommon.Model.Application.Exceptions;
+using ForkCommon.ExtensionMethods;
+using ForkCommon.Model.Application.Exceptions;
 
-namespace ProjectAvery.Util;
+namespace Fork.Util;
 
 public class ForkExceptionFilterAttribute : ExceptionFilterAttribute
 {
