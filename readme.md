@@ -177,7 +177,7 @@ There are some basic principles for tokens:
 #### 1. Getting a token
 
 As localhost:  
-There is a local token created while installing Fork, which automatically has `Admin` priviledges. This token is stored in the installation path of Avery, so everyone with access to that directory has access to that token!  
+There is a local token created while installing Fork, which automatically has `Admin` priviledges. This token is stored in the installation path of Fork, so everyone with access to that directory has access to that token!  
 
 As remote:
 The preferred approach is to make an input field for the user to input a token before connecting to the app. Be carefull when storing the token somewhere!
@@ -185,7 +185,7 @@ The preferred approach is to make an input field for the user to input a token b
 
 #### 2. Communication
 
-For local applications you can just read the local `Admin` token and the settings of Fork to get the ports for API and WebSocket. To connect to Avery you use `localhost:port`.  
+For local applications you can just read the local `Admin` token and the settings of Fork to get the ports for API and WebSocket. To connect to Fork you use `localhost:port`.  
 
 For remote applications this is a bit more complex, as you need a way to find IP-Adress and Ports for a connection. For this reason you can use the public Fork API, where each token is registered with the according IP, API-Port and WebSocket-Port.  
 :construction: This service is not built yet :construction:
