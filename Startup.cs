@@ -78,7 +78,6 @@ namespace Fork
             services.AddSingleton<INotificationCenter, DefaultNotificationCenter>();
             services.AddSingleton<ITokenManager, TokenManager>();
             services.AddSingleton<IEntityManager, EntityManager>();
-            services.AddSingleton<IObjectCache, ObjectCache>();
 
             // Scoped
             services.AddScoped<IAuthenticationService, AuthenticationService>();

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Mime;
+using System.Runtime.Intrinsics.Arm;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -161,7 +162,8 @@ public class ServerService : IServerService
         };
         process.StartInfo = startInfo;
         process.Start();
-        // TODO CKE Task.Run(() => { viewModel.TrackPerformance(process); });
+        CancellationTokenSource serverStoppedTokenSource = new CancellationTokenSource();
+        Task.Run(() => TrackServerPerformance(server, process, serverStoppedTokenSource));
         await _console.BindProcessToConsole(server, process.StandardOutput, process.StandardError,
             status => _ = ChangeServerStatusAsync(server, status));
         server.ConsoleHandler = delegate(string line)
@@ -182,8 +184,7 @@ public class ServerService : IServerService
             //TODO determine crash and normal stop
             await ChangeServerStatusAsync(server, EntityStatus.Stopped);
 
-            //TODO CKE stop performance tracking here
-            // worker.Dispose();
+            serverStoppedTokenSource.Cancel();
             //TODO CKE stop automation here
             //ServerAutomationManager.Instance.UpdateAutomation(viewModel);
         });
@@ -365,7 +366,7 @@ public class ServerService : IServerService
         await using (FileStream fs = resourcePackFile.OpenRead())
         {
             await using var bs = new BufferedStream(fs);
-            using (SHA1Managed sha1 = new SHA1Managed())
+            using (SHA1 sha1 = SHA1.Create())
             {
                 byte[] hash = await sha1.ComputeHashAsync(bs);
                 StringBuilder formatted = new StringBuilder(2 * hash.Length);
@@ -380,5 +381,31 @@ public class ServerService : IServerService
 
         resourcePackFile.Delete();
         return result;
+    }
+
+    private async void TrackServerPerformance(Server server, Process process, CancellationTokenSource tokenSource)
+    {
+        while (!tokenSource.IsCancellationRequested && !process.HasExited)
+        {
+            try
+            {
+                var notification = new EntityPerformanceNotification
+                {
+                    EntityId = server.Id,
+                    Uptime = DateTime.Now - process.StartTime,
+                    RamPercentage = await process.CalculateMemLoad(server.JavaSettings.MaxRam),
+                    CpuPercentage = await process.CalculateCpuLoad(TimeSpan.FromSeconds(1)),
+                };
+                await _notificationCenter.BroadcastNotification(notification);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Error while tracking performance of {server.FullName}");
+            }
+            finally
+            {
+                //await Task.Delay(1000);
+            }
+        }
     }
 }

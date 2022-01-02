@@ -23,17 +23,14 @@ public class EntityManager : IEntityManager
 
     private readonly ILogger<EntityManager> _logger;
     private readonly IServiceScopeFactory _scopeFactory;
-    private readonly IEntityPostProcessingService _postProcessing;
 
     // This contains all loaded entities (Database cache and state keeping)
     private readonly Dictionary<ulong, IEntity> _entities;
 
-    public EntityManager(ILogger<EntityManager> logger, IServiceScopeFactory scopeFactory,
-        IEntityPostProcessingService postProcessing)
+    public EntityManager(ILogger<EntityManager> logger, IServiceScopeFactory scopeFactory)
     {
         _logger = logger;
         _scopeFactory = scopeFactory;
-        _postProcessing = postProcessing;
         _entities = new Dictionary<ulong, IEntity>();
     }
 
@@ -69,7 +66,8 @@ public class EntityManager : IEntityManager
         }
 
         // Post processing can be done without the lock
-        await _postProcessing.PostProcessEntity(result);
+        var postProcessing = scope.ServiceProvider.GetRequiredService<IEntityPostProcessingService>();
+        await postProcessing.PostProcessEntity(result);
         await context.SaveChangesAsync();
         _semaphore.Release();
         return result;

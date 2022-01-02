@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,27 +12,26 @@ using Fork.Logic.Services.WebServices;
 using ForkCommon.ExtensionMethods;
 using ForkCommon.Model.Application.Exceptions;
 using ForkCommon.Model.Entity.Pocos.Player;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fork.Logic.Services.EntityServices;
 
 public class PlayerService : IPlayerService
 {
     private readonly ILogger<PlayerService> _logger;
-    private readonly IObjectCache _objectCache;
     private readonly IMojangApiAdapter _mojangApi;
-    
-    private Dictionary<string, Player> PlayersByUid => _objectCache.PlayersByUid;
+    private readonly ApplicationDbContext _applicationDbContext;
 
-    public PlayerService(ILogger<PlayerService> logger, IObjectCache objectCache, IMojangApiAdapter mojangApi)
+    public PlayerService(ILogger<PlayerService> logger, ApplicationDbContext applicationDbContext, IMojangApiAdapter mojangApi)
     {
         _logger = logger;
-        _objectCache = objectCache;
+        _applicationDbContext = applicationDbContext;
         _mojangApi = mojangApi;
     }
 
     public async Task<Player> PlayerByNameAsync(string name)
     {
-        var cachedPlayer = PlayersByUid.Values.FirstOrDefault(p => p.Name == name);
+        var cachedPlayer = _applicationDbContext.PlayerSet.FirstOrDefault(p => p.Name == name);
         if (cachedPlayer != null && !cachedPlayer.LastUpdated.IsOlderThan(TimeSpan.FromHours(24)))
         {
             return cachedPlayer;
@@ -57,10 +57,11 @@ public class PlayerService : IPlayerService
 
     public async Task<Player> PlayerByUidAsync(string uid)
     {
-        
-        if (PlayersByUid.ContainsKey(uid) && !PlayersByUid[uid].LastUpdated.IsOlderThan(TimeSpan.FromHours(24)))
+        uid = uid.Replace("-", "");
+        var existingPlayer = await _applicationDbContext.PlayerSet.FirstOrDefaultAsync(p => p.Uid == uid);
+        if (existingPlayer != null && !existingPlayer.LastUpdated.IsOlderThan(TimeSpan.FromHours(24)))
         {
-            return PlayersByUid[uid];
+            return existingPlayer;
         }
         
         try
@@ -68,28 +69,30 @@ public class PlayerService : IPlayerService
             var playerProfile = await _mojangApi.ProfileForUidAsync(uid);
             if (playerProfile != null)
             {
-                var result = new Player
+                if (existingPlayer != null)
                 {
-                    Name = playerProfile.Name, 
-                    Uid = playerProfile.Id, 
-                    Head = await _mojangApi.Base64HeadFromTextureProperty(playerProfile.Properties.Where(p => p.Name == "textures").Select(p => p.Value).FirstOrDefault()), 
-                    LastUpdated = DateTime.Now,
-                    IsOfflinePlayer = false
-                };
-                if (PlayersByUid.ContainsKey(uid))
-                {
-                    // TODO CKE Add these changes to the DB!!
-                    PlayersByUid[uid].Head = result.Head;
-                    PlayersByUid[uid].Name = result.Name;
-                    PlayersByUid[uid].IsOfflinePlayer = false;
-                    PlayersByUid[uid].LastUpdated = DateTime.Now;
+                    existingPlayer.Head = await _mojangApi.Base64HeadFromTextureProperty(playerProfile.Properties
+                        .Where(p => p.Name == "textures").Select(p => p.Value).FirstOrDefault());
+                    existingPlayer.Name = playerProfile.Name;
+                    existingPlayer.IsOfflinePlayer = false;
+                    existingPlayer.LastUpdated = DateTime.Now;
                 }
                 else
                 {
-                    PlayersByUid.Add(uid, result);
+                    _applicationDbContext.PlayerSet.Add(new Player
+                    {
+                        Name = playerProfile.Name,
+                        Uid = playerProfile.Id,
+                        Head = await _mojangApi.Base64HeadFromTextureProperty(playerProfile.Properties
+                            .Where(p => p.Name == "textures").Select(p => p.Value).FirstOrDefault()),
+                        LastUpdated = DateTime.Now,
+                        IsOfflinePlayer = false
+                    });
                 }
 
-                return result;
+                await _applicationDbContext.SaveChangesAsync();
+
+                return await _applicationDbContext.PlayerSet.FirstOrDefaultAsync(p => p.Uid == uid);
             }
         }
         catch (MojangServiceException e)

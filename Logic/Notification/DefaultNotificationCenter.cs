@@ -44,7 +44,7 @@ namespace Fork.Logic.Notification
             {
                 socket.OnOpen = () =>
                 {
-                    _logger.LogInformation($"New WebSocket connection from {socket.ConnectionInfo.Host}");
+                    _logger.LogInformation($"New WebSocket connection from {socket.ConnectionInfo.Origin}");
                     if (_privilegesByConnection.ContainsKey(socket))
                     {
                         _privilegesByConnection.Remove(socket);
@@ -105,7 +105,7 @@ namespace Fork.Logic.Notification
         {
             switch (logLevel)
             {
-                case Fleck.LogLevel.Debug: return LogLevel.Debug;
+                case Fleck.LogLevel.Debug: return LogLevel.Trace;
                 case Fleck.LogLevel.Info: return LogLevel.Information;
                 case Fleck.LogLevel.Warn: return LogLevel.Warning;
                 case Fleck.LogLevel.Error: return LogLevel.Error;

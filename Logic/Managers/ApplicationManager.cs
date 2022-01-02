@@ -18,7 +18,7 @@ public class ApplicationManager : IApplicationManager
     private readonly IConfiguration _configuration;
 
     public ApplicationManager(ILogger<ApplicationManager> logger, IServiceScopeFactory scopeFactory,
-        IConfiguration configuration, IObjectCache objectCache)
+        IConfiguration configuration)
     {
         _logger = logger;
         _scopeFactory = scopeFactory;
@@ -37,17 +37,7 @@ public class ApplicationManager : IApplicationManager
             if (string.IsNullOrWhiteSpace(AppSettings.EntityPath))
             {
                 AppSettings.EntityPath = Path.Combine(AppPath, "entities");
-#pragma warning disable CS4014
-                dbContext.WriteAppSettings(AppSettings);
-#pragma warning restore CS4014
-            }
-
-            {
-                objectCache.PlayersByUid = new Dictionary<string, Player>();
-                foreach (var player in dbContext.PlayerSet.Where(p => p.IsOfflinePlayer == false))
-                {
-                    objectCache.PlayersByUid.Add(player.Uid, player);
-                }
+                _ = dbContext.WriteAppSettings(AppSettings);
             }
         }
 
