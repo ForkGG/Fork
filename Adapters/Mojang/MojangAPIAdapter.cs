@@ -5,17 +5,21 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Fork.Logic.Managers;
 using Newtonsoft.Json;
 using Fork.Logic.Model.Web.Mojang;
 using Fork.Util.ExtensionMethods;
 using ForkCommon.Model.Application.Exceptions;
+using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 
 namespace Fork.Adapters.Mojang;
 
-public class MojangApiAdapter : IMojangApiAdapter
+public class MojangApiAdapter : AbstractAdapter, IMojangApiAdapter
 {
+
+    public MojangApiAdapter(ILogger<MojangApiAdapter> logger, IApplicationManager applicationManager) : base(logger, applicationManager){}
     
     public async Task<string> UidForNameAsync(string name)
     {
@@ -86,23 +90,4 @@ public class MojangApiAdapter : IMojangApiAdapter
         imageStream.Position = 0;
         return imageStream.ConvertToBase64();
     }
-
-    private async Task<T> GetAsync<T>(string path)
-    {
-        using HttpClient client = new HttpClient();
-        var response = await client.GetAsync(path);
-        if (response.StatusCode == HttpStatusCode.OK)
-        {
-            var content = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(content);
-        }
-
-        if (response.StatusCode == HttpStatusCode.NoContent)
-        {
-            return default;
-        }
-
-        throw new MojangServiceException($"Mojang service returned status {response.StatusCode} on {path}");
-    }
-    
 }

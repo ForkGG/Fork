@@ -40,6 +40,7 @@ namespace Fork.Logic.Notification
             // A Dictionary containing all active sockets and their privileges (or null if no token was provided yet)
             _privilegesByConnection = new Dictionary<IWebSocketConnection, IReadOnlySet<IPrivilege>>();
             _server.RestartAfterListenError = true;
+            //_server.ListenerSocket.NoDelay = true;
             _server.Start(socket =>
             {
                 socket.OnOpen = () =>

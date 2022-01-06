@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Fork.Adapters.Fork;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Fork.Logic.Managers;
@@ -8,6 +9,7 @@ using Fork.Logic.Services.AuthenticationServices;
 using Fork.Logic.Services.StateServices;
 using ForkCommon.Model.Application;
 using ForkCommon.Model.Privileges;
+using ForkCommon.Model.Privileges.Entity.ReadEntity.ReadConsoleTab;
 
 namespace Fork.Controllers
 {
@@ -19,11 +21,13 @@ namespace Fork.Controllers
     {
         private readonly IApplicationStateService _applicationState;
         private readonly IAuthenticationService _authentication;
+        private readonly IForkAPIAdapter _forkApi;
 
-        public ApplicationController(ILogger<ApplicationController> logger, IApplicationStateService applicationState, IAuthenticationService authentication) : base(logger)
+        public ApplicationController(ILogger<ApplicationController> logger, IApplicationStateService applicationState, IAuthenticationService authentication, IForkAPIAdapter forkApi) : base(logger)
         {
             _applicationState = applicationState;
             _authentication = authentication;
+            _forkApi = forkApi;
         }
 
         [HttpGet("state")]
@@ -32,7 +36,6 @@ namespace Fork.Controllers
         {
             // TODO automatically call this with each request
             LogRequest();
-            //TODO create caller object with permissions from header token in each request
             return await _applicationState.BuildAppState();
         }
 
@@ -41,6 +44,16 @@ namespace Fork.Controllers
         public IEnumerable<IPrivilege> Privileges()
         {
             return _authentication.Privileges;
+        }
+
+        /// <summary>
+        /// Get the external IP address for accessing the hosted servers
+        /// </summary>
+        [HttpGet("ip")]
+        [Privileges(typeof(ReadConsoleConsoleTabPrivilege))]
+        public async Task<string> Ip()
+        {
+            return await _forkApi.GetExternalIpAddress();
         }
     }
 }

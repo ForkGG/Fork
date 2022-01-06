@@ -45,7 +45,7 @@ public class PlayerService : IPlayerService
                 return await PlayerByUidAsync(uid);
             }
         }
-        catch (MojangServiceException e)
+        catch (ExternalServiceException e)
         {
             _logger.LogError(e, "Failed to get player by name");
             return null;
@@ -95,7 +95,7 @@ public class PlayerService : IPlayerService
                 return await _applicationDbContext.PlayerSet.FirstOrDefaultAsync(p => p.Uid == uid);
             }
         }
-        catch (MojangServiceException e)
+        catch (ExternalServiceException e)
         {
             _logger.LogError(e, "Failed to get player by name");
             return null;

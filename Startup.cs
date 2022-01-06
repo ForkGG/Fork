@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Fork.Adapters.Fork;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
@@ -95,6 +96,7 @@ namespace Fork
             services.AddTransient<IConsoleInterpreter, ConsoleInterpreter>(); 
             // Transient adapters
             services.AddTransient<IMojangApiAdapter, MojangApiAdapter>();
+            services.AddTransient<IForkAPIAdapter, ForkAPIAdapter>();
 
             services.AddSwaggerGen(c =>
             {
