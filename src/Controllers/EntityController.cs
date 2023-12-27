@@ -35,12 +35,12 @@ namespace Fork.Controllers
 
         [HttpPost("createServer")]
         [Privileges(typeof(CreateEntityPrivilege))]
-        public async Task<ulong> CreateServer([FromBody] CreateServerPayload payload)
+        public async Task<ulong> CreateServer([FromBody] CreateServerPayload abstractPayload)
         {
             //TODO CKE validation
-            return await _serverService.CreateServerAsync(payload.ServerName, payload.ServerVersion,
-                payload.VanillaSettings,
-                payload.JavaSettings, payload.WorldPath);
+            return await _serverService.CreateServerAsync(abstractPayload.ServerName, abstractPayload.ServerVersion,
+                abstractPayload.VanillaSettings,
+                abstractPayload.JavaSettings, abstractPayload.WorldPath);
         }
 
         [HttpPost("{entityId}/delete")]

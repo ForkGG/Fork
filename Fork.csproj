@@ -24,6 +24,7 @@
 
     <ItemGroup>
       <Folder Include="Migrations" />
+      <Folder Include="src\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -32,8 +33,5 @@
 
     <ItemGroup>
       <None Remove="Resources\DefaultHead.png" />
-      <Content Include="Resources\DefaultHead.png">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
     </ItemGroup>
 </Project>
