@@ -30,6 +30,18 @@ public class EntityService : IEntityService
         }
     }
 
+    public async Task DeleteEntityAsync(IEntity entity)
+    {
+        if (entity is Server server)
+        {
+            await _serverService.DeleteServerAsync(server);
+        }
+        else
+        {
+            throw new ForkException($"Can't delete entity of type: {entity.GetType()}");
+        }
+    }
+
     public async Task StopEntityAsync(IEntity entity)
     {
         if (entity is Server server)

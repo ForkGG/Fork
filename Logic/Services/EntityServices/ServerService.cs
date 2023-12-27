@@ -90,6 +90,31 @@ public class ServerService : IServerService
         return server.Id;
     }
 
+    public async Task DeleteServerAsync(Server server)
+    {
+        if (server.Status != EntityStatus.Stopped)
+        {
+            await StopServerAsync(server);
+            while (server.Status != EntityStatus.Stopped)
+            {
+                await Task.Delay(500);
+            }
+        }
+
+        // TODO CKE cancel download if still in progress
+        // if (!serverViewModel.DownloadCompleted)
+        // {
+        //     //Cancel download
+        //     await Downloader.CancelJarDownloadAsync(serverViewModel);
+        // }
+
+        DirectoryInfo serverDirectory =
+            new DirectoryInfo(Path.Combine(_application.EntityPath, server.Name));
+        serverDirectory.Delete(true);
+        _context.ServerSet.Remove(server);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task StartServerAsync(Server server)
     {
         if (server.Status != EntityStatus.Stopped)
@@ -188,7 +213,6 @@ public class ServerService : IServerService
             //TODO CKE stop automation here
             //ServerAutomationManager.Instance.UpdateAutomation(viewModel);
         });
-        _logger.LogInformation("Started server " + server.Name);
 
         //Register new world if created
         _ = Task.Run(async () =>
@@ -200,6 +224,8 @@ public class ServerService : IServerService
 
             if (server.Status == EntityStatus.Started)
             {
+                _logger.LogInformation("Started server " + server.Name);
+                
                 // TODO CKE update Worlds as a new one might have been created
                 // viewModel.InitializeWorldsList();
             }

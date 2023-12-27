@@ -7,6 +7,7 @@ namespace Fork.Logic.Services.EntityServices;
 public interface IEntityService
 {
     public Task StartEntityAsync(IEntity entity);
+    public Task DeleteEntityAsync(IEntity entity);
     public Task StopEntityAsync(IEntity entity);
     public Task RestartEntityAsync(IEntity entity);
 

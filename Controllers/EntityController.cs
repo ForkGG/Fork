@@ -43,6 +43,20 @@ namespace Fork.Controllers
                 payload.JavaSettings, payload.WorldPath);
         }
 
+        [HttpPost("{entityId}/delete")]
+        [Privileges(typeof(DeleteEntityPrivilege))]
+        public async Task<StatusCodeResult> DeleteEntity([FromRoute] ulong entityId)
+        {
+            var entity = await _entityManager.EntityById(entityId);
+            if (entity == null)
+            {
+                return BadRequest();
+            }
+
+            await _entityService.DeleteEntityAsync(entity);
+            return Ok();
+        }
+
         [HttpPost("{entityId}/start")]
         [Privileges(typeof(WriteConsoleTabPrivilege))]
         public async Task<StatusCodeResult> StartEntity([FromRoute] ulong entityId)

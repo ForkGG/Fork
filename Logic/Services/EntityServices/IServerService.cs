@@ -8,6 +8,7 @@ namespace Fork.Logic.Services.EntityServices;
 public interface IServerService
 {
     public Task StartServerAsync(Server entity);
+    public Task DeleteServerAsync(Server entity);
     public Task StopServerAsync(Server entity);
     public Task RestartServerAsync(Server entity);
     
