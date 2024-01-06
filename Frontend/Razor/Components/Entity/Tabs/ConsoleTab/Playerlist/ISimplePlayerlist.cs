@@ -1,6 +1,6 @@
 ﻿using ForkCommon.Model.Entity.Pocos.Player;
 
-namespace ForkFrontend.Shared.Components.Entity.Tabs.ConsoleTab.Playerlist;
+namespace ForkFrontend.Razor.Components.Entity.Tabs.ConsoleTab.Playerlist;
 
 public interface ISimplePlayerlist
 {

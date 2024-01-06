@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RunPostBuildEvent>Always</RunPostBuildEvent>
+        <ApplicationIcon>wwwroot\favicon.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,14 +15,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <_ContentIncludedByDefault Remove="Pages-old\Counter.razor"/>
-        <_ContentIncludedByDefault Remove="Pages-old\FetchData.razor"/>
-        <_ContentIncludedByDefault Remove="Pages-old\Index.razor"/>
+        <_ContentIncludedByDefault Remove="Razor-old\Counter.razor"/>
+        <_ContentIncludedByDefault Remove="Razor-old\FetchData.razor"/>
+        <_ContentIncludedByDefault Remove="Razor-old\Index.razor"/>
         <_ContentIncludedByDefault Remove="Shared-old\MainLayout.razor"/>
         <_ContentIncludedByDefault Remove="Shared-old\NavMenu.razor"/>
         <_ContentIncludedByDefault Remove="Shared-old\SurveyPrompt.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\Index.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\Welcome.razor"/>
+        <_ContentIncludedByDefault Remove="Razor\Index.razor"/>
+        <_ContentIncludedByDefault Remove="Razor\Welcome.razor"/>
         <_ContentIncludedByDefault Remove="Shared\Components\Buttons\IconButton.razor"/>
         <_ContentIncludedByDefault Remove="Shared\Components\Entity\Entity.razor"/>
         <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\ConsoleIn.razor"/>
@@ -49,8 +50,8 @@
         <_ContentIncludedByDefault Remove="Shared\Components\Translated.razor"/>
         <_ContentIncludedByDefault Remove="Shared\EmptyLayout.razor"/>
         <_ContentIncludedByDefault Remove="Shared\MainLayout.razor"/>
-        <_ContentIncludedByDefault Remove="src\Pages\Index.razor"/>
-        <_ContentIncludedByDefault Remove="src\Pages\Welcome.razor"/>
+        <_ContentIncludedByDefault Remove="src\Razor\Index.razor"/>
+        <_ContentIncludedByDefault Remove="src\Razor\Welcome.razor"/>
         <_ContentIncludedByDefault Remove="src\Shared\Components\Buttons\IconButton.razor"/>
         <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Entity.razor"/>
         <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\ConsoleIn.razor"/>
@@ -88,6 +89,34 @@
         <Content Update="wwwroot\ressources\translation.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Include="Razor\Components\Buttons\IconButton.razor"/>
+        <AdditionalFiles Include="Razor\Components\Entity\Entity.razor"/>
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\ConsoleIn.razor"/>
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\ConsoleOut.razor"/>
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\ConsoleTab.razor"/>
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\PerformanceMonitor.razor"/>
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\Playerlist\Banlist.razor"/>
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\Playerlist\PlayerComponent.razor"/>
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\Playerlist\Playerlist.razor"/>
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\Playerlist\ServerPlayerComponent.razor"/>
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\Playerlist\Whitelist.razor"/>
+        <AdditionalFiles Include="Razor\Components\Forms\Radio\ForkRadio.razor"/>
+        <AdditionalFiles Include="Razor\Components\Forms\Select\ForkSelect.razor"/>
+        <AdditionalFiles Include="Razor\Components\Forms\Text\ForkText.razor"/>
+        <AdditionalFiles Include="Razor\Components\Inputs\Checkbox.razor"/>
+        <AdditionalFiles Include="Razor\Components\Inputs\Textfield.razor"/>
+        <AdditionalFiles Include="Razor\Components\Navbar.razor"/>
+        <AdditionalFiles Include="Razor\Components\Screens\CreateEntity\CreateEntityScreen.razor"/>
+        <AdditionalFiles Include="Razor\Components\Shared\IconTab.razor"/>
+        <AdditionalFiles Include="Razor\Components\Shared\IconTabControl.razor"/>
+        <AdditionalFiles Include="Razor\Components\Shared\SelectedIndicatorVertical.razor"/>
+        <AdditionalFiles Include="Razor\Components\Sidebar\Sidebar.razor"/>
+        <AdditionalFiles Include="Razor\Components\Sidebar\SidebarEntity.razor"/>
+        <AdditionalFiles Include="Razor\Components\Sidebar\StatusIndicator.razor"/>
+        <AdditionalFiles Include="Razor\Components\Translated.razor"/>
     </ItemGroup>
 
 </Project>

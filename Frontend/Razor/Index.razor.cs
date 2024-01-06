@@ -1,12 +1,12 @@
-using Microsoft.AspNetCore.Components;
 using ForkCommon.Model.Entity.Pocos;
 using ForkFrontend.Logic.Services.Connections;
 using ForkFrontend.Logic.Services.Managers;
 using ForkFrontend.Logic.Services.Notifications;
-using ForkFrontend.Shared.Components.Screens;
-using ForkFrontend.Shared.Components.Screens.CreateEntity;
+using ForkFrontend.Razor.Components.Screens;
+using ForkFrontend.Razor.Components.Screens.CreateEntity;
+using Microsoft.AspNetCore.Components;
 
-namespace ForkFrontend.Pages;
+namespace ForkFrontend.Razor;
 
 // This Page controls the whole entity logic
 public partial class Index : ComponentBase

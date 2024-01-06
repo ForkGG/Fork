@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
-namespace ForkFrontend.Shared.Components.Forms;
+namespace ForkFrontend.Razor.Components.Forms;
 
 public abstract class AbstractForkInput<T> : InputBase<T>
 {

@@ -1,7 +1,7 @@
 ﻿using ForkFrontend.Model.Forms;
 using Microsoft.AspNetCore.Components;
 
-namespace ForkFrontend.Shared.Components.Forms;
+namespace ForkFrontend.Razor.Components.Forms;
 
 public interface IValueListInput<T, TU>
 {

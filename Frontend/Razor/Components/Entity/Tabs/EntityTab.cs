@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace ForkFrontend.Shared.Components.Entity.Tabs;
+namespace ForkFrontend.Razor.Components.Entity.Tabs;
 
 public abstract class EntityTab : ComponentBase
 {
