@@ -1,0 +1,18 @@
+﻿@using ForkFrontend.Logic.Services.Translation
+@inject ITranslationService _translation
+
+<span>@value</span>
+
+@code {
+
+    [Parameter]
+    public string Path { get; set; }
+
+    private string value;
+
+    protected override async Task OnInitializedAsync()
+    {
+        value = await _translation.Translate(Path);
+    }
+
+}

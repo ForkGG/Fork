@@ -1,0 +1,46 @@
+﻿@using ForkFrontend.Logic.Services.Notifications
+@using ForkCommon.Model.Entity.Pocos
+@using ForkCommon.Model.Entity.Pocos.Player
+@using ForkCommon.Model.Notifications.EntityNotifications.PlayerNotifications
+@using ForkCommon.Model.Entity.Enums.Player
+@using ForkFrontend.Logic.Services.Managers
+@implements ISimplePlayerlist
+<div class="h-full bg-forkBlue pt-3">
+    @* Ban count *@
+    <span class="px-7 py-3 text-label-hover">@(Server?.Banlist?.Count ?? 0) - Banned</span>
+    @* Player list *@
+    <div class="h-full overflow-y-auto mt-3">
+        @if (Server?.Banlist != null)
+        {
+            Server.Banlist.Sort();
+            foreach (var player in Server.Banlist)
+            {
+                <CascadingValue Value="this">
+                    <PlayerComponent Value="player"></PlayerComponent>
+                </CascadingValue>
+            }
+        }
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter]
+    public EntityStateManager? EntityState { get; set; }
+
+    private Server? Server => EntityState?.Entity as Server;
+
+    public Player? ActivePlayer { get; set; }
+
+    public void SelectPlayer(PlayerComponent playerComponent)
+    {
+        ActivePlayer = playerComponent.Value;
+        StateHasChanged();
+    }
+
+    protected override void OnInitialized()
+    {
+        EntityState!.UpdateBanlistPlayerNotificationHandler.After += async _ => StateHasChanged();
+    }
+
+}

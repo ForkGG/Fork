@@ -1,0 +1,42 @@
+﻿@*
+This component is used multiple times in Fork as control to switch tab contexts
+
+It displays a list of `IconTab` components as children
+*@
+<CascadingValue Value="this">
+    <div class="flex" style="height: 50px">
+        @ChildContent
+    </div>
+</CascadingValue>
+
+@code {
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback<IconTab> OnTabSelected { get; set; }
+
+    public IconTab? ActiveTab { get; set; }
+
+    public List<IconTab> Tabs { get; set; } = new();
+
+    internal async Task AddTabAsync(IconTab tab)
+    {
+        Tabs.Add(tab);
+        if (Tabs.Count == 1)
+        {
+            await SelectTabAsync(tab);
+        }
+    }
+
+    internal async Task SelectTabAsync(IconTab tab)
+    {
+        ActiveTab = tab;
+        if (OnTabSelected.HasDelegate)
+        {
+            await OnTabSelected.InvokeAsync(tab);
+        }
+    }
+
+}

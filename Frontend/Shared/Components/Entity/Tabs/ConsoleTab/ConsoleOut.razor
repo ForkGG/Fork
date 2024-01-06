@@ -1,0 +1,129 @@
+﻿@using ForkFrontend.Logic.Services.Notifications
+@using ForkFrontend.Logic.Services.Connections
+@using ForkCommon.Model.Entity.Pocos
+@using ForkCommon.Model.Entity.Transient.Console
+@using ForkCommon.Model.Notifications.EntityNotifications
+@using ForkCommon.Model.Entity.Enums.Console
+@using ForkFrontend.Logic.Services.Managers
+@implements IAsyncDisposable
+
+@inject IJSRuntime _js
+@inject ILogger<ConsoleOut> _logger
+@inject IEntityConnectionService _entityConnection
+
+<div class="flex-1 flex flex-col console-out-container clipping">
+    @*Controls*@
+    <div class="flex justify-between">
+        <span style="width: 60px" content=" "></span>
+        <span class="text-lg text-label font-bold p-3">Console</span>
+        <div class="flex gap-3 mr-5 items-center">
+            <IconButton Size="23" IconSize="22" NoBackground="true" IconChar="'F'"></IconButton>
+            <IconButton Size="23" IconSize="22" NoBackground="true" IconChar="'O'"></IconButton>
+        </div>
+    </div>
+
+    @* Console *@
+    <div class="flex-1">
+        <div id="@($"consoleScrollArea{EntityState?.Entity.Id}")" class="clusterize-scroll p-3 overflow-ellipsis text-text overflow-y-auto max-h-full select-text" @ref="_consoleScroller" @onscroll="OnConsoleScroll">
+            <div id="@($"consoleContentArea{EntityState?.Entity.Id}")" class="clusterize-content console-text" @ref="_consoleContent">
+                <div class="clusterize-no-data">Loading Console...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter]
+    public EntityStateManager? EntityState { get; set; }
+
+    private ElementReference _consoleScroller;
+    private ElementReference _consoleContent;
+
+    private bool _autoscroll = true;
+    private bool _userscroll = true;
+
+    protected override void OnInitialized()
+    {
+        EntityState!.ConsoleAddNotificationHandler.After += HandleNewConsoleLine;
+    }
+
+
+    private bool _isFirstRender = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_isFirstRender)
+        {
+            _isFirstRender = false;
+            EntityState!.Entity.ConsoleMessages = await _entityConnection.GetConsoleMessagesAsync(EntityState!.Entity.Id);
+            await _js.InvokeVoidAsync("InitConsoleClusterize", EntityState!.Entity.ConsoleMessages.Select(ConsoleMessageToHtml).ToList(), _consoleScroller, _consoleContent);
+
+    // Scroll to bottom
+            await ScrollToBottom();
+            await Task.Delay(1);
+    // THE ABSOLUTE BOTTOM!!!
+            await ScrollToBottom();
+            StateHasChanged();
+        }
+    }
+
+    // It is important to clean up here else we have too many Registered handlers and NullPointers in JS
+    public async ValueTask DisposeAsync()
+    {
+        EntityState!.ConsoleAddNotificationHandler.After -= HandleNewConsoleLine;
+        await _js.InvokeVoidAsync("DestroyConsoleCluster", _consoleScroller);
+    }
+
+    private async Task HandleNewConsoleLine(ConsoleAddNotification notification)
+    {
+        await _js.InvokeVoidAsync("AppendToConsole", ConsoleMessageToHtml(notification.NewConsoleMessage), _consoleScroller);
+        StateHasChanged();
+        if (_autoscroll)
+        {
+            await ScrollToBottom();
+        }
+    }
+
+    private async Task ScrollToBottom()
+    {
+        _userscroll = false;
+        await _js.InvokeVoidAsync("ScrollToBottom", _consoleScroller);
+        _userscroll = true;
+    }
+
+    //TODO Search feature: Use the update method of clusterize to apply new css to found rows and scroll to the found results
+
+    private async Task OnConsoleScroll()
+    {
+        if (_userscroll)
+        {
+            _autoscroll = await _js.InvokeAsync<bool>("IsScrolledToBottom", new object[] { _consoleScroller });
+        }
+    }
+
+    private string ConsoleMessageToHtml(ConsoleMessage message)
+    {
+        string escapedMessage = message.Message.Replace("<", "&lt;").Replace("\"", "&quot;").Replace(">", "&gt;");
+        string colorClass = MessageTypeToConsoleColor(message.MessageType);
+        return $"<div class=\"block monospace leading-tight text-sm {colorClass}\">{escapedMessage}</div>";
+    }
+
+    private string MessageTypeToConsoleColor(ConsoleMessageType type)
+    {
+        switch (type)
+        {
+            case ConsoleMessageType.Success:
+                return "text-text-green";
+            case ConsoleMessageType.Warning:
+                return "text-text-orange";
+            case ConsoleMessageType.Error:
+                return "text-text-red";
+            case ConsoleMessageType.UserInput:
+                return "opacity-70";
+            default:
+                return "";
+        }
+    }
+
+}

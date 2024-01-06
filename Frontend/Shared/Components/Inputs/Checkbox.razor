@@ -1,0 +1,18 @@
+﻿@using System.Diagnostics.CodeAnalysis
+@inherits InputBase<bool>
+
+<label class="@CssClass text-label cursor-pointer flex gap-1 items-center">
+    <input class="hidden" type="checkbox" @bind="CurrentValue"/>
+    <span class="w-4 h-4 bg-forkBlue-dark hover:bg-forkBlue-hover checked:bg-forkBlue-highlighted"></span>
+    <span class="text-sm">@DisplayName</span>
+</label>
+
+@code {
+
+
+    protected override bool TryParseValueFromString(string? value, out bool result, [NotNullWhen(false)] out string? validationErrorMessage)
+    {
+        throw new NotSupportedException($"This component does not parse string inputs. Bind to the '{nameof(CurrentValue)}' property, not '{nameof(CurrentValueAsString)}'.");
+    }
+
+}

@@ -1,0 +1,30 @@
+﻿@using ForkCommon.Model.Entity.Enums
+<div style="height: 12px; width: 12px;" class="rounded-full @($"bg-{Color}")"></div>
+
+@code {
+
+    [Parameter]
+    public EntityStatus Status { get; set; }
+
+    private string Color
+    {
+        get
+        {
+            switch (Status)
+            {
+                case EntityStatus.Stopped:
+                    return "status-inactive";
+                case EntityStatus.Starting:
+                case EntityStatus.Stopping:
+                    return "status-orange";
+                case EntityStatus.Started:
+                    return "status-green";
+                case EntityStatus.Crashed:
+                    return "status-red";
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+    }
+
+}

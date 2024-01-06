@@ -1,0 +1,22 @@
+﻿@*TODO CKE Replace this with ForkText Component*@
+
+@using System.Diagnostics.CodeAnalysis
+@inherits InputBase<string>
+<label class="@CssClass">
+    @if (DisplayName != null)
+    {
+        <span>@DisplayName</span>
+    }
+    <input class="w-full bg-transparent text-text monospace outline-none" @bind="CurrentValue"/>
+</label>
+
+@code {
+
+    protected override bool TryParseValueFromString(string? value, out string? result, [NotNullWhen(false)] out string? validationErrorMessage)
+    {
+        result = value;
+        validationErrorMessage = null;
+        return true;
+    }
+
+}

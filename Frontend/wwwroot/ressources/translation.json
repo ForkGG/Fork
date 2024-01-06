@@ -1,0 +1,22 @@
+{
+  "common": {
+    "navbar": {
+      "servers": {
+        "DEFAULT": "Servers",
+        "german": "Server"
+      },
+      "settings": {
+        "DEFAULT": "Settings",
+        "german": "Einstellungen"
+      },
+      "discord": {
+        "DEFAULT": "Discord",
+        "german": "Discord"
+      },
+      "patreon": {
+        "DEFAULT": "Patreon",
+        "german": "Patreon"
+      }
+    }
+  }
+}

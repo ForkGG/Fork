@@ -1,0 +1,12 @@
+.vs
+.idea
+.vscode
+bin
+obj
+UpgradeLog.htm
+*.user
+Properties/PublishProfiles
+*.css.map
+*.min.css
+node_modules
+package-lock.json

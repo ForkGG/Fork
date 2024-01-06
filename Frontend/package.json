@@ -1,0 +1,30 @@
+{
+  "name": "Forkfrontend",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "autoprefixer": "^10.4.0",
+    "chokidar-cli": "^3.0.0",
+    "cssnano": "^5.0.14",
+    "node": "^14.18.2",
+    "postcss": "^8.4.4",
+    "postcss-cli": "^8.3.1",
+    "tailwindcss": "^3.0.8"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "buildcss": "postcss wwwroot/css/app.css -o wwwroot/css/app.min.css --verbose",
+    "watch": "chokidar \"**/*.razor\" \"wwwroot/css/app.css\" -c \"npm run tw\"",
+    "tw": "npx tailwindcss -i wwwroot/css/app.css -o wwwroot/css/app.min.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ForkGG/ForkFrontend.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ForkGG/ForkFrontend/issues"
+  },
+  "homepage": "https://github.com/ForkGG/ForkFrontend#readme"
+}

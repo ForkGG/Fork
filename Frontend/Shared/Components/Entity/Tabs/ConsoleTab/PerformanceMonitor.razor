@@ -1,0 +1,28 @@
+﻿<div class="performance-container">
+    <div class="performance-background clipping flex p-4 justify-center">
+        <div class="clipping performance-circle justify-center items-center flex flex-col overflow-visible w-20 h-20 @($"before:bg-percentage-p{ColorIntensity}")">
+            <span class="@($"text-percentage-p{ColorIntensity}") font-bold text-3xl leading-none">@Content</span>
+            <span class="@($"text-percentage-p{ColorIntensity}") font-bold leading-none absolute bottom-2.5">@SubTitle</span>
+        </div>
+        <span class="text-xs text-right text-label font-bold absolute bottom-0 right-0 leading-tight">@((MarkupString)Name)</span>
+    </div>
+</div>
+
+
+@code {
+
+    [Parameter]
+    public string? Content { get; set; }
+
+    [Parameter]
+    public string? SubTitle { get; set; }
+
+    [Parameter]
+    public string? Name { get; set; }
+
+    // This is the value of the percentage color
+    // One of: 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100
+    [Parameter]
+    public int? ColorIntensity { get; set; }
+
+}

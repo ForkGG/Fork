@@ -1,0 +1,89 @@
+﻿@using ForkFrontend.Logic.Services.Connections
+@using ForkCommon.Model.Entity.Pocos
+@using ForkCommon.Model.Entity.Pocos.ServerSettings
+@using ForkCommon.Model.Payloads.Entity
+@using ForkCommon.Model.Entity.Enums
+@using ForkFrontend.Logic.Services.Managers
+@using Index = ForkFrontend.Pages.Index
+@inject ILogger<Sidebar> _logger
+@inject IEntityConnectionService _entityConnection
+
+
+<div class="w-80 flex flex-col text-label">
+    @* Part over server list *@
+    <div class="bg-forkBlue flex py-2 px-4 items-center" style="height: 50px">
+        <div class="flex-1 flex flex-col">
+            <span class="text-md leading-none">v1.0.0</span>
+            <span class="text-sm">You are up to date</span>
+        </div>
+        @* TODO only show if update privilege is granted *@
+        @if (true)
+        {
+            <IconButton IconChar="'r'" IconSize="18" NoBackground="true" OnClickMethod="TestClickHandler"></IconButton>
+        }
+    </div>
+
+    @* Server List *@
+    <div class="bg-forkBlue-light flex-1 mt-5 flex flex-col">
+        @* Server *@
+        <div class="flex-1 overflow-y-auto scroll-left">
+            @if (EntityManagers != null)
+            {
+                @foreach (var entityManager in EntityManagers)
+                {
+                    <SidebarEntity Value="@entityManager.Value" OnClickCallback="OnSelectEntity" IsSelected="@(SelectedEntity?.Id == entityManager.Key)"></SidebarEntity>
+                }
+            }
+        </div>
+
+        @* Controls *@
+        <div class="flex justify-end gap-3 p-3">
+            <IconButton IconChar="'I'" IconSize="24" Size="45"></IconButton>
+            <IconButton IconChar="'C'" IconSize="24" Size="45" OnClickMethod="OpenCreateEntityScreen"></IconButton>
+        </div>
+    </div>
+</div>
+
+@code
+{
+    [Parameter]
+    public Index? Parent { get; set; }
+    
+    [Parameter]
+    public EventCallback<IEntity> OnSelectEntity { get; set; }
+
+    [Parameter]
+    public Dictionary<ulong, EntityStateManager>? EntityManagers { get; set; }
+
+    [CascadingParameter(Name = nameof(SelectedEntity))]
+    public IEntity? SelectedEntity { get; set; }
+
+    private void TestClickHandler(IconButton button)
+    {
+        Console.WriteLine(button.IconChar);
+    }
+
+    private Task OpenCreateEntityScreen(IconButton _)
+    {
+        Parent?.OpenAddEntityScreen();
+        return Task.CompletedTask;
+    }
+
+    private async Task CreateServerHandler(IconButton button)
+    {
+        var createPayload = new CreateServerPayload();
+        createPayload.ServerName = "test";
+        createPayload.JavaSettings = new JavaSettings();
+        createPayload.ServerVersion = new ServerVersion{Build = 0, Type = VersionType.Vanilla, Version = "1.18.1", JarLink = "https://launcher.mojang.com/v1/objects/125e5adf40c659fd3bce3e66e67a16bb49ecc1b9/server.jar" };
+        createPayload.VanillaSettings = new VanillaSettings("world");
+
+        try
+        {
+            _logger.LogError(await _entityConnection.CreateServerAsync(createPayload) + "");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error while creating server");
+        }
+    }
+}

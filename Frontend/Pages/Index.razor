@@ -1,0 +1,52 @@
+﻿@page "/"
+@using ForkFrontend.Logic.Services.Managers
+@inject IApplicationStateManager _applicationState
+
+<div class="flex flex-1">
+    @if (_applicationState.IsApplicationReady)
+    {
+        <div class="flex flex-1 mx-6 my-10 gap-10 overflow-hidden">
+            @* Sidebar *@
+            <CascadingValue Name="@nameof(SelectedEntity)" Value="SelectedEntity">
+                <Sidebar Parent="this" OnSelectEntity="OnSelectEntity" EntityManagers="_applicationState.EntityStateManagersById"/>
+            </CascadingValue>
+            @* Content *@
+            <div class="flex-1">
+                @if (_openScreen != null)
+                {
+                    <ErrorBoundary>
+                        <ChildContent>
+                            <DynamicComponent Type="_openScreen.GetType()"></DynamicComponent>
+                        </ChildContent>
+                        <ErrorContent>
+                            <div>Error Content</div>
+                            <DynamicComponent Type="_openScreen.GetType()"></DynamicComponent>
+                        </ErrorContent>
+                    </ErrorBoundary>
+                }
+                @if (_applicationState.EntityStateManagersById.Count > 0)
+                {
+                    foreach (KeyValuePair<ulong, EntityStateManager> entity in _applicationState.EntityStateManagersById)
+                    {
+                        <div class="@(entity.Key == SelectedEntity?.Id ? "h-full" : "hidden")">
+                            <Entity @key="@entity.Key" Value="entity.Value"></Entity>
+                        </div>
+                    }
+                }
+                else
+                {
+                    @* TODO CKE Welcome Screen if no server exists *@
+                    <div></div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="w-screen h-screen flex justify-center items-center bg-forkBlue-dark flex-col">
+            <span class="text-label text-lg">@_applicationState.ApplicationStatus</span>
+            <img style="width: 116px; height: 122px" src="ressources/img/loading.gif"/>
+        </div>
+    }
+
+</div>

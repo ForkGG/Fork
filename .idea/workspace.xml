@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d56c7b88-3f99-45fb-acc6-9d19082dc94e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Util/SwaggerUtils/FriendlyStringEnumConverter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/ApplicationController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/ApplicationController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/EntityController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/EntityController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Managers/ITokenManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Managers/ITokenManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Managers/TokenManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Managers/TokenManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Services/Authentication/AuthenticationService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Services/Authentication/AuthenticationService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Services/Authentication/IAuthenticationService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Services/Authentication/IAuthenticationService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notification/DefaultNotificationCenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Notification/DefaultNotificationCenter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Util/SwaggerUtils/TokenSecurityFilter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Util/SwaggerUtils/TokenSecurityFilter.cs" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="22FKHJRAk3vm06t9eaPal8C0QrG" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d56c7b88-3f99-45fb-acc6-9d19082dc94e" name="Default Changelist" comment="" />
+      <created>1639427809272</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1639427809272</updated>
+      <workItem from="1639427812923" duration="7000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

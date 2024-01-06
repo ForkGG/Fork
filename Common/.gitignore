@@ -1,0 +1,10 @@
+.vs
+.idea
+.vscode
+bin
+obj
+UpgradeLog.htm
+*.html
+NihilusInstaller
+*.user
+Properties/PublishProfiles

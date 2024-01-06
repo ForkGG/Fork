@@ -1,0 +1,51 @@
+﻿@using ForkFrontend.Logic.Services.Notifications
+@using ForkCommon.Model.Entity.Pocos
+@using ForkCommon.Model.Entity.Pocos.Player
+@using ForkCommon.Model.Notifications.EntityNotifications.PlayerNotifications
+@using ForkFrontend.Logic.Services.Managers
+<div class="h-full bg-forkBlue pt-3">
+    @* Player count *@
+    <span class="px-7 py-3 text-label-hover">@(Server?.ServerPlayers?.Count(p => p.IsOnline) ?? 0) / @(Server?.VanillaSettings?.MaxPlayers ?? 0) - Online</span>
+
+    @* Player list *@
+    <div class="h-full overflow-y-auto mt-3">
+        @if (Server?.ServerPlayers != null)
+        {
+            Server.ServerPlayers.Sort();
+            foreach (var player in Server.ServerPlayers)
+            {
+                <CascadingValue Value="this">
+                    <ServerPlayerComponent Value="player"></ServerPlayerComponent>
+                </CascadingValue>
+            }
+        }
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter]
+    public EntityStateManager? EntityState { get; set; }
+
+    private Server? Server => EntityState?.Entity as Server;
+
+    public ServerPlayer? ActivePlayer { get; set; }
+
+    public void SelectPlayer(ServerPlayerComponent playerComponent)
+    {
+        ActivePlayer = playerComponent.Value;
+        StateHasChanged();
+    }
+
+    protected override void OnInitialized()
+    {
+        EntityState!.UpdatePlayerNotificationHandler.After += HandlePlayerUpdate;
+    }
+
+    private Task HandlePlayerUpdate(UpdatePlayerNotification notification)
+    {
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+}

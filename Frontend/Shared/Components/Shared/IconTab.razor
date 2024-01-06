@@ -1,0 +1,43 @@
+﻿@*
+Should be used with `IconTabControl`
+*@
+<div style="width: 48px" class="cursor-pointer @(IsActive ? "bg-forkBlue-hover text-label-hover" : "bg-forkBlue-light text-label hover:text-label-hover")" @onclick="OnClick">
+    <div class="p-2 flex justify-center items-center">
+        <span class="text-xl icon">@IconCharacter</span>
+    </div>
+    <div class="relative left-0 right-0 bg-forkBlue-highlighted w-full h-3 @(IsActive ? "visible" : "hidden")" style="clip-path: polygon(0 0, 33% 0, 45% 50%, 100% 50%, 100% 100%, 0 100%); bottom: 8px"></div>
+</div>
+
+@code {
+
+    [CascadingParameter]
+    private IconTabControl? Parent { get; set; }
+
+    [Parameter]
+    public char IconCharacter { get; set; }
+
+    [Parameter]
+    public Type? RelatedType { get; set; }
+
+    private bool IsActive => Parent?.ActiveTab == this;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Parent == null)
+        {
+            throw new ArgumentNullException(nameof(Parent), "IconTab mus exist within IconTabControl!");
+        }
+        await Parent.AddTabAsync(this);
+        await base.OnInitializedAsync();
+    }
+
+    private async Task OnClick()
+    {
+        if (Parent == null)
+        {
+            throw new ArgumentNullException(nameof(Parent), "IconTab mus exist within IconTabControl!");
+        }
+        await Parent.SelectTabAsync(this);
+    }
+
+}

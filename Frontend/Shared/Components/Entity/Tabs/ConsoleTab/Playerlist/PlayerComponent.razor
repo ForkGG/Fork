@@ -1,0 +1,34 @@
+﻿@using ForkCommon.Model.Entity.Pocos.Player
+@*
+    This is basically the same as ServerPlayerComponent, but no status indicator and a different Value
+*@
+<div class="hover:text-label-hover @(IsActive ? "bg-forkBlue-hover text-label-hover" : "text-text-dark cursor-pointer")" @onclick="OnClick">
+    <div class="flex px-7 py-3">
+        @* Player Head *@
+        <div class="mx-2">
+            <img class="w-6 pixelated" src="@($"data:image/png;base64,{Value?.Head}")" alt=""/>
+        </div>
+
+        @* Player name *@
+        <div>
+            <div class="text-lg">@Value?.Name</div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter]
+    public ISimplePlayerlist? Parent { get; set; }
+
+    [Parameter]
+    public Player? Value { get; set; }
+
+    private bool IsActive => Parent?.ActivePlayer != null && Parent.ActivePlayer.Equals(Value);
+
+    private void OnClick(EventArgs e)
+    {
+        Parent?.SelectPlayer(this);
+    }
+
+}
