@@ -3,5 +3,5 @@
 public enum RadioType
 {
     Default,
-    ButtonRow,
+    ButtonRow
 }

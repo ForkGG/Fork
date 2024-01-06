@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Fork.Logic.Services.AuthenticationServices;
+using ForkCommon.Model.Privileges;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging;
-using Fork.Logic.Services.AuthenticationServices;
-using ForkCommon.Model.Privileges;
 
 namespace Fork.Util;
 
@@ -34,9 +34,11 @@ public class AuthenticationMiddleware
         {
             authenticationService.AuthenticateToken(token);
             bool authenticated = true;
-            var metadata = context.GetEndpoint()!.Metadata.GetMetadata<ControllerActionDescriptor>();
+            ControllerActionDescriptor metadata =
+                context.GetEndpoint()!.Metadata.GetMetadata<ControllerActionDescriptor>();
             authenticated = metadata!.EndpointMetadata
-                .All(a => a is not PrivilegesAttribute || a is PrivilegesAttribute p && authenticationService.IsAuthenticated(p.Privilege));
+                .All(a => a is not PrivilegesAttribute ||
+                          (a is PrivilegesAttribute p && authenticationService.IsAuthenticated(p.Privilege)));
             if (!authenticated)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;

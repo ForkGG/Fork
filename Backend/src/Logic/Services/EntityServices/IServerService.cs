@@ -11,9 +11,9 @@ public interface IServerService
     public Task DeleteServerAsync(Server entity);
     public Task StopServerAsync(Server entity);
     public Task RestartServerAsync(Server entity);
-    
+
     public Task ChangeServerStatusAsync(Server server, EntityStatus newStatus);
-    
+
     public Task<ulong> CreateServerAsync(string name, ServerVersion version, VanillaSettings settings,
         JavaSettings javaSettings, string worldPath);
 }

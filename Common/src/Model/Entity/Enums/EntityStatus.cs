@@ -2,5 +2,9 @@
 
 public enum EntityStatus
 {
-    Stopped, Starting, Started, Stopping, Crashed
+    Stopped,
+    Starting,
+    Started,
+    Stopping,
+    Crashed
 }

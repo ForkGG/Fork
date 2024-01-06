@@ -10,14 +10,11 @@ Should be used with `IconTabControl`
 
 @code {
 
-    [CascadingParameter]
-    private IconTabControl? Parent { get; set; }
+    [CascadingParameter] private IconTabControl? Parent { get; set; }
 
-    [Parameter]
-    public char IconCharacter { get; set; }
+    [Parameter] public char IconCharacter { get; set; }
 
-    [Parameter]
-    public Type? RelatedType { get; set; }
+    [Parameter] public Type? RelatedType { get; set; }
 
     private bool IsActive => Parent?.ActiveTab == this;
 
@@ -27,6 +24,7 @@ Should be used with `IconTabControl`
         {
             throw new ArgumentNullException(nameof(Parent), "IconTab mus exist within IconTabControl!");
         }
+
         await Parent.AddTabAsync(this);
         await base.OnInitializedAsync();
     }
@@ -37,6 +35,7 @@ Should be used with `IconTabControl`
         {
             throw new ArgumentNullException(nameof(Parent), "IconTab mus exist within IconTabControl!");
         }
+
         await Parent.SelectTabAsync(this);
     }
 

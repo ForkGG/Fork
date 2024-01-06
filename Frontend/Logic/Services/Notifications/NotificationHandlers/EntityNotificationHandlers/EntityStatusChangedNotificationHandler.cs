@@ -6,7 +6,7 @@ namespace ForkFrontend.Logic.Services.Notifications.NotificationHandlers.EntityN
 public class EntityStatusChangedNotificationHandler : AbstractEntityNotificationHandler<EntityStatusChangedNotification>
 {
     private readonly IEntity _entity;
-    
+
     public EntityStatusChangedNotificationHandler(IEntity entity) : base(entity.Id)
     {
         _entity = entity;

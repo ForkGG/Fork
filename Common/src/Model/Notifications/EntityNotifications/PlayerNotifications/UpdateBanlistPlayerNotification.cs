@@ -6,7 +6,7 @@ using ForkCommon.Model.Privileges.Entity.ReadEntity.ReadConsoleTab;
 namespace ForkCommon.Model.Notifications.EntityNotifications.PlayerNotifications;
 
 /// <summary>
-/// Updates a Player on the Banlist (add, remove or update)
+///     Updates a Player on the Banlist (add, remove or update)
 /// </summary>
 [Privileges(typeof(ReadBanlistConsoleTabPrivilege))]
 public class UpdateBanlistPlayerNotification : AbstractEntityNotification

@@ -2,5 +2,7 @@
 
 public enum PlayerlistUpdateType
 {
-    Add, Update, Remove
+    Add,
+    Update,
+    Remove
 }

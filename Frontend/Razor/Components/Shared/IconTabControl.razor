@@ -11,11 +11,9 @@ It displays a list of `IconTab` components as children
 
 @code {
 
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter]
-    public EventCallback<IconTab> OnTabSelected { get; set; }
+    [Parameter] public EventCallback<IconTab> OnTabSelected { get; set; }
 
     public IconTab? ActiveTab { get; set; }
 

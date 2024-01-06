@@ -11,13 +11,12 @@ namespace ForkFrontend.Razor;
 // This Page controls the whole entity logic
 public partial class Index : ComponentBase
 {
+    // Screens can be shown instead of entities (add entity, Fork settings, ...)
+    private AbstractScreenComponent? _openScreen;
     [Inject] private IApplicationConnectionService ApplicationConnection { get; set; }
     [Inject] private IApplicationStateManager ApplicationStateManager { get; set; }
     [Inject] private INotificationService NotificationService { get; set; }
 
-    // Screens can be shown instead of entities (add entity, Fork settings, ...)
-    private AbstractScreenComponent? _openScreen;
-    
     public IEntity? SelectedEntity { get; set; }
 
     public void OpenAddEntityScreen()
@@ -39,9 +38,14 @@ public partial class Index : ComponentBase
         {
             if (SelectedEntity != null &&
                 _applicationState.ApplicationState.Entities.Any(e => e.Id == SelectedEntity.Id))
+            {
                 SelectedEntity = _applicationState.ApplicationState.Entities.First(e => e.Id == SelectedEntity.Id);
+            }
             else
+            {
                 SelectedEntity = _applicationState.ApplicationState.Entities.FirstOrDefault();
+            }
+
             StateHasChanged();
         };
         await NotificationService.StartupAsync();

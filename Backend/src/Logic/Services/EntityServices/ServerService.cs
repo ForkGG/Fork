@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Mime;
-using System.Runtime.Intrinsics.Arm;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Fork.Logic.Managers;
 using Fork.Logic.Notification;
 using Fork.Logic.Persistence;
@@ -23,23 +19,24 @@ using ForkCommon.Model.Entity.Enums;
 using ForkCommon.Model.Entity.Enums.Console;
 using ForkCommon.Model.Entity.Pocos;
 using ForkCommon.Model.Entity.Pocos.ServerSettings;
-using ForkCommon.Model.Entity.Transient.Console;
 using ForkCommon.Model.Notifications.EntityNotifications;
+using Microsoft.Extensions.Logging;
 
 namespace Fork.Logic.Services.EntityServices;
 
 public class ServerService : IServerService
 {
-    private readonly ILogger<ServerService> _logger;
-    private readonly ApplicationDbContext _context;
     private readonly IApplicationManager _application;
     private readonly IConsoleService _console;
+    private readonly ApplicationDbContext _context;
     private readonly IDownloadService _download;
     private readonly IFileWriterService _fileWriter;
+    private readonly ILogger<ServerService> _logger;
     private readonly INotificationCenter _notificationCenter;
 
     public ServerService(ILogger<ServerService> logger, ApplicationDbContext context, IApplicationManager application,
-        IConsoleService console, IDownloadService download, IFileWriterService fileWriter, INotificationCenter notificationCenter)
+        IConsoleService console, IDownloadService download, IFileWriterService fileWriter,
+        INotificationCenter notificationCenter)
     {
         _logger = logger;
         _context = context;
@@ -63,11 +60,11 @@ public class ServerService : IServerService
 
         DirectoryInfo directoryInfo = Directory.CreateDirectory(serverPath);
         // TODO CKE serverVersion.Build = await VersionManager.Instance.GetLatestBuild(serverVersion);
-        Server server = new Server(serverName, serverVersion, settings, javaSettings);
+        Server server = new(serverName, serverVersion, settings, javaSettings);
         _context.ServerSet.Add(server);
 
         //Download server.jar
-        var downloadProgress = new Progress<float>();
+        Progress<float> downloadProgress = new Progress<float>();
         downloadProgress.ProgressChanged += (_, f) =>
         {
             // TODO CKE send notification update
@@ -95,10 +92,7 @@ public class ServerService : IServerService
         if (server.Status != EntityStatus.Stopped)
         {
             await StopServerAsync(server);
-            while (server.Status != EntityStatus.Stopped)
-            {
-                await Task.Delay(500);
-            }
+            while (server.Status != EntityStatus.Stopped) await Task.Delay(500);
         }
 
         // TODO CKE cancel download if still in progress
@@ -108,8 +102,7 @@ public class ServerService : IServerService
         //     await Downloader.CancelJarDownloadAsync(serverViewModel);
         // }
 
-        DirectoryInfo serverDirectory =
-            new DirectoryInfo(Path.Combine(_application.EntityPath, server.Name));
+        DirectoryInfo serverDirectory = new(Path.Combine(_application.EntityPath, server.Name));
         serverDirectory.Delete(true);
         _context.ServerSet.Remove(server);
         await _context.SaveChangesAsync();
@@ -122,11 +115,12 @@ public class ServerService : IServerService
             await _console.WriteError(server, "Can't start server that was not properly stopped");
             throw new ForkException("Only stopped servers can be started");
         }
+
         await ChangeServerStatusAsync(server, EntityStatus.Starting);
         _logger.LogInformation($"Starting server {server.Name} on world {server.VanillaSettings.LevelName}");
 
         // Get server directory
-        DirectoryInfo serverDirectory = new DirectoryInfo(server.GetPath(_application));
+        DirectoryInfo serverDirectory = new(server.GetPath(_application));
         if (!serverDirectory.Exists)
         {
             await ChangeServerStatusAsync(server, EntityStatus.Stopped);
@@ -171,8 +165,8 @@ public class ServerService : IServerService
             await UpdateResourcePackHash(server);
         }
 
-        Process process = new Process();
-        ProcessStartInfo startInfo = new ProcessStartInfo
+        Process process = new();
+        ProcessStartInfo startInfo = new()
         {
             UseShellExecute = false,
             RedirectStandardError = true,
@@ -187,7 +181,7 @@ public class ServerService : IServerService
         };
         process.StartInfo = startInfo;
         process.Start();
-        CancellationTokenSource serverStoppedTokenSource = new CancellationTokenSource();
+        CancellationTokenSource serverStoppedTokenSource = new();
         Task.Run(() => TrackServerPerformance(server, process, serverStoppedTokenSource));
         await _console.BindProcessToConsole(server, process.StandardOutput, process.StandardError,
             status => _ = ChangeServerStatusAsync(server, status));
@@ -217,15 +211,12 @@ public class ServerService : IServerService
         //Register new world if created
         _ = Task.Run(async () =>
         {
-            while (server.Status == EntityStatus.Starting)
-            {
-                await Task.Delay(500);
-            }
+            while (server.Status == EntityStatus.Starting) await Task.Delay(500);
 
             if (server.Status == EntityStatus.Started)
             {
                 _logger.LogInformation("Started server " + server.Name);
-                
+
                 // TODO CKE update Worlds as a new one might have been created
                 // viewModel.InitializeWorldsList();
             }
@@ -239,7 +230,7 @@ public class ServerService : IServerService
             await _console.WriteError(server, "Can't stop server that was not properly started yet");
             throw new ForkException("Only started servers can be stopped");
         }
-        
+
         if (server.ConsoleHandler == null)
         {
             throw new ForkException("Can't stop server with no active input handler");
@@ -262,10 +253,7 @@ public class ServerService : IServerService
     public async Task RestartServerAsync(Server server)
     {
         await StopServerAsync(server);
-        while (server.Status != EntityStatus.Stopped)
-        {
-            await Task.Delay(250);
-        }
+        while (server.Status != EntityStatus.Stopped) await Task.Delay(250);
 
         try
         {
@@ -279,6 +267,7 @@ public class ServerService : IServerService
             {
                 await ChangeServerStatusAsync(server, EntityStatus.Stopped);
             }
+
             throw;
         }
     }
@@ -342,9 +331,9 @@ public class ServerService : IServerService
             return false;
         }
 
-        var client = new HttpClient();
+        HttpClient client = new HttpClient();
         HttpResponseMessage response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, fileSourceUrl));
-        var lastModifiedString = response.Headers.GetValues("LastModified").FirstOrDefault();
+        string lastModifiedString = response.Headers.GetValues("LastModified").FirstOrDefault();
         if (lastModifiedString == null)
         {
             await _console.WriteError(server,
@@ -352,7 +341,7 @@ public class ServerService : IServerService
             return false;
         }
 
-        bool canBeParsed = DateTime.TryParse(lastModifiedString, out var lastModified);
+        bool canBeParsed = DateTime.TryParse(lastModifiedString, out DateTime lastModified);
 
         if (canBeParsed && lastModified.CompareTo(hashDate) < 0)
         {
@@ -372,12 +361,12 @@ public class ServerService : IServerService
 
         //ensure tmp directory
         new DirectoryInfo(Path.Combine(_application.AppPath, "tmp")).Create();
-        FileInfo resourcePackFile = new FileInfo(
+        FileInfo resourcePackFile = new(
             Path.Combine(_application.AppPath, "tmp", Guid.NewGuid().ToString()
                 .Replace("-", "") + ".zip"));
 
         //Download the resource pack
-        var client = new HttpClient();
+        HttpClient client = new HttpClient();
         HttpResponseMessage response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, url));
         if (response.Headers.GetValues("ContentType").All(h => h != "application/zip"))
         {
@@ -391,15 +380,12 @@ public class ServerService : IServerService
         //Calculate sha-1
         await using (FileStream fs = resourcePackFile.OpenRead())
         {
-            await using var bs = new BufferedStream(fs);
+            await using BufferedStream bs = new BufferedStream(fs);
             using (SHA1 sha1 = SHA1.Create())
             {
                 byte[] hash = await sha1.ComputeHashAsync(bs);
-                StringBuilder formatted = new StringBuilder(2 * hash.Length);
-                foreach (var b in hash)
-                {
-                    formatted.Append($"{b:X2}");
-                }
+                StringBuilder formatted = new(2 * hash.Length);
+                foreach (byte b in hash) formatted.Append($"{b:X2}");
 
                 result = formatted.ToString();
             }
@@ -412,15 +398,14 @@ public class ServerService : IServerService
     private async void TrackServerPerformance(Server server, Process process, CancellationTokenSource tokenSource)
     {
         while (!tokenSource.IsCancellationRequested && !process.HasExited)
-        {
             try
             {
-                var notification = new EntityPerformanceNotification
+                EntityPerformanceNotification notification = new EntityPerformanceNotification
                 {
                     EntityId = server.Id,
                     Uptime = DateTime.Now - process.StartTime,
                     RamPercentage = await process.CalculateMemLoad(server.JavaSettings.MaxRam),
-                    CpuPercentage = await process.CalculateCpuLoad(TimeSpan.FromSeconds(1)),
+                    CpuPercentage = await process.CalculateCpuLoad(TimeSpan.FromSeconds(1))
                 };
                 await _notificationCenter.BroadcastNotification(notification);
             }
@@ -428,10 +413,5 @@ public class ServerService : IServerService
             {
                 _logger.LogError(e, $"Error while tracking performance of {server.FullName}");
             }
-            finally
-            {
-                //await Task.Delay(1000);
-            }
-        }
     }
 }

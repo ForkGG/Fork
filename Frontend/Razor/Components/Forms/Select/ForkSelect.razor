@@ -1,6 +1,6 @@
-﻿@using ForkFrontend.Model.Forms
-@typeparam TModelValue
+﻿@typeparam TModelValue
 @inherits AbstractForkInput<TModelValue>
+@using ForkFrontend.Model.Forms
 @implements IValueListInput<TModelValue, string>
 
 <div>
@@ -9,44 +9,44 @@
         <div class="select-wrapper ml-5 mt-2 w-max">
             @* Good enough option for now. Replace with fully custom select in the future *@
             <InputSelect @bind-Value="SelectedHash" id="@Name" class="appearance-none bg-forkBlue-light py-1 px-5 text-text-dark font-bold">
-                @foreach(var value in Values!)
+                @foreach (ForkFormEntity<TModelValue, string> value in Values!)
                 {
                     <option value="@value.ModelValue?.GetHashCode()">@value.ViewValue</option>
                 }
             </InputSelect>
         </div>
-    </div>    
+    </div>
 </div>
 
 @code {
-    [Parameter]
-    public List<ForkFormEntity<TModelValue, string>>? Values { get; set; }
+    [Parameter] public List<ForkFormEntity<TModelValue, string>>? Values { get; set; }
 
     private int? SelectedHash
     {
         get => CurrentValue?.GetHashCode();
         set
         {
-            var selectedValue = Values?.FirstOrDefault(x => x.ModelValue?.GetHashCode() == value);
-            if(selectedValue != null)
+            ForkFormEntity<TModelValue, string>? selectedValue = Values?.FirstOrDefault(x => x.ModelValue?.GetHashCode() == value);
+            if (selectedValue != null)
             {
                 CurrentValue = selectedValue.ModelValue;
             }
         }
-    } 
+    }
 
     protected override bool TryParseValueFromString(string? value, out TModelValue result, out string? validationErrorMessage)
     {
         throw new NotSupportedException($"This component does not parse string inputs. Bind to the '{nameof(CurrentValue)}' property, not '{nameof(CurrentValueAsString)}'.");
     }
-    
+
     /// <summary>
-    /// Override to make sure <see cref="Values"> is set
+    ///     Override to make sure <see cref="Values"> is set
     /// </summary>
     public override Task SetParametersAsync(ParameterView parameters)
     {
-        var result = base.SetParametersAsync(parameters);
+        Task result = base.SetParametersAsync(parameters);
         Values ??= new List<ForkFormEntity<TModelValue, string>>();
         return result;
     }
+
 }

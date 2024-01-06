@@ -2,12 +2,12 @@
 
 public class ReadWorldsTabPrivilege : IReadEntityPrivilege
 {
-    public string Name => "ReadWorldsTab";
-    public string TranslationPath => "privileges.entity.read.worldsTab";
-    public ulong EntityId { get; set; }
-
     public ReadWorldsTabPrivilege(ulong entityId)
     {
         EntityId = entityId;
     }
+
+    public string Name => "ReadWorldsTab";
+    public string TranslationPath => "privileges.entity.read.worldsTab";
+    public ulong EntityId { get; set; }
 }

@@ -5,7 +5,7 @@ using ForkCommon.Model.Privileges;
 namespace Fork.Logic.Services.AuthenticationServices;
 
 /// <summary>
-/// A scoped service interface for handling authentication with tokens
+///     A scoped service interface for handling authentication with tokens
 /// </summary>
 public interface IAuthenticationService
 {

@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using ForkCommon.Model.Entity.Pocos;
 
-namespace ForkCommon.Model.Application
+namespace ForkCommon.Model.Application;
+
+/// <summary>
+///     The class that is filled with all state data of the application to be passed to the frontend
+/// </summary>
+public class State
 {
-    /// <summary>
-    ///     The class that is filled with all state data of the application to be passed to the frontend
-    /// </summary>
-    public class State
-    {
-        public List<IEntity> Entities { get; set; }
-    }
+    public List<IEntity> Entities { get; set; }
 }

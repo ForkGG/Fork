@@ -15,8 +15,10 @@ public class NotificationHandler<T> : INotificationHandler where T : AbstractNot
     public async Task CallHandlers(AbstractNotification abstractNotification)
     {
         if (abstractNotification is not T notification)
+        {
             throw new ArgumentException(
                 "A NotificationHandler should only get Notifications of its type.\nTHIS SHOULD NEVER EVER HAPPEN!");
+        }
 
         foreach (Func<T, Task> handler in Handlers) await handler.Invoke(notification);
     }

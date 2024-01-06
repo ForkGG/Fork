@@ -1,10 +1,8 @@
-﻿@using ForkFrontend.Logic.Services.Notifications
-@using ForkFrontend.Logic.Services.Connections
-@using ForkCommon.Model.Entity.Pocos
-@using ForkCommon.Model.Entity.Transient.Console
+﻿@using ForkFrontend.Logic.Services.Managers
 @using ForkCommon.Model.Notifications.EntityNotifications
+@using ForkCommon.Model.Entity.Transient.Console
 @using ForkCommon.Model.Entity.Enums.Console
-@using ForkFrontend.Logic.Services.Managers
+@using ForkFrontend.Logic.Services.Connections
 @implements IAsyncDisposable
 
 @inject IJSRuntime _js
@@ -34,8 +32,7 @@
 
 @code {
 
-    [CascadingParameter]
-    public EntityStateManager? EntityState { get; set; }
+    [CascadingParameter] public EntityStateManager? EntityState { get; set; }
 
     private ElementReference _consoleScroller;
     private ElementReference _consoleContent;
@@ -59,10 +56,10 @@
             EntityState!.Entity.ConsoleMessages = await _entityConnection.GetConsoleMessagesAsync(EntityState!.Entity.Id);
             await _js.InvokeVoidAsync("InitConsoleClusterize", EntityState!.Entity.ConsoleMessages.Select(ConsoleMessageToHtml).ToList(), _consoleScroller, _consoleContent);
 
-    // Scroll to bottom
+            // Scroll to bottom
             await ScrollToBottom();
             await Task.Delay(1);
-    // THE ABSOLUTE BOTTOM!!!
+            // THE ABSOLUTE BOTTOM!!!
             await ScrollToBottom();
             StateHasChanged();
         }

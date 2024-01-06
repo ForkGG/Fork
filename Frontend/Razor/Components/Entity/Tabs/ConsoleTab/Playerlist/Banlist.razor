@@ -1,9 +1,6 @@
-﻿@using ForkFrontend.Logic.Services.Notifications
+﻿@using ForkFrontend.Logic.Services.Managers
 @using ForkCommon.Model.Entity.Pocos
 @using ForkCommon.Model.Entity.Pocos.Player
-@using ForkCommon.Model.Notifications.EntityNotifications.PlayerNotifications
-@using ForkCommon.Model.Entity.Enums.Player
-@using ForkFrontend.Logic.Services.Managers
 @implements ISimplePlayerlist
 <div class="h-full bg-forkBlue pt-3">
     @* Ban count *@
@@ -13,7 +10,7 @@
         @if (Server?.Banlist != null)
         {
             Server.Banlist.Sort();
-            foreach (var player in Server.Banlist)
+            foreach (Player? player in Server.Banlist)
             {
                 <CascadingValue Value="this">
                     <PlayerComponent Value="player"></PlayerComponent>
@@ -25,8 +22,7 @@
 
 @code {
 
-    [CascadingParameter]
-    public EntityStateManager? EntityState { get; set; }
+    [CascadingParameter] public EntityStateManager? EntityState { get; set; }
 
     private Server? Server => EntityState?.Entity as Server;
 

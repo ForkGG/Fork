@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ForkCommon.Model.Entity.Pocos.ServerSettings;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using ForkCommon.Model.Entity.Pocos.ServerSettings;
 
 namespace Fork.Logic.Services.FileServices;
 
 public class FileReaderService : IFileReaderService
 {
-    private readonly ILogger<FileReaderService> _logger;
     private readonly IFileWriterService _fileWriter;
+    private readonly ILogger<FileReaderService> _logger;
 
     public FileReaderService(ILogger<FileReaderService> logger, IFileWriterService fileWriter)
     {
@@ -24,7 +24,7 @@ public class FileReaderService : IFileReaderService
     public async Task<Dictionary<string, string>> ReadVanillaSettingsAsync(string folderPath)
     {
         string propertiesPath = Path.Combine(folderPath, "server.properties");
-        FileInfo propertiesFile = new FileInfo(propertiesPath);
+        FileInfo propertiesFile = new(propertiesPath);
         if (!propertiesFile.Exists)
         {
             _logger.LogInformation("Could not find properties file: " + propertiesPath +
@@ -32,20 +32,18 @@ public class FileReaderService : IFileReaderService
             await _fileWriter.WriteServerSettings(folderPath, new VanillaSettings("world").SettingsDictionary);
         }
 
-        Dictionary<string, string> serverSettings = new Dictionary<string, string>();
+        Dictionary<string, string> serverSettings = new();
         try
         {
             // Open the text file using a stream reader.
-            using StreamReader sr = new StreamReader(propertiesFile.FullName);
+            using StreamReader sr = new(propertiesFile.FullName);
             string line;
             while ((line = await sr.ReadLineAsync()) != null)
-            {
                 if (!line.StartsWith("#"))
                 {
                     string[] args = line.Split('=');
                     serverSettings.Add(args[0], args[1].Replace("\\n", "\n"));
                 }
-            }
 
             return serverSettings;
         }
@@ -83,16 +81,16 @@ public class FileReaderService : IFileReaderService
     public async Task<List<string>> ReadBanListTxt(string serverPath)
     {
         string path = Path.Combine(serverPath, "banned-players.txt");
-        
+
         // We can't use generic method here, because of the structure of this file...
         if (!File.Exists(path))
         {
             return new List<string>();
         }
 
-        List<string> list = new List<string>();
-        FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-        using StreamReader sr = new StreamReader(fs);
+        List<string> list = new();
+        FileStream fs = new(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using StreamReader sr = new(fs);
         string line;
         while ((line = await sr.ReadLineAsync()) != null)
         {
@@ -127,8 +125,8 @@ public class FileReaderService : IFileReaderService
         }
 
         List<string> result = new();
-        FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-        using StreamReader sr = new StreamReader(fs);
+        FileStream fs = new(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using StreamReader sr = new(fs);
         string line;
         while ((line = await sr.ReadLineAsync()) != null)
         {
@@ -147,7 +145,7 @@ public class FileReaderService : IFileReaderService
 
         return result;
     }
-    
+
     private async Task<List<string>> ReadRoleJsonFile(string filePath)
     {
         if (!File.Exists(filePath))
@@ -156,22 +154,18 @@ public class FileReaderService : IFileReaderService
         }
 
         string json;
-        using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-        {
-            using (StreamReader sr = new StreamReader(fs))
-            {
-                json = await sr.ReadToEndAsync();
-            }
-        }
+        using (FileStream fs = new(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+        using (StreamReader sr = new(fs))
+            json = await sr.ReadToEndAsync();
 
         dynamic deserialized = JsonConvert.DeserializeObject(json);
-        List<string> uuids = new List<string>();
+        List<string> uuids = new();
         if (deserialized is JArray deserializedArray)
         {
             dynamic[] players = deserializedArray.ToObject<dynamic[]>();
             uuids.AddRange(players?.Select(player => player.uuid.Value as string) ?? Array.Empty<string>());
         }
-        
+
 
         return uuids;
     }

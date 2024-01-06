@@ -8,9 +8,12 @@ namespace Fork.Adapters.Fork;
 public class ForkAPIAdapter : AbstractAdapter, IForkAPIAdapter
 {
     private const string API_BASE = "https://api.fork.gg/";
-    
-    public ForkAPIAdapter(ILogger<ForkAPIAdapter> logger,IApplicationManager applicationManager) : base(logger, applicationManager){}
-    
+
+    public ForkAPIAdapter(ILogger<ForkAPIAdapter> logger, IApplicationManager applicationManager) : base(logger,
+        applicationManager)
+    {
+    }
+
     public async Task<string> GetExternalIpAddress()
     {
         if (await IsApiAvailable())
@@ -26,7 +29,7 @@ public class ForkAPIAdapter : AbstractAdapter, IForkAPIAdapter
     {
         try
         {
-            var response = await GetBodyAsync(API_BASE + "status");
+            string response = await GetBodyAsync(API_BASE + "status");
             return response == "ONLINE";
         }
         catch (ExternalServiceException e)

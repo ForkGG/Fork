@@ -1,9 +1,8 @@
-﻿@using ForkFrontend.Logic.Services.Connections
-@using ForkCommon.Model.Entity.Pocos
-@using ForkCommon.Model.Entity.Enums
+﻿@using ForkFrontend.Logic.Services.Managers
 @using ForkCommon.Model.Notifications.EntityNotifications
-@using ForkFrontend.Logic.Services.Managers
-@using ForkFrontend.Logic.Services.Notifications
+@using ForkFrontend.Logic.Services.Connections
+@using ForkCommon.Model.Entity.Enums
+@using ForkCommon.Model.Entity.Pocos
 @inject ILogger<Entity> _logger
 @inject IEntityConnectionService _entityConnection
 
@@ -65,9 +64,7 @@
 
 @code {
 
-    [Parameter]
-    [EditorRequired]
-    public EntityStateManager? Value { get; set; }
+    [Parameter] [EditorRequired] public EntityStateManager? Value { get; set; }
 
     private Type? SelectedEntityTabType { get; set; }
     private Type? SelectedPlayerListTabType { get; set; }
@@ -142,21 +139,25 @@
     private Task HandleEntityStatusChange(EntityStatusChangedNotification notification)
     {
         //TODO CKE FIXME Paramenters should not be set by parent but by child itself: https://stackoverflow.com/questions/58852101/bl0005-external-parameter-usage-why-is-a-warning-for-that
-        if(_startButton != null)
+        if (_startButton != null)
         {
             _startButton.IsDisabled = notification.NewEntityStatus != EntityStatus.Stopped;
             _startButton.StateHasChanged();
         }
+
         if (_stopButton != null)
         {
             _stopButton.IsDisabled = notification.NewEntityStatus != EntityStatus.Started;
             _stopButton.StateHasChanged();
         }
+
         if (_restartButton != null)
         {
             _restartButton.IsDisabled = notification.NewEntityStatus != EntityStatus.Started;
             _restartButton.StateHasChanged();
         }
+
         return Task.CompletedTask;
     }
+
 }

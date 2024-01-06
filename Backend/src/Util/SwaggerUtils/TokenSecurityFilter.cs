@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Microsoft.OpenApi.Models;
 using ForkCommon.ExtensionMethods;
 using ForkCommon.Model.Privileges;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Fork.Util.SwaggerUtils;
@@ -15,7 +15,7 @@ public class TokenSecurityFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        var privilegeAttributes = context.MethodInfo.CustomAttributes
+        List<CustomAttributeData> privilegeAttributes = context.MethodInfo.CustomAttributes
             .Where(a => a.AttributeType == typeof(PrivilegesAttribute))
             .Concat(context.MethodInfo.DeclaringType?.CustomAttributes.Where(a =>
                 a.AttributeType == typeof(PrivilegesAttribute)) ?? Array.Empty<CustomAttributeData>()).ToList();
@@ -40,13 +40,17 @@ public class TokenSecurityFilter : IOperationFilter
                 });
             string privilegesString = string.Join(", ", privilegeAttributes.Select(a =>
             {
-                var value = a.ConstructorArguments.FirstOrDefault().Value;
+                object value = a.ConstructorArguments.FirstOrDefault().Value;
                 if (value != null)
+                {
                     return ((Type)value).FriendlyName();
+                }
+
                 return "Parse Error!";
             }));
-            operation.Description = 
-                $"<b>Required {(privilegeAttributes.Count > 1 ? "privileges" : "privilege")}:</b> {privilegesString}<br/>" + operation.Description;
+            operation.Description =
+                $"<b>Required {(privilegeAttributes.Count > 1 ? "privileges" : "privilege")}:</b> {privilegesString}<br/>" +
+                operation.Description;
         }
     }
 }

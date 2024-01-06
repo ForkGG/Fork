@@ -16,5 +16,4 @@ public class PlayerTextureProfile
     {
         public string Url { get; set; }
     }
-    
 }

@@ -1,7 +1,7 @@
 ﻿namespace ForkCommon.Model.Notifications.EntityNotifications;
 
 /// <summary>
-/// Abstract Class for all notifications that belong to a single entity
+///     Abstract Class for all notifications that belong to a single entity
 /// </summary>
 public abstract class AbstractEntityNotification : AbstractNotification
 {

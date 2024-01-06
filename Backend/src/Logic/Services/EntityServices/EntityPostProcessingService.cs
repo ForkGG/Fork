@@ -2,21 +2,20 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Fork.Logic.Managers;
 using Fork.Logic.Services.FileServices;
-using ForkCommon.Model.Entity.Enums;
 using ForkCommon.Model.Entity.Pocos;
 using ForkCommon.Model.Entity.Pocos.Player;
 using ForkCommon.Model.Entity.Pocos.ServerSettings;
+using Microsoft.Extensions.Logging;
 
 namespace Fork.Logic.Services.EntityServices;
 
 public class EntityPostProcessingService : IEntityPostProcessingService
 {
-    private readonly ILogger<EntityPostProcessingService> _logger;
-    private readonly IFileReaderService _fileReader;
     private readonly IApplicationManager _application;
+    private readonly IFileReaderService _fileReader;
+    private readonly ILogger<EntityPostProcessingService> _logger;
     private readonly IPlayerService _playerService;
 
     public EntityPostProcessingService(ILogger<EntityPostProcessingService> logger, IFileReaderService fileReader,
@@ -31,7 +30,7 @@ public class EntityPostProcessingService : IEntityPostProcessingService
     public async Task PostProcessEntity(IEntity entity)
     {
         await DoEntityPostProcessing(entity);
-        
+
         if (entity is Server server)
         {
             await DoServerPostProcessing(server);
@@ -46,20 +45,20 @@ public class EntityPostProcessingService : IEntityPostProcessingService
     private async Task DoServerPostProcessing(Server server)
     {
         string serverPath = Path.Combine(_application.EntityPath, server.Name);
-        
+
         // Read settings files
         server.VanillaSettings =
             new VanillaSettings(
                 await _fileReader.ReadVanillaSettingsAsync(serverPath));
         server.ServerPlayers ??= new List<ServerPlayer>();
-        
+
         // Update changed players by comparing database with files
         // TODO extend this if multiple worlds are possible
-        List<string> worlds = new List<string>{Path.Combine(serverPath, server.VanillaSettings.LevelName)};
-        var playersInWorlds = await UidsToPlayersAsync(await _playerService.PlayerUidsForWorldsAsync(worlds));
+        List<string> worlds = new() { Path.Combine(serverPath, server.VanillaSettings.LevelName) };
+        List<Player> playersInWorlds = await UidsToPlayersAsync(await _playerService.PlayerUidsForWorldsAsync(worlds));
         foreach (Player player in playersInWorlds)
         {
-            var serverPlayer = server.ServerPlayers.FirstOrDefault(s => s.Player.Uid == player.Uid);
+            ServerPlayer serverPlayer = server.ServerPlayers.FirstOrDefault(s => s.Player.Uid == player.Uid);
             if (serverPlayer != null)
             {
                 serverPlayer.Player.Name = player.Name;
@@ -69,7 +68,7 @@ public class EntityPostProcessingService : IEntityPostProcessingService
             }
             else
             {
-                server.ServerPlayers.Add(new ServerPlayer{Player = player, Server = server, ServerId = server.Id});
+                server.ServerPlayers.Add(new ServerPlayer { Player = player, Server = server, ServerId = server.Id });
             }
         }
 
@@ -77,14 +76,14 @@ public class EntityPostProcessingService : IEntityPostProcessingService
         // Version 1.7.5 and earlier have txt files
         if (server.Version.CompareTo(new ServerVersion { Version = "1.7.5" }) <= 0)
         {
-            var whitelistNames = await _fileReader.ReadWhiteListTxt(serverPath);
+            List<string> whitelistNames = await _fileReader.ReadWhiteListTxt(serverPath);
             server.Whitelist = await NamesToPlayersAsync(whitelistNames);
-            var banListNames = await _fileReader.ReadBanListTxt(serverPath);
+            List<string> banListNames = await _fileReader.ReadBanListTxt(serverPath);
             server.Banlist = await NamesToPlayersAsync(banListNames);
-            var opListNames = await _fileReader.ReadOpListTxt(serverPath);
+            List<string> opListNames = await _fileReader.ReadOpListTxt(serverPath);
             foreach (string opName in opListNames)
             {
-                var serverPlayer = server.ServerPlayers.FirstOrDefault(p => p.Player.Name == opName);
+                ServerPlayer serverPlayer = server.ServerPlayers.FirstOrDefault(p => p.Player.Name == opName);
                 if (serverPlayer != null)
                 {
                     serverPlayer.IsOp = true;
@@ -93,14 +92,15 @@ public class EntityPostProcessingService : IEntityPostProcessingService
         }
         else
         {
-            var whitelistUids = await _fileReader.ReadWhiteListJson(serverPath);
+            List<string> whitelistUids = await _fileReader.ReadWhiteListJson(serverPath);
             server.Whitelist = await UidsToPlayersAsync(whitelistUids);
-            var banListUids = await _fileReader.ReadBanListJson(serverPath);
+            List<string> banListUids = await _fileReader.ReadBanListJson(serverPath);
             server.Banlist = await UidsToPlayersAsync(banListUids);
-            var opListUids = await _fileReader.ReadOpListJson(serverPath);
+            List<string> opListUids = await _fileReader.ReadOpListJson(serverPath);
             foreach (string opUid in opListUids)
             {
-                var serverPlayer = server.ServerPlayers.FirstOrDefault(p => p.Player.Uid == opUid.Replace("-",""));
+                ServerPlayer serverPlayer =
+                    server.ServerPlayers.FirstOrDefault(p => p.Player.Uid == opUid.Replace("-", ""));
                 if (serverPlayer != null)
                 {
                     serverPlayer.IsOp = true;
@@ -111,24 +111,18 @@ public class EntityPostProcessingService : IEntityPostProcessingService
 
     private async Task<List<Player>> NamesToPlayersAsync(IEnumerable<string> names)
     {
-        var result = new List<Player>();
+        List<Player> result = new List<Player>();
 
-        foreach (string name in names)
-        {
-            result.Add(await _playerService.PlayerByNameAsync(name));
-        }
-        
+        foreach (string name in names) result.Add(await _playerService.PlayerByNameAsync(name));
+
         return result;
     }
 
     private async Task<List<Player>> UidsToPlayersAsync(IEnumerable<string> uids)
     {
-        var result = new List<Player>();
+        List<Player> result = new List<Player>();
 
-        foreach (string uid in uids)
-        {
-            result.Add(await _playerService.PlayerByUidAsync(uid));
-        }
+        foreach (string uid in uids) result.Add(await _playerService.PlayerByUidAsync(uid));
 
         return result;
     }

@@ -1,10 +1,10 @@
-﻿@using ForkFrontend.Logic.Services.Connections
+﻿@using Index = Index
 @using ForkCommon.Model.Entity.Pocos
 @using ForkCommon.Model.Entity.Pocos.ServerSettings
 @using ForkCommon.Model.Payloads.Entity
-@using ForkCommon.Model.Entity.Enums
 @using ForkFrontend.Logic.Services.Managers
-@using Index = ForkFrontend.Razor.Index
+@using ForkFrontend.Logic.Services.Connections
+@using ForkCommon.Model.Entity.Enums
 @inject ILogger<Sidebar> _logger
 @inject IEntityConnectionService _entityConnection
 
@@ -29,7 +29,7 @@
         <div class="flex-1 overflow-y-auto scroll-left">
             @if (EntityManagers != null)
             {
-                @foreach (var entityManager in EntityManagers)
+                @foreach (KeyValuePair<ulong, EntityStateManager> entityManager in EntityManagers)
                 {
                     <SidebarEntity Value="@entityManager.Value" OnClickCallback="OnSelectEntity" IsSelected="@(SelectedEntity?.Id == entityManager.Key)"></SidebarEntity>
                 }
@@ -46,14 +46,11 @@
 
 @code
 {
-    [Parameter]
-    public Index? Parent { get; set; }
-    
-    [Parameter]
-    public EventCallback<IEntity> OnSelectEntity { get; set; }
+    [Parameter] public Index? Parent { get; set; }
 
-    [Parameter]
-    public Dictionary<ulong, EntityStateManager>? EntityManagers { get; set; }
+    [Parameter] public EventCallback<IEntity> OnSelectEntity { get; set; }
+
+    [Parameter] public Dictionary<ulong, EntityStateManager>? EntityManagers { get; set; }
 
     [CascadingParameter(Name = nameof(SelectedEntity))]
     public IEntity? SelectedEntity { get; set; }
@@ -71,10 +68,10 @@
 
     private async Task CreateServerHandler(IconButton button)
     {
-        var createPayload = new CreateServerPayload();
+        CreateServerPayload createPayload = new CreateServerPayload();
         createPayload.ServerName = "test";
         createPayload.JavaSettings = new JavaSettings();
-        createPayload.ServerVersion = new ServerVersion{Build = 0, Type = VersionType.Vanilla, Version = "1.18.1", JarLink = "https://launcher.mojang.com/v1/objects/125e5adf40c659fd3bce3e66e67a16bb49ecc1b9/server.jar" };
+        createPayload.ServerVersion = new ServerVersion { Build = 0, Type = VersionType.Vanilla, Version = "1.18.1", JarLink = "https://launcher.mojang.com/v1/objects/125e5adf40c659fd3bce3e66e67a16bb49ecc1b9/server.jar" };
         createPayload.VanillaSettings = new VanillaSettings("world");
 
         try

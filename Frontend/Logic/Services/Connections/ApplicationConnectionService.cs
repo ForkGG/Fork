@@ -20,11 +20,11 @@ public class ApplicationConnectionService : AbstractConnectionService, IApplicat
     {
         _logger.LogDebug("Loading main state");
         // TODO make this generic
-        var responseMessage = await _client.GetAsync("/v1/application/state");
-        var message = await responseMessage.Content.ReadAsStringAsync();
+        HttpResponseMessage responseMessage = await _client.GetAsync("/v1/application/state");
+        string message = await responseMessage.Content.ReadAsStringAsync();
         try
         {
-            var result = message.FromJson<State>();
+            State? result = message.FromJson<State>();
             return result;
         }
         catch (Exception e)
@@ -37,7 +37,7 @@ public class ApplicationConnectionService : AbstractConnectionService, IApplicat
     public async Task<string> GetIpAddress()
     {
         _logger.LogDebug("Getting servers external Ip address");
-        var responseMessage = await _client.GetAsync("/v1/application/ip");
+        HttpResponseMessage responseMessage = await _client.GetAsync("/v1/application/ip");
         return await responseMessage.Content.ReadAsStringAsync();
     }
 }

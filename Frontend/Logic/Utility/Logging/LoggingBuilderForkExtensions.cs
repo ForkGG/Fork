@@ -9,7 +9,7 @@ public static class LoggingBuilderForkExtensions
         loggingBuilder.Services.Configure(configure);
         loggingBuilder.Services.AddSingleton<ILoggerProvider, ForkLoggerProvider>(services =>
         {
-            var options = services.GetService<IOptions<ForkLoggerOptions>>();
+            IOptions<ForkLoggerOptions>? options = services.GetService<IOptions<ForkLoggerOptions>>();
             return new ForkLoggerProvider(options);
         });
         return loggingBuilder;

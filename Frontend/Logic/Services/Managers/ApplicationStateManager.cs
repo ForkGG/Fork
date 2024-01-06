@@ -21,7 +21,7 @@ public class ApplicationStateManager : IApplicationStateManager
         _logger = logger;
         _applicationConnection = applicationConnection;
         _notificationService = notificationService;
-        
+
         _notificationService.WebsocketStatusChanged += async newStatus =>
         {
             WebsocketStatus = newStatus;
@@ -35,7 +35,7 @@ public class ApplicationStateManager : IApplicationStateManager
     public State ApplicationState { get; private set; }
     public string ForkExternalIp { get; private set; }
 
-    public Dictionary<ulong, EntityStateManager> EntityStateManagersById { get; } = new ();
+    public Dictionary<ulong, EntityStateManager> EntityStateManagersById { get; } = new();
 
     public WebsocketStatus WebsocketStatus
     {
@@ -51,8 +51,16 @@ public class ApplicationStateManager : IApplicationStateManager
     {
         get
         {
-            if (!_isStateReady) return ApplicationStatus.RetrievingState;
-            if (WebsocketStatus != WebsocketStatus.Connected) return ApplicationStatus.WaitingForWebsocket;
+            if (!_isStateReady)
+            {
+                return ApplicationStatus.RetrievingState;
+            }
+
+            if (WebsocketStatus != WebsocketStatus.Connected)
+            {
+                return ApplicationStatus.WaitingForWebsocket;
+            }
+
             return ApplicationStatus.Ready;
         }
     }
@@ -73,9 +81,8 @@ public class ApplicationStateManager : IApplicationStateManager
     private void UpdateEntityManagers()
     {
         // TODO CKE do we need to remove some here? Thinking of including multiple States we might not
-        
+
         foreach (IEntity entity in ApplicationState.Entities)
-        {
             if (EntityStateManagersById.ContainsKey(entity.Id))
             {
                 // Update existing entity
@@ -84,9 +91,8 @@ public class ApplicationStateManager : IApplicationStateManager
             else
             {
                 // Add new entity
-                var entityManager = new EntityStateManager(entity, _notificationService);
+                EntityStateManager entityManager = new EntityStateManager(entity, _notificationService);
                 EntityStateManagersById.Add(entity.Id, entityManager);
             }
-        }
     }
 }

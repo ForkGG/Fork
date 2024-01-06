@@ -8,31 +8,21 @@
 
 @code {
 
-    [Parameter]
-    [EditorRequired]
-    public char IconChar { get; set; }
+    [Parameter] [EditorRequired] public char IconChar { get; set; }
 
-    [Parameter]
-    [EditorRequired]
-    public int IconSize { get; set; }
+    [Parameter] [EditorRequired] public int IconSize { get; set; }
 
     private string IconSizeString => $"{IconSize}px;";
 
-    [Parameter]
-    [EditorRequired]
-    public EventCallback<IconButton> OnClickMethod { get; set; }
+    [Parameter] [EditorRequired] public EventCallback<IconButton> OnClickMethod { get; set; }
 
-    [Parameter]
-    public int? Size { get; set; }
+    [Parameter] public int? Size { get; set; }
 
-    [Parameter]
-    public bool NoBackground { get; set; } = false;
+    [Parameter] public bool NoBackground { get; set; } = false;
 
-    [Parameter]
-    public string HoverColor { get; set; } = "label-hover";
+    [Parameter] public string HoverColor { get; set; } = "label-hover";
 
-    [Parameter]
-    public bool IsDisabled { get; set; }
+    [Parameter] public bool IsDisabled { get; set; }
 
     private string SizeString => Size.HasValue ? $"width: {Size}px; height: {Size}px;" : "";
 

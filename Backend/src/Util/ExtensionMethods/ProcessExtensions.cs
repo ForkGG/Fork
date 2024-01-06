@@ -17,12 +17,13 @@ public static class ProcessExtensions
         process.Refresh();
         TimeSpan endCpuTime = process.TotalProcessorTime;
         timer.Stop();
-        return ((endCpuTime - startCpuTime).TotalMilliseconds / (Environment.ProcessorCount * timer.ElapsedMilliseconds)) * 100;
+        return (endCpuTime - startCpuTime).TotalMilliseconds /
+            (Environment.ProcessorCount * timer.ElapsedMilliseconds) * 100;
     }
 
     public static Task<double> CalculateMemLoad(this Process process, int maxRam)
     {
         process.Refresh();
-        return Task.FromResult((process.WorkingSet64 / (1024d * 1024d) / maxRam)  * 100);
+        return Task.FromResult(process.WorkingSet64 / (1024d * 1024d) / maxRam * 100);
     }
 }

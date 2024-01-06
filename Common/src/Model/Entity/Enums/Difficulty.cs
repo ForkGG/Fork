@@ -1,10 +1,9 @@
-﻿namespace ForkCommon.Model.Entity.Enums
+﻿namespace ForkCommon.Model.Entity.Enums;
+
+public enum Difficulty
 {
-    public enum Difficulty
-    {
-        Peaceful,
-        Easy,
-        Normal,
-        Hard
-    }
+    Peaceful,
+    Easy,
+    Normal,
+    Hard
 }

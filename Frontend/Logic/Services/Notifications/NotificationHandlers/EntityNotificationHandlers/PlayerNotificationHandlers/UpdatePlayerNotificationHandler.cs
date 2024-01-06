@@ -2,7 +2,8 @@
 using ForkCommon.Model.Entity.Pocos.Player;
 using ForkCommon.Model.Notifications.EntityNotifications.PlayerNotifications;
 
-namespace ForkFrontend.Logic.Services.Notifications.NotificationHandlers.EntityNotificationHandlers.PlayerNotificationHandlers;
+namespace ForkFrontend.Logic.Services.Notifications.NotificationHandlers.EntityNotificationHandlers.
+    PlayerNotificationHandlers;
 
 public class UpdatePlayerNotificationHandler : AbstractEntityNotificationHandler<UpdatePlayerNotification>
 {
@@ -15,7 +16,8 @@ public class UpdatePlayerNotificationHandler : AbstractEntityNotificationHandler
 
     protected override async Task UpdateModel(UpdatePlayerNotification notification)
     {
-        var existing = _serverPlayers.FirstOrDefault(p => p.Player.Uid == notification.ServerPlayer.Player.Uid);
+        ServerPlayer? existing =
+            _serverPlayers.FirstOrDefault(p => p.Player.Uid == notification.ServerPlayer.Player.Uid);
         if (existing != null)
         {
             existing.IsOnline = notification.ServerPlayer.IsOnline;
@@ -25,6 +27,7 @@ public class UpdatePlayerNotificationHandler : AbstractEntityNotificationHandler
         {
             _serverPlayers.Add(notification.ServerPlayer);
         }
+
         await base.UpdateModel(notification);
     }
 }

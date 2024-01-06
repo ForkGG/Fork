@@ -4,7 +4,7 @@
     <label for="@($"{Name}")" class="text-label text-md">@Label</label>
     <div class="py-1 pl-9 pr-1 ml-5 mt-2 bg-forkBlue-dark w-max clip-top-left">
         <input type="text" name="@Name" id="@Name" @bind="CurrentValue"
-                class="bg-transparent focus:outline-none w-full text-text text-xs monospace outline-none"/>
+               class="bg-transparent focus:outline-none w-full text-text text-xs monospace outline-none"/>
     </div>
 </div>
 
@@ -18,4 +18,5 @@
         validationErrorMessage = null;
         return true;
     }
+
 }

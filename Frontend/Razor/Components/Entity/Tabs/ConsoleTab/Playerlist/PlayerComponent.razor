@@ -18,11 +18,9 @@
 
 @code {
 
-    [CascadingParameter]
-    public ISimplePlayerlist? Parent { get; set; }
+    [CascadingParameter] public ISimplePlayerlist? Parent { get; set; }
 
-    [Parameter]
-    public Player? Value { get; set; }
+    [Parameter] public Player? Value { get; set; }
 
     private bool IsActive => Parent?.ActivePlayer != null && Parent.ActivePlayer.Equals(Value);
 

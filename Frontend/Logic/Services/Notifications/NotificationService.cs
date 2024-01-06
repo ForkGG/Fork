@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using ForkCommon.ExtensionMethods;
 using ForkCommon.Model.Notifications;
-using ForkFrontend.Logic.Services.Managers;
 using ForkFrontend.Model;
 
 namespace ForkFrontend.Logic.Services.Notifications;
@@ -12,13 +11,21 @@ namespace ForkFrontend.Logic.Services.Notifications;
 public class NotificationService : INotificationService
 {
     private const int BUFFER_SIZE = 2048;
-    
+
     private readonly CancellationTokenSource _cancellationTokenSource;
     private readonly ILogger<NotificationService> _logger;
     private readonly Uri _webSocketUri = new("ws://localhost:35566");
     private ClientWebSocket? _webSocket;
 
     private WebsocketStatus _websocketStatus = WebsocketStatus.Disconnected;
+
+    public NotificationService(ILogger<NotificationService> logger)
+    {
+        logger.LogInformation("Initializing NotificationService");
+        _logger = logger;
+        _cancellationTokenSource = new CancellationTokenSource();
+        RegisteredHandlers = new List<INotificationHandler>();
+    }
 
     private WebsocketStatus WebsocketStatus
     {
@@ -29,17 +36,9 @@ public class NotificationService : INotificationService
             WebsocketStatusChanged?.Invoke(value);
         }
     }
-    public event INotificationService.WebsocketStatusChangedHandler? WebsocketStatusChanged;
-
-    public NotificationService(ILogger<NotificationService> logger)
-    {
-        logger.LogInformation("Initializing NotificationService");
-        _logger = logger;
-        _cancellationTokenSource = new CancellationTokenSource();
-        RegisteredHandlers = new List<INotificationHandler>();
-    }
 
     private List<INotificationHandler> RegisteredHandlers { get; }
+    public event INotificationService.WebsocketStatusChangedHandler? WebsocketStatusChanged;
 
     public void Register<T>(Func<T, Task> handler) where T : AbstractNotification
     {
@@ -60,7 +59,7 @@ public class NotificationService : INotificationService
         if (RegisteredHandlers.FirstOrDefault(h => h.GetType() == typeof(NotificationHandler<T>)) is
             NotificationHandler<T> notificationHandler)
         {
-            var count = notificationHandler.Handlers.RemoveAll(f => f.Target == caller);
+            int count = notificationHandler.Handlers.RemoveAll(f => f.Target == caller);
             _logger.LogDebug(
                 $"Unregistered {count} NotificationHandlers for {typeof(T)}");
         }
@@ -111,16 +110,20 @@ public class NotificationService : INotificationService
     private async IAsyncEnumerable<string> ConnectAsync(
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        if (_webSocket == null) yield break;
+        if (_webSocket == null)
+        {
+            yield break;
+        }
+
         await _webSocket.ConnectAsync(_webSocketUri, cancellationToken);
         WebsocketStatus = WebsocketStatus.Connected;
         // TODO CKE actual token
         await SendMessageAsync("dummyToken", cancellationToken);
-        var buffer = new ArraySegment<byte>(new byte[BUFFER_SIZE]);
+        ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[BUFFER_SIZE]);
         while (!cancellationToken.IsCancellationRequested)
         {
             WebSocketReceiveResult result;
-            await using var ms = new MemoryStream();
+            await using MemoryStream ms = new MemoryStream();
             do
             {
                 result = await _webSocket.ReceiveAsync(buffer, cancellationToken);
@@ -133,7 +136,9 @@ public class NotificationService : INotificationService
             yield return Encoding.UTF8.GetString(ms.ToArray());
 
             if (result.MessageType == WebSocketMessageType.Close)
+            {
                 break;
+            }
         }
     }
 
@@ -152,11 +157,11 @@ public class NotificationService : INotificationService
             return;
         }
 
-        var messageInBytes = Encoding.UTF8.GetBytes(message);
+        byte[] messageInBytes = Encoding.UTF8.GetBytes(message);
         _logger.LogDebug($"Sending message with {messageInBytes.Length} Bytes");
         for (int i = 0; i < messageInBytes.Length; i += BUFFER_SIZE)
         {
-            var chunk = new ArraySegment<byte>(messageInBytes.Skip(i).Take(BUFFER_SIZE).ToArray());
+            ArraySegment<byte> chunk = new ArraySegment<byte>(messageInBytes.Skip(i).Take(BUFFER_SIZE).ToArray());
             await _webSocket.SendAsync(chunk, WebSocketMessageType.Text, i + BUFFER_SIZE >= messageInBytes.Length,
                 cancellationToken);
         }

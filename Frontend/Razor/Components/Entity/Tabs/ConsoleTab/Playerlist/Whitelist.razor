@@ -1,9 +1,7 @@
-﻿@using ForkFrontend.Logic.Services.Notifications
+﻿@using ForkFrontend.Logic.Services.Managers
+@using ForkFrontend.Logic.Services.Notifications
 @using ForkCommon.Model.Entity.Pocos
 @using ForkCommon.Model.Entity.Pocos.Player
-@using ForkCommon.Model.Notifications.EntityNotifications.PlayerNotifications
-@using ForkCommon.Model.Entity.Enums.Player
-@using ForkFrontend.Logic.Services.Managers
 @implements ISimplePlayerlist
 @inject INotificationService _notificationService
 <div class="h-full bg-forkBlue pt-3">
@@ -14,7 +12,7 @@
         @if (Server?.Whitelist != null)
         {
             Server.Whitelist.Sort();
-            foreach (var player in Server.Whitelist)
+            foreach (Player? player in Server.Whitelist)
             {
                 <CascadingValue Value="this">
                     <PlayerComponent Value="player"></PlayerComponent>
@@ -26,8 +24,7 @@
 
 @code {
 
-    [CascadingParameter]
-    public EntityStateManager? EntityState { get; set; }
+    [CascadingParameter] public EntityStateManager? EntityState { get; set; }
 
     private Server? Server => EntityState?.Entity as Server;
 

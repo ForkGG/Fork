@@ -1,6 +1,5 @@
-﻿@using ForkFrontend.Logic.Services.Connections
-@using ForkCommon.Model.Entity.Pocos
-@using ForkFrontend.Logic.Services.Managers
+﻿@using ForkFrontend.Logic.Services.Managers
+@using ForkFrontend.Logic.Services.Connections
 @inject IEntityConnectionService _entityConnection
 
 <EditForm Model="@InputForm" OnSubmit="OnSubmit">
@@ -15,15 +14,14 @@
 
 @code {
 
-    [CascadingParameter]
-    public EntityStateManager? EntityState { get; set; }
+    [CascadingParameter] public EntityStateManager? EntityState { get; set; }
 
     private ConsoleInput InputForm { get; set; } = new();
 
     private string Prefix => InputForm.SayMode ? "/say " : "/";
 
     private async Task OnSubmit()
-    {   
+    {
         if (await _entityConnection.SubmitConsoleInAsync($"{Prefix}{InputForm.Input}", EntityState!.Entity.Id))
         {
             InputForm.Input = "";

@@ -2,5 +2,7 @@
 
 public enum ApplicationStatus
 {
-    Ready, RetrievingState, WaitingForWebsocket
+    Ready,
+    RetrievingState,
+    WaitingForWebsocket
 }

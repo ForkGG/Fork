@@ -15,39 +15,40 @@ public abstract class AbstractAdapter
 {
     protected readonly ILogger Logger;
     protected readonly string UserAgent;
-    
+
     public AbstractAdapter(ILogger logger, IApplicationManager applicationManager)
     {
         Logger = logger;
         UserAgent = applicationManager.UserAgent;
     }
-    
+
     /// <summary>
-    /// Makes a GET request to the given path and returns the deserialized body as <see cref="T"/>>
+    ///     Makes a GET request to the given path and returns the deserialized body as <see cref="T" />>
     /// </summary>
     protected async Task<T> GetAsync<T>(string path)
     {
-        var body = await GetBodyAsync(path);
+        string body = await GetBodyAsync(path);
         return JsonConvert.DeserializeObject<T>(body);
     }
 
     // TODO CKE Add optional caching to requests
     /// <summary>
-    /// Makes a GET request to the given path and returns the body as string
+    ///     Makes a GET request to the given path and returns the body as string
     /// </summary>
     protected async Task<string> GetBodyAsync(string path)
     {
         try
         {
-            using HttpClient client = new HttpClient();
+            using HttpClient client = new();
             client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", UserAgent);
-            var stopwatch = Stopwatch.StartNew();
-            var response = await client.GetAsync(path);
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            HttpResponseMessage response = await client.GetAsync(path);
             stopwatch.Stop();
             if (!response.IsSuccessStatusCode)
             {
                 Logger.LogWarning($"GET {path} -> {response.StatusCode}");
             }
+
             Logger.LogDebug($"GET {path} -> {response.StatusCode} ({stopwatch.ElapsedMilliseconds}ms)");
 
             if (response.StatusCode == HttpStatusCode.OK)

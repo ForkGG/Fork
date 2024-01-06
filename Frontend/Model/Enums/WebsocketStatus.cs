@@ -2,5 +2,6 @@
 
 public enum WebsocketStatus
 {
-    Disconnected, Connected
+    Disconnected,
+    Connected
 }

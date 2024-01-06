@@ -1,10 +1,9 @@
-﻿namespace ForkCommon.Model.Entity.Enums
+﻿namespace ForkCommon.Model.Entity.Enums;
+
+public enum Gamemode
 {
-    public enum Gamemode
-    {
-        Survival,
-        Creative,
-        Adventure,
-        Spectator
-    }
+    Survival,
+    Creative,
+    Adventure,
+    Spectator
 }

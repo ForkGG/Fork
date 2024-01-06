@@ -1,6 +1,6 @@
-﻿@using ForkCommon.Model.Entity.Pocos
+﻿@using ForkFrontend.Logic.Services.Managers
 @using ForkCommon.Model.Notifications.EntityNotifications
-@using ForkFrontend.Logic.Services.Managers
+@using ForkCommon.Model.Entity.Pocos
 @inherits EntityTab
 @inject IApplicationStateManager Application
 
@@ -40,8 +40,8 @@
 
     [CascadingParameter] public EntityStateManager? EntityState { get; set; }
 
-    private int CpuPercentage { get; set; } = 0;
-    private int MemoryPercentage { get; set; } = 0;
+    private int CpuPercentage { get; set; }
+    private int MemoryPercentage { get; set; }
     private TimeSpan Uptime { get; set; } = TimeSpan.Zero;
 
     protected override void OnInitialized()

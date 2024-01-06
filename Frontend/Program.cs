@@ -1,13 +1,13 @@
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using ForkFrontend;
 using ForkFrontend.Logic.Services.Connections;
 using ForkFrontend.Logic.Services.HttpsClients;
 using ForkFrontend.Logic.Services.Managers;
 using ForkFrontend.Logic.Services.Notifications;
 using ForkFrontend.Logic.Services.Translation;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
-var builder = WebAssemblyHostBuilder.CreateDefault(args);
+WebAssemblyHostBuilder builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 

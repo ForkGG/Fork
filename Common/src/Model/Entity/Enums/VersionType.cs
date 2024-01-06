@@ -1,11 +1,10 @@
-﻿namespace ForkCommon.Model.Entity.Enums
+﻿namespace ForkCommon.Model.Entity.Enums;
+
+public enum VersionType
 {
-    public enum VersionType
-    {
-        Vanilla,
-        Paper,
-        Spigot,
-        Waterfall,
-        BungeeCord
-    }
+    Vanilla,
+    Paper,
+    Spigot,
+    Waterfall,
+    BungeeCord
 }

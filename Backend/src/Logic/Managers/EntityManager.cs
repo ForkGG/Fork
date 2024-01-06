@@ -4,9 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Fork.Logic.Notification;
 using Fork.Logic.Persistence;
 using Fork.Logic.Services.EntityServices;
@@ -14,6 +11,9 @@ using ForkCommon.Model.Entity.Enums.Player;
 using ForkCommon.Model.Entity.Pocos;
 using ForkCommon.Model.Entity.Pocos.Player;
 using ForkCommon.Model.Notifications.EntityNotifications.PlayerNotifications;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Fork.Logic.Managers;
 
@@ -21,11 +21,11 @@ public class EntityManager : IEntityManager
 {
     private static readonly SemaphoreSlim _semaphore = new(1);
 
-    private readonly ILogger<EntityManager> _logger;
-    private readonly IServiceScopeFactory _scopeFactory;
-
     // This contains all loaded entities (Database cache and state keeping)
     private readonly Dictionary<ulong, IEntity> _entities;
+
+    private readonly ILogger<EntityManager> _logger;
+    private readonly IServiceScopeFactory _scopeFactory;
 
     public EntityManager(ILogger<EntityManager> logger, IServiceScopeFactory scopeFactory)
     {
@@ -35,11 +35,11 @@ public class EntityManager : IEntityManager
     }
 
     /// <summary>
-    /// Get an entity by ID and loads it form the DB if the entity is not yet loaded
+    ///     Get an entity by ID and loads it form the DB if the entity is not yet loaded
     /// </summary>
     public async Task<IEntity> EntityById(ulong entityId)
     {
-        using var scope = _scopeFactory.CreateScope();
+        using IServiceScope scope = _scopeFactory.CreateScope();
 
         // We need a lock here to ensure that we don't get multiple instances of the same entity
         await _semaphore.WaitAsync();
@@ -50,7 +50,7 @@ public class EntityManager : IEntityManager
         }
 
         // TODO extend once we got networks
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         IEntity result = await context.ServerSet.Where(s => s.Id == entityId)
             .Include(s => s.AutomationTimes)
             .ThenInclude(a => a.Time)
@@ -66,7 +66,8 @@ public class EntityManager : IEntityManager
         }
 
         // Post processing can be done without the lock
-        var postProcessing = scope.ServiceProvider.GetRequiredService<IEntityPostProcessingService>();
+        IEntityPostProcessingService postProcessing =
+            scope.ServiceProvider.GetRequiredService<IEntityPostProcessingService>();
         await postProcessing.PostProcessEntity(result);
         await context.SaveChangesAsync();
         _semaphore.Release();
@@ -75,13 +76,13 @@ public class EntityManager : IEntityManager
 
     public async Task<List<IEntity>> ListAllEntities()
     {
-        List<IEntity> result = new List<IEntity>();
+        List<IEntity> result = new();
 
-        using var scope = _scopeFactory.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        using IServiceScope scope = _scopeFactory.CreateScope();
+        ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         foreach (ulong serverId in context.ServerSet.Select(s => s.Id))
         {
-            var entity = await EntityById(serverId);
+            IEntity entity = await EntityById(serverId);
             result.Add(entity);
         }
 
@@ -89,12 +90,12 @@ public class EntityManager : IEntityManager
     }
 
     /// <summary>
-    /// Add or update a player on the player list and save changes to DB
+    ///     Add or update a player on the player list and save changes to DB
     /// </summary>
     public async Task UpdatePlayerOnPlayerList(Server server, ServerPlayer player)
     {
         // Player already exists -> update
-        var existingPlayer = server.ServerPlayers.FirstOrDefault(p => p.Player.Uid == player.Player.Uid);
+        ServerPlayer existingPlayer = server.ServerPlayers.FirstOrDefault(p => p.Player.Uid == player.Player.Uid);
         if (existingPlayer != null)
         {
             existingPlayer.IsOnline = player.IsOnline;
@@ -106,13 +107,14 @@ public class EntityManager : IEntityManager
             server.ServerPlayers.Add(player);
         }
 
-        using var scope = _scopeFactory.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        using IServiceScope scope = _scopeFactory.CreateScope();
+        ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         await context.SaveChangesAsync();
 
         // Send notification
-        var notification = new UpdatePlayerNotification { EntityId = server.Id, ServerPlayer = player };
-        var notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
+        UpdatePlayerNotification notification = new UpdatePlayerNotification
+            { EntityId = server.Id, ServerPlayer = player };
+        INotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
         await notificationCenter.BroadcastNotification(notification);
     }
 
@@ -135,7 +137,7 @@ public class EntityManager : IEntityManager
 
                 break;
             case PlayerlistUpdateType.Update:
-                var existingPlayer = server.Whitelist.FirstOrDefault(p => p.Uid == player.Uid);
+                Player existingPlayer = server.Whitelist.FirstOrDefault(p => p.Uid == player.Uid);
                 if (existingPlayer == null)
                 {
                     _logger.LogWarning("Tried to update entry on the whitelist which is not present. Adding it...");
@@ -154,10 +156,10 @@ public class EntityManager : IEntityManager
             default: throw new ArgumentException($"Unknown update type {updateType}");
         }
 
-        var notification = new UpdateWhitelistPlayerNotification
+        UpdateWhitelistPlayerNotification notification = new UpdateWhitelistPlayerNotification
             { EntityId = server.Id, Player = player, UpdateType = updateType };
-        using var scope = _scopeFactory.CreateScope();
-        var notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
+        using IServiceScope scope = _scopeFactory.CreateScope();
+        INotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
         await notificationCenter.BroadcastNotification(notification);
     }
 
@@ -179,7 +181,7 @@ public class EntityManager : IEntityManager
 
                 break;
             case PlayerlistUpdateType.Update:
-                var existingPlayer = server.Banlist.FirstOrDefault(p => p.Uid == player.Uid);
+                Player existingPlayer = server.Banlist.FirstOrDefault(p => p.Uid == player.Uid);
                 if (existingPlayer == null)
                 {
                     _logger.LogWarning("Tried to update entry on the banlist which is not present. Adding it...");
@@ -198,17 +200,17 @@ public class EntityManager : IEntityManager
             default: throw new ArgumentException($"Unknown update type {updateType}");
         }
 
-        var notification = new UpdateBanlistPlayerNotification
+        UpdateBanlistPlayerNotification notification = new UpdateBanlistPlayerNotification
             { EntityId = server.Id, Player = player, UpdateType = updateType };
-        using var scope = _scopeFactory.CreateScope();
-        var notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
+        using IServiceScope scope = _scopeFactory.CreateScope();
+        INotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
         await notificationCenter.BroadcastNotification(notification);
     }
 
     private void UpdatePlayerOnList(Player player, List<Player> players)
     {
         Debug.Assert(players.Any(p => p.Uid == player.Uid));
-        var existingPlayer = players.First(p => p.Uid == player.Uid);
+        Player existingPlayer = players.First(p => p.Uid == player.Uid);
         existingPlayer.Head = player.Head;
         existingPlayer.Name = player.Name;
         existingPlayer.LastUpdated = player.LastUpdated;

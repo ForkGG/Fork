@@ -20,13 +20,15 @@
             <div class="px-4 pb-10">
                 <div>
                     <ForkRadio Name="ServerType" @bind-Value="SelectedVersionType" TModelValue="VersionType"
-                               Values="AvailableVersionTypes" RadioType="RadioType.ButtonRow" Label="Server Type"></ForkRadio>
+                               Values="AvailableVersionTypes" RadioType="RadioType.ButtonRow" Label="Server Type">
+                    </ForkRadio>
                 </div>
 
                 <div>
                     <ForkSelect Name="ServerVersion" @bind-Value="_serverPayload.ServerVersion" TModelValue="ServerVersion"
-                        Values="Versions" Label="Choose Version"></ForkSelect>
-                        
+                                Values="Versions" Label="Choose Version">
+                    </ForkSelect>
+
                 </div>
             </div>
 
@@ -38,12 +40,14 @@
                 </div>
                 <div class="flex gap-8">
                     <ForkSelect Name="Gamemode" @bind-Value="_serverPayload.VanillaSettings.CurrGamemode" TModelValue="Gamemode"
-                                Values="GetAvailableGameModes()" Label="Gamemode"></ForkSelect>
+                                Values="GetAvailableGameModes()" Label="Gamemode">
+                    </ForkSelect>
                     <ForkSelect Name="Gamemode" @bind-Value="_serverPayload.VanillaSettings.CurrDifficulty" TModelValue="Difficulty"
-                                Values="GetAvailableDifficulties()" Label="Difficulty"></ForkSelect>
+                                Values="GetAvailableDifficulties()" Label="Difficulty">
+                    </ForkSelect>
                 </div>
             </div>
-            
+
             <IconButton IconChar="'C'" IconSize="24" Size="45" OnClickMethod="OnCreateEntity"></IconButton>
         </div>
     </EditForm>
@@ -51,11 +55,12 @@
 
 @code {
     [CascadingParameter] Error Error { get; set; } = null!;
-    
-    private CreateServerPayload _serverPayload = new CreateServerPayload();
+
+    private readonly CreateServerPayload _serverPayload = new();
 
     private List<ForkFormEntity<ServerVersion, string>> Versions { get; set; } = new();
     private VersionType _selectedVersionType = VersionType.Vanilla;
+
     private VersionType SelectedVersionType
     {
         get => _selectedVersionType;
@@ -92,65 +97,70 @@
     private List<ForkFormEntity<ServerVersion, string>> GetAvailableVersions(VersionType versionType)
     {
         //TODO CKE implement
-        var result = new List<ForkFormEntity<ServerVersion, string>>();
-        var version1 = new ServerVersion()
-            {
-                Id = 0,
-                Type = VersionType.Vanilla,
-                Version = "1.10.2"
-            };
-        result.Add(new ForkFormEntity<ServerVersion, string>()
-            {
-                ModelValue = version1,
-                ViewValue = version1.Version
-            });
-        var version2 = new ServerVersion()
-            {
-                Id = 0,
-                Type = VersionType.Vanilla,
-                Version = "1.10.1"
-            };
-        result.Add(new ForkFormEntity<ServerVersion, string>()
-            {
-                ModelValue = version2,
-                ViewValue = version2.Version
-            });
+        List<ForkFormEntity<ServerVersion, string>> result = new();
+        ServerVersion version1 = new()
+        {
+            Id = 0,
+            Type = VersionType.Vanilla,
+            Version = "1.10.2"
+        };
+        result.Add(new ForkFormEntity<ServerVersion, string>
+        {
+            ModelValue = version1,
+            ViewValue = version1.Version
+        });
+        ServerVersion version2 = new()
+        {
+            Id = 0,
+            Type = VersionType.Vanilla,
+            Version = "1.10.1"
+        };
+        result.Add(new ForkFormEntity<ServerVersion, string>
+        {
+            ModelValue = version2,
+            ViewValue = version2.Version
+        });
         return result;
     }
 
     private List<ForkFormEntity<VersionType, string>> GetAvailableVersionTypes()
     {
-        var result = new List<ForkFormEntity<VersionType, string>>();
-        result.Add(new ForkFormEntity<VersionType, string>()
+        List<ForkFormEntity<VersionType, string>> result = new()
+        {
+            new ForkFormEntity<VersionType, string>
             {
                 ModelValue = VersionType.Vanilla,
                 ViewValue = "Vanilla"
-            }); 
-        result.Add(new ForkFormEntity<VersionType, string>()
+            },
+            new ForkFormEntity<VersionType, string>
             {
                 ModelValue = VersionType.Paper,
                 ViewValue = "Paper"
-            });
+            }
+        };
         return result;
     }
 
     private List<ForkFormEntity<Gamemode, string>> GetAvailableGameModes()
     {
-        var result = new List<ForkFormEntity<Gamemode, string>>(); 
-        foreach (var gameMode in _serverPayload.VanillaSettings.Gamemodes)     
+        List<ForkFormEntity<Gamemode, string>> result = new();
+        foreach (Gamemode gameMode in _serverPayload.VanillaSettings.Gamemodes)
         {
-            result.Add(new ForkFormEntity<Gamemode, string>() { ModelValue = gameMode, ViewValue = gameMode.ToString() });
+            result.Add(new ForkFormEntity<Gamemode, string> { ModelValue = gameMode, ViewValue = gameMode.ToString() });
         }
+
         return result;
     }
 
     private List<ForkFormEntity<Difficulty, string>> GetAvailableDifficulties()
     {
-        var result = new List<ForkFormEntity<Difficulty, string>>();
-        foreach (var difficulty in _serverPayload.VanillaSettings.Difficulties)
+        List<ForkFormEntity<Difficulty, string>> result = new();
+        foreach (Difficulty difficulty in _serverPayload.VanillaSettings.Difficulties)
         {
-            result.Add(new ForkFormEntity<Difficulty, string>() { ModelValue = difficulty, ViewValue = difficulty.ToString() });
+            result.Add(new ForkFormEntity<Difficulty, string> { ModelValue = difficulty, ViewValue = difficulty.ToString() });
         }
+
         return result;
     }
+
 }

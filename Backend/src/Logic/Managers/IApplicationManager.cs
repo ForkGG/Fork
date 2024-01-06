@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using ForkCommon.Model.Application;
+﻿using ForkCommon.Model.Application;
 
 namespace Fork.Logic.Managers;
 

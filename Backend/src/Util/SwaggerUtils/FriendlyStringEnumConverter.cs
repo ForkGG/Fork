@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Globalization;
+using ForkCommon.ExtensionMethods;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Utilities;
-using ForkCommon.ExtensionMethods;
 
 namespace Fork.Util.SwaggerUtils;
 
@@ -18,7 +16,7 @@ public class FriendlyStringEnumConverter : StringEnumConverter
         }
 
         Enum e = (Enum)value;
-        
+
         writer.WriteValue(e.FriendlyName());
     }
 }

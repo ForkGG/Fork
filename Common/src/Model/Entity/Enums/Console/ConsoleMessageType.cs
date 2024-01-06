@@ -2,5 +2,9 @@
 
 public enum ConsoleMessageType
 {
-    Default, Error, Warning, Success, UserInput
+    Default,
+    Error,
+    Warning,
+    Success,
+    UserInput
 }

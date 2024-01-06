@@ -17,9 +17,9 @@ public class ConsoleService : IConsoleService
     private const string WATERFALL_STARTED_REGEX = @"\[([0-9]+:?)* INFO\]: Listening on /.*$";
     private const string WARN_REGEX = @"^\[(?:[0-9]{1,2}:){2}[0-9]{1,2}\] \[.*\/WARN\]:.*";
     private const string WERROR_REGEX = @"^\[(?:[0-9]{1,2}:){2}[0-9]{1,2}\] \[.*\/ERROR\]:.*";
+    private readonly IConsoleInterpreter _consoleInterpreter;
 
     private readonly INotificationCenter _notificationCenter;
-    private readonly IConsoleInterpreter _consoleInterpreter;
 
     public ConsoleService(INotificationCenter notificationCenter, IConsoleInterpreter consoleInterpreter)
     {
@@ -29,7 +29,7 @@ public class ConsoleService : IConsoleService
 
     public async Task WriteLine(IEntity entity, string message, ConsoleMessageType type = ConsoleMessageType.Default)
     {
-        ConsoleMessage consoleMessage = new ConsoleMessage(message, type);
+        ConsoleMessage consoleMessage = new(message, type);
         entity.ConsoleMessages.Add(consoleMessage);
         await _notificationCenter.BroadcastNotification(new ConsoleAddNotification
             { EntityId = entity.Id, NewConsoleMessage = consoleMessage });
@@ -67,15 +67,21 @@ public class ConsoleService : IConsoleService
 
                     ConsoleMessageType messageType = ConsoleMessageType.Default;
                     if (Regex.IsMatch(line, WARN_REGEX))
+                    {
                         messageType = ConsoleMessageType.Warning;
+                    }
+
                     if (Regex.IsMatch(line, WERROR_REGEX))
+                    {
                         messageType = ConsoleMessageType.Error;
+                    }
 
                     if (line.Contains("For help, type \"help\"") || Regex.IsMatch(line, WATERFALL_STARTED_REGEX))
                     {
                         entityStatusUpdateAction.Invoke(EntityStatus.Started);
                         messageType = ConsoleMessageType.Success;
                     }
+
                     await _consoleInterpreter.InterpretLine(entity, line);
 
                     await WriteLine(entity, line, messageType);
@@ -97,6 +103,7 @@ public class ConsoleService : IConsoleService
                         entityStatusUpdateAction.Invoke(EntityStatus.Started);
                         isSuccess = true;
                     }
+
                     await _consoleInterpreter.InterpretLine(entity, line);
 
                     await WriteLine(entity, line, isSuccess ? ConsoleMessageType.Success : ConsoleMessageType.Error);

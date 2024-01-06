@@ -1,11 +1,10 @@
-﻿namespace ForkCommon.Model.Entity.Enums
+﻿namespace ForkCommon.Model.Entity.Enums;
+
+public enum LevelType
 {
-    public enum LevelType
-    {
-        Default,
-        Flat,
-        Largebioms,
-        Amplified,
-        Buffet
-    }
+    Default,
+    Flat,
+    Largebioms,
+    Amplified,
+    Buffet
 }

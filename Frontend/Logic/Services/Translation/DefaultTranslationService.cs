@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using ForkFrontend.Logic.Services.HttpsClients;
+﻿using ForkFrontend.Logic.Services.HttpsClients;
+using Newtonsoft.Json;
 
 namespace ForkFrontend.Logic.Services.Translation;
 
@@ -48,7 +48,7 @@ public class DefaultTranslationService : ITranslationService
         try
         {
             dynamic prop = _translationJson;
-            var path = variable.Split(".");
+            string[] path = variable.Split(".");
             foreach (string s in path) prop = prop[s];
             return prop[_language];
         }

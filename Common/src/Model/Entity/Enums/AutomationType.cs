@@ -1,9 +1,8 @@
-﻿namespace ForkCommon.Model.Entity.Enums
+﻿namespace ForkCommon.Model.Entity.Enums;
+
+public enum AutomationType
 {
-    public enum AutomationType
-    {
-        Start,
-        Stop,
-        Restart
-    }
+    Start,
+    Stop,
+    Restart
 }

@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using Fork.Logic.Persistence;
+using ForkCommon.Model.Application;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Fork.Logic.Persistence;
-using ForkCommon.Model.Application;
-using ForkCommon.Model.Entity.Pocos.Player;
 
 namespace Fork.Logic.Managers;
 
 public class ApplicationManager : IApplicationManager
 {
+    private readonly IConfiguration _configuration;
     private readonly ILogger<ApplicationManager> _logger;
     private readonly IServiceScopeFactory _scopeFactory;
-    private readonly IConfiguration _configuration;
 
     public ApplicationManager(ILogger<ApplicationManager> logger, IServiceScopeFactory scopeFactory,
         IConfiguration configuration)
@@ -29,9 +26,9 @@ public class ApplicationManager : IApplicationManager
         AppPath = directoryInfo.FullName;
         _logger.LogInformation("Data directory of Fork is: " + AppPath);
 
-        using (var scope = _scopeFactory.CreateScope())
+        using (IServiceScope scope = _scopeFactory.CreateScope())
         {
-            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             AppSettings = dbContext.ReadAppSettings().Result;
 
             if (string.IsNullOrWhiteSpace(AppSettings.EntityPath))

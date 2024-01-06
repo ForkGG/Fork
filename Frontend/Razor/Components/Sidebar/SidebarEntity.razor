@@ -1,7 +1,6 @@
-﻿@using ForkFrontend.Logic.Services.Notifications
+﻿@using ForkFrontend.Logic.Services.Managers
+@using ForkFrontend.Logic.Services.Notifications
 @using ForkCommon.Model.Entity.Pocos
-@using ForkCommon.Model.Notifications.EntityNotifications
-@using ForkFrontend.Logic.Services.Managers
 @inject ILogger<SidebarEntity> _logger
 @inject INotificationService _notificationService
 
@@ -24,16 +23,11 @@
 
 @code {
 
-    [Parameter]
-    [EditorRequired]
-    public EntityStateManager? Value { get; set; }
+    [Parameter] [EditorRequired] public EntityStateManager? Value { get; set; }
 
-    [Parameter]
-    [EditorRequired]
-    public EventCallback<IEntity> OnClickCallback { get; set; }
+    [Parameter] [EditorRequired] public EventCallback<IEntity> OnClickCallback { get; set; }
 
-    [Parameter]
-    public bool IsSelected { get; set; }
+    [Parameter] public bool IsSelected { get; set; }
 
     protected override Task OnInitializedAsync()
     {

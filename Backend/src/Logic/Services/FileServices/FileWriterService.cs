@@ -34,14 +34,11 @@ public class FileWriterService : IFileWriterService
             Directory.CreateDirectory(folderPath);
         }
 
-        List<string> lines = new List<string>();
-        lines.Add("#Minecraft server properties");
+        List<string> lines = new() { "#Minecraft server properties" };
         DateTime dt = DateTime.Now;
         lines.Add($"#{dt:ddd MMM dd HH:mm:ss yyyy}");
-        foreach (var setting in serverSettings.Keys)
-        {
+        foreach (string setting in serverSettings.Keys)
             lines.Add(setting + "=" + serverSettings[setting].Replace("\n", "\\n").Replace("\r", ""));
-        }
 
         await File.WriteAllLinesAsync(Path.Combine(folderPath, "server.properties"), lines, Encoding.UTF8);
     }

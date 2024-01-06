@@ -1,6 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 
 namespace ForkCommon.ExtensionMethods;
 
@@ -11,10 +11,10 @@ public static class TypeExtensionMethods
     {
         if (type.CustomAttributes.Any())
         {
-            var attribs = type.GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), false);
+            object[] attribs = type.GetCustomAttributes(typeof(DescriptionAttribute), false);
             if (attribs.Any())
             {
-                return ((System.ComponentModel.DescriptionAttribute)attribs.ElementAt(0)).Description;
+                return ((DescriptionAttribute)attribs.ElementAt(0)).Description;
             }
         }
 

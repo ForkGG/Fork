@@ -24,7 +24,7 @@ public class UpdateBanlistPlayerNotificationHandler : AbstractEntityNotification
         }
         else
         {
-            var existing = _banlist.FirstOrDefault(p => p.Uid == notification.Player.Uid);
+            Player? existing = _banlist.FirstOrDefault(p => p.Uid == notification.Player.Uid);
             // Update
             if (existing != null)
             {

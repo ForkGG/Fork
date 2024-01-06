@@ -2,14 +2,15 @@
 
 namespace ForkFrontend.Logic.Services.Notifications.NotificationHandlers.EntityNotificationHandlers;
 
-public abstract class AbstractEntityNotificationHandler<T> : AbstractNotificationHandler<T> where T : AbstractEntityNotification
+public abstract class AbstractEntityNotificationHandler<T> : AbstractNotificationHandler<T>
+    where T : AbstractEntityNotification
 {
-    public ulong EntityId { get; set; }
-
     protected AbstractEntityNotificationHandler(ulong entityId)
     {
         EntityId = entityId;
     }
+
+    public ulong EntityId { get; set; }
 
     public override async Task HandleNotification(T notification)
     {

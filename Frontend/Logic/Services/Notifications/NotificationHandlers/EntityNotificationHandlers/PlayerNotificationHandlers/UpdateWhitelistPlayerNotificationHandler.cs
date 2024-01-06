@@ -25,7 +25,7 @@ public class
         }
         else
         {
-            var existing = _whitelist.FirstOrDefault(p => p.Uid == notification.Player.Uid);
+            Player? existing = _whitelist.FirstOrDefault(p => p.Uid == notification.Player.Uid);
             // Update
             if (existing != null)
             {

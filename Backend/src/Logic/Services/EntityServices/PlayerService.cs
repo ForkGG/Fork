@@ -1,28 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Fork.Adapters.Mojang;
-using Fork.Logic.Managers;
+using Fork.Logic.Model.Web.Mojang;
 using Fork.Logic.Persistence;
-using Fork.Logic.Services.WebServices;
 using ForkCommon.ExtensionMethods;
 using ForkCommon.Model.Application.Exceptions;
 using ForkCommon.Model.Entity.Pocos.Player;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Fork.Logic.Services.EntityServices;
 
 public class PlayerService : IPlayerService
 {
+    private readonly ApplicationDbContext _applicationDbContext;
     private readonly ILogger<PlayerService> _logger;
     private readonly IMojangApiAdapter _mojangApi;
-    private readonly ApplicationDbContext _applicationDbContext;
 
-    public PlayerService(ILogger<PlayerService> logger, ApplicationDbContext applicationDbContext, IMojangApiAdapter mojangApi)
+    public PlayerService(ILogger<PlayerService> logger, ApplicationDbContext applicationDbContext,
+        IMojangApiAdapter mojangApi)
     {
         _logger = logger;
         _applicationDbContext = applicationDbContext;
@@ -31,12 +30,12 @@ public class PlayerService : IPlayerService
 
     public async Task<Player> PlayerByNameAsync(string name)
     {
-        var cachedPlayer = _applicationDbContext.PlayerSet.FirstOrDefault(p => p.Name == name);
+        Player cachedPlayer = _applicationDbContext.PlayerSet.FirstOrDefault(p => p.Name == name);
         if (cachedPlayer != null && !cachedPlayer.LastUpdated.IsOlderThan(TimeSpan.FromHours(24)))
         {
             return cachedPlayer;
         }
-        
+
         try
         {
             string uid = await _mojangApi.UidForNameAsync(name);
@@ -50,7 +49,7 @@ public class PlayerService : IPlayerService
             _logger.LogError(e, "Failed to get player by name");
             return null;
         }
-        
+
         // If the player is not in the Mojang API we handle him like an offline player
         return new Player { Name = name, Head = "TODO", LastUpdated = DateTime.Now, IsOfflinePlayer = true };
     }
@@ -58,15 +57,15 @@ public class PlayerService : IPlayerService
     public async Task<Player> PlayerByUidAsync(string uid)
     {
         uid = uid.Replace("-", "");
-        var existingPlayer = await _applicationDbContext.PlayerSet.FirstOrDefaultAsync(p => p.Uid == uid);
+        Player existingPlayer = await _applicationDbContext.PlayerSet.FirstOrDefaultAsync(p => p.Uid == uid);
         if (existingPlayer != null && !existingPlayer.LastUpdated.IsOlderThan(TimeSpan.FromHours(24)))
         {
             return existingPlayer;
         }
-        
+
         try
         {
-            var playerProfile = await _mojangApi.ProfileForUidAsync(uid);
+            PlayerProfile playerProfile = await _mojangApi.ProfileForUidAsync(uid);
             if (playerProfile != null)
             {
                 if (existingPlayer != null)
@@ -107,13 +106,21 @@ public class PlayerService : IPlayerService
 
     public async Task<ISet<string>> PlayerUidsForWorldsAsync(List<string> worldPaths)
     {
-        HashSet<string> result = new HashSet<string>();
+        HashSet<string> result = new();
         foreach (string worldPath in worldPaths)
         {
-            DirectoryInfo world = new DirectoryInfo(worldPath);
-            if (!world.Exists) continue;
-            DirectoryInfo playerData = new DirectoryInfo(Path.Combine(world.FullName, "playerdata"));
-            if (!playerData.Exists) continue;
+            DirectoryInfo world = new(worldPath);
+            if (!world.Exists)
+            {
+                continue;
+            }
+
+            DirectoryInfo playerData = new(Path.Combine(world.FullName, "playerdata"));
+            if (!playerData.Exists)
+            {
+                continue;
+            }
+
             await Task.Run(() =>
             {
                 foreach (string fileName in Directory.GetFiles(playerData.FullName, "*.dat",
