@@ -1,9 +1,7 @@
 module.exports = {
     content: [
-        './Pages/**/*.html',
-        './Pages/**/*.razor',
-        './Shared/**/*.html',
-        './Shared/**/*.razor',
+        './Razor/**/*.html',
+        './Razor/**/*.razor',
         './wwwroot/index.html',
     ],
     safelist: [
