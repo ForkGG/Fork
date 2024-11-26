@@ -8,13 +8,13 @@ namespace ForkCommon.Model.Entity.Pocos;
 
 public class ServerVersion
 {
-    private readonly Regex nonNumeric = new(@"[^\d.]");
+    private readonly Regex _nonNumeric = new(@"[^\d.]");
 
     public ulong Id { get; set; }
     public VersionType Type { get; set; }
-    public string Version { get; set; }
+    public string? Version { get; set; }
     public int Build { get; set; } = 0;
-    public string JarLink { get; set; }
+    public string? JarLink { get; set; }
 
     [NotMapped] public bool IsProxy => Type == VersionType.Waterfall;
 
@@ -24,25 +24,24 @@ public class ServerVersion
 
     public override string ToString()
     {
-        return Version;
+        return Version ?? "";
     }
 
-    public int CompareTo(object obj)
+    public int CompareTo(object? obj)
     {
         if (obj == null)
         {
             return 1;
         }
 
-        ServerVersion otherVersion = obj as ServerVersion;
-        if (otherVersion != null)
+        if (obj is ServerVersion otherVersion && Version != null && otherVersion.Version != null)
         {
-            string friendlyVersion = nonNumeric.Replace(Version, "");
+            string friendlyVersion = _nonNumeric.Replace(Version, "");
             List<string> thisVersionSub = new(friendlyVersion.Split('.'));
             Version.Split('.');
             thisVersionSub.Add("0");
             thisVersionSub.Add("0");
-            string friendlyOtherVersion = nonNumeric.Replace(otherVersion.Version, "");
+            string friendlyOtherVersion = _nonNumeric.Replace(otherVersion.Version, "");
             List<string> otherVersionSub = new(friendlyOtherVersion.Split('.'));
             otherVersion.Version.Split('.');
             otherVersionSub.Add("0");
@@ -89,7 +88,7 @@ public class ServerVersion
         return Type == other.Type && Version == other.Version && JarLink == other.JarLink;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj))
         {

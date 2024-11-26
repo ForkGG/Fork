@@ -33,7 +33,7 @@ public class ApplicationDbContext : DbContext
         AppSettings result = new();
         foreach (SettingsKeyValue setting in result)
         {
-            SettingsKeyValue entry = AppSettingsSet.FirstOrDefault(s => s.Key == setting.Key);
+            SettingsKeyValue? entry = AppSettingsSet.FirstOrDefault(s => s.Key == setting.Key);
             if (entry != null)
             {
                 PropertyInfo property = result.GetType().GetProperty(setting.Key);

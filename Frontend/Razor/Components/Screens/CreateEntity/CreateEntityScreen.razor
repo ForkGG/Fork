@@ -15,7 +15,7 @@
 
     @* Main *@
     <EditForm Model="_serverPayload">
-        <div class="flex-1 bg-forkBlue max-w-5xl p-4">
+        <div class="flex-1 bg-forkBlue max-w-5xl p-4 overflow-auto">
             <span class="text-lg font-bold text-label">Create A Server</span>
             <div class="px-4 pb-10">
                 <div>
@@ -83,14 +83,7 @@
 
     private async Task OnCreateEntity(IconButton _)
     {
-        try
-        {
-            ulong newEntityId = await _entityConnection.CreateServerAsync(_serverPayload);
-        }
-        catch (Exception e)
-        {
-            Error.ProcessError(e);
-        }
+        ulong newEntityId = await Error.RunSafe(() => _entityConnection.CreateServerAsync(_serverPayload));
     }
 
     // TODO CKE make "Values" allow async enumerables properly

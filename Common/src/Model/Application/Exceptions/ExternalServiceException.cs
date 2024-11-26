@@ -5,10 +5,6 @@
 /// </summary>
 public class ExternalServiceException : ForkException
 {
-    public ExternalServiceException()
-    {
-    }
-
     public ExternalServiceException(string message) : base(message)
     {
     }

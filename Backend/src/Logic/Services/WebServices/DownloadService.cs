@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Fork.Logic.Managers;
 using ForkCommon.ExtensionMethods;
+using ForkCommon.Model.Application.Exceptions;
 using ForkCommon.Model.Entity.Pocos;
 using Microsoft.Extensions.Logging;
 
@@ -23,21 +24,25 @@ public class DownloadService : IDownloadService
 
     public async Task DownloadJarAsync(IEntity entity, IProgress<float> progress, CancellationToken cancellationToken)
     {
-        using HttpClient client = new HttpClient();
+        using HttpClient client = new();
         client.Timeout = TimeSpan.FromMinutes(5);
-        await using FileStream fileStream = new FileStream(
+        await using FileStream fileStream = new(
             Path.Combine(_application.EntityPath, entity.Name, "server.jar"),
             FileMode.Create, FileAccess.Write, FileShare.None);
+        if (entity.Version.JarLink == null)
+        {
+            throw new IllegalInternalStateException("Version is missing JarLink! Version setup is wrong");
+        }
+
         await client.DownloadAsync(entity.Version.JarLink, fileStream, progress, cancellationToken);
     }
 
     public async Task DownloadFileAsync(string url, string targetPath, IProgress<float> progress,
         CancellationToken cancellationToken)
     {
-        using HttpClient client = new HttpClient();
+        using HttpClient client = new();
         client.Timeout = TimeSpan.FromMinutes(5);
-        await using FileStream fileStream =
-            new FileStream(targetPath, FileMode.Create, FileAccess.Write, FileShare.None);
+        await using FileStream fileStream = new(targetPath, FileMode.Create, FileAccess.Write, FileShare.None);
         await client.DownloadAsync(url, fileStream, progress, cancellationToken);
     }
 }

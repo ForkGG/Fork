@@ -68,5 +68,9 @@ public abstract class AbstractConnectionService
         {
             throw new ForkException("Internal Server Error occured");
         }
+
+        if (!response.IsSuccessStatusCode)
+        {
+        }
     }
 }

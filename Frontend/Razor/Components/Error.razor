@@ -1,29 +1,91 @@
-﻿@inject ILogger<Error> Logger
+﻿@using ForkFrontend.Model
+@using ForkCommon.Model.Application.Exceptions
+@inject ILogger<Error> Logger
 
 <CascadingValue Value="this">
+
+
+    @if (Messages.Any())
+    {
+        <div>
+            @foreach (UiMessage message in Messages)
+            {
+                <div>@message.Message</div>
+            }
+        </div>
+    }
     @ChildContent
 </CascadingValue>
 
 @code {
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
+    public List<UiMessage> Messages { get; } = new();
+
     public void ProcessError(Exception ex)
     {
-        Logger.LogError("Error:ProcessError - Type: {Type} Message: {Message}",
+        Logger.LogError("Caught exception - Type: {Type} Message: {Message}",
             ex.GetType(), ex.Message);
+        if (ex is ForkException fe)
+        {
+            AddMessage(new UiMessage
+            {
+                Type = UiMessageType.Error,
+                Message = fe.Message
+            });
+        }
+        else
+        {
+            AddMessage(new UiMessage
+            {
+                Type = UiMessageType.Error,
+                Message = "Oops! An unexpected error happened. Sorry for that!"
+            });
+        }
     }
 
-    public void RunSafe(Action action)
+    public void AddMessage(UiMessage message)
+    {
+        Messages.Add(message);
+        StateHasChanged();
+    }
+
+    public void RemoveMessage(UiMessage message)
+    {
+        if (Messages.Contains(message))
+        {
+            Messages.Remove(message);
+            StateHasChanged();
+        }
+    }
+
+    public T? RunSafe<T>(Func<T> func)
     {
         try
         {
-            action();
+            return func();
         }
         catch (Exception e)
         {
             // TODO CKE send report to server for devs
             ProcessError(e);
             // TODO CKE show error to user
+            return default;
+        }
+    }
+
+    public async Task<T?> RunSafe<T>(Func<Task<T>> func)
+    {
+        try
+        {
+            return await func();
+        }
+        catch (Exception e)
+        {
+            // TODO CKE send report to server for devs
+            ProcessError(e);
+            // TODO CKE show error to user
+            return default;
         }
     }
 
