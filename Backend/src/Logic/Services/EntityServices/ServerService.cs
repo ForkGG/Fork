@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.ExceptionServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -64,7 +65,7 @@ public class ServerService : IServerService
         _context.ServerSet.Add(server);
 
         //Download server.jar
-        Progress<float> downloadProgress = new Progress<float>();
+        Progress<float> downloadProgress = new();
         downloadProgress.ProgressChanged += (_, f) =>
         {
             // TODO CKE send notification update
@@ -119,108 +120,113 @@ public class ServerService : IServerService
         await ChangeServerStatusAsync(server, EntityStatus.Starting);
         _logger.LogInformation($"Starting server {server.Name} on world {server.VanillaSettings.LevelName}");
 
-        // Get server directory
-        DirectoryInfo serverDirectory = new(server.GetPath(_application));
-        if (!serverDirectory.Exists)
+        try
         {
-            await ChangeServerStatusAsync(server, EntityStatus.Stopped);
-            await _console.WriteError(server,
-                $"This server has no directory for some reason. The path that was searched was:\n{server.GetPath(_application)}");
-            throw new ForkException($"Supplied server \"{server.Name}\" has no directory!");
-        }
-
-        JavaVersion javaVersion = JavaVersionUtils.GetInstalledJavaVersion(server.JavaSettings.JavaPath);
-        if (javaVersion == null)
-        {
-            await ChangeServerStatusAsync(server, EntityStatus.Stopped);
-            await _console.WriteError(server,
-                $"No valid Java installation was found for the configured java path:\n{server.JavaSettings.JavaPath}");
-            throw new ForkException(
-                $"No valid Java installation was found for the configured java path:\n{server.JavaSettings.JavaPath}");
-        }
-
-        if (!javaVersion.Is64Bit)
-        {
-            await _console.WriteWarning(server,
-                "The Java installation selected for this server is a 32-bit version, which can cause errors and limits the RAM usage to 2GB");
-        }
-
-        if (javaVersion.VersionComputed < 16)
-        {
-            if (new ServerVersion { Version = "1.17" }.CompareTo(server.Version) <= 0)
+            // Get server directory
+            DirectoryInfo serverDirectory = new(server.GetPath(_application));
+            if (!serverDirectory.Exists)
             {
-                await ChangeServerStatusAsync(server, EntityStatus.Stopped);
                 await _console.WriteError(server,
-                    "The Java installation selected for this server is outdated. Please update Java to version 16 or higher.");
-                throw new ForkException(
-                    "The Java installation selected for this server is outdated. Please update Java to version 16 or higher.");
+                    $"This server has no directory for some reason. The path that was searched was:\n{server.GetPath(_application)}");
+                throw new ForkException($"Supplied server \"{server.Name}\" has no directory!");
             }
 
-            await _console.WriteWarning(server,
-                "WARN: The Java installation selected for this server is outdated. Please update Java to version 16 or higher.");
-        }
-
-        if (server.VanillaSettings.ResourcePack != "" && server.AutoSetSha1)
-        {
-            await UpdateResourcePackHash(server);
-        }
-
-        Process process = new();
-        ProcessStartInfo startInfo = new()
-        {
-            UseShellExecute = false,
-            RedirectStandardError = true,
-            RedirectStandardInput = true,
-            RedirectStandardOutput = true,
-            FileName = server.JavaSettings.JavaPath ?? "java",
-            WorkingDirectory = serverDirectory.FullName,
-            Arguments = "-Xmx" + server.JavaSettings.MaxRam + "m " +
-                        server.JavaSettings.StartupParameters + " -jar server.jar nogui",
-            WindowStyle = ProcessWindowStyle.Hidden,
-            CreateNoWindow = true
-        };
-        process.StartInfo = startInfo;
-        process.Start();
-        CancellationTokenSource serverStoppedTokenSource = new();
-        Task.Run(() => TrackServerPerformance(server, process, serverStoppedTokenSource));
-        await _console.BindProcessToConsole(server, process.StandardOutput, process.StandardError,
-            status => _ = ChangeServerStatusAsync(server, status));
-        server.ConsoleHandler = delegate(string line)
-        {
-            _console.WriteLine(server, line, ConsoleMessageType.UserInput);
-            process.StandardInput.WriteLineAsync(line);
-        };
-
-        //TODO CKE add server automation
-        //ServerAutomationManager.Instance.UpdateAutomation(viewModel);
-
-        _ = Task.Run(async () =>
-        {
-            //TODO CKE start performance tracker here
-            // var worker = new QueryStatsWorker(viewModel);
-
-            await process.WaitForExitAsync();
-            //TODO determine crash and normal stop
-            await ChangeServerStatusAsync(server, EntityStatus.Stopped);
-
-            serverStoppedTokenSource.Cancel();
-            //TODO CKE stop automation here
-            //ServerAutomationManager.Instance.UpdateAutomation(viewModel);
-        });
-
-        //Register new world if created
-        _ = Task.Run(async () =>
-        {
-            while (server.Status == EntityStatus.Starting) await Task.Delay(500);
-
-            if (server.Status == EntityStatus.Started)
+            JavaVersion javaVersion = JavaVersionUtils.GetInstalledJavaVersion(server.JavaSettings.JavaPath);
+            if (javaVersion == null)
             {
-                _logger.LogInformation("Started server " + server.Name);
-
-                // TODO CKE update Worlds as a new one might have been created
-                // viewModel.InitializeWorldsList();
+                await _console.WriteError(server,
+                    $"No valid Java installation was found for the configured java path:\n{server.JavaSettings.JavaPath}");
+                throw new ForkException(
+                    $"No valid Java installation was found for the configured java path:\n{server.JavaSettings.JavaPath}");
             }
-        });
+
+            if (!javaVersion.Is64Bit)
+            {
+                await _console.WriteWarning(server,
+                    "The Java installation selected for this server is a 32-bit version, which can cause errors and limits the RAM usage to 2GB");
+            }
+
+            if (javaVersion.VersionComputed < 16)
+            {
+                if (new ServerVersion { Version = "1.17" }.CompareTo(server.Version) <= 0)
+                {
+                    await _console.WriteError(server,
+                        "The Java installation selected for this server is outdated. Please update Java to version 16 or higher.");
+                    throw new ForkException(
+                        "The Java installation selected for this server is outdated. Please update Java to version 16 or higher.");
+                }
+
+                await _console.WriteWarning(server,
+                    "WARN: The Java installation selected for this server is outdated. Please update Java to version 16 or higher.");
+            }
+
+            if (server.VanillaSettings.ResourcePack != "" && server.AutoSetSha1)
+            {
+                await UpdateResourcePackHash(server);
+            }
+
+            Process process = new();
+            ProcessStartInfo startInfo = new()
+            {
+                UseShellExecute = false,
+                RedirectStandardError = true,
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                FileName = server.JavaSettings.JavaPath ?? "java",
+                WorkingDirectory = serverDirectory.FullName,
+                Arguments = "-Xmx" + server.JavaSettings.MaxRam + "m " +
+                            server.JavaSettings.StartupParameters + " -jar server.jar nogui",
+                WindowStyle = ProcessWindowStyle.Hidden,
+                CreateNoWindow = true
+            };
+            process.StartInfo = startInfo;
+            process.Start();
+            CancellationTokenSource serverStoppedTokenSource = new();
+            Task.Run(() => TrackServerPerformance(server, process, serverStoppedTokenSource));
+            await _console.BindProcessToConsole(server, process.StandardOutput, process.StandardError,
+                status => _ = ChangeServerStatusAsync(server, status));
+            server.ConsoleHandler = delegate(string line)
+            {
+                _console.WriteLine(server, line, ConsoleMessageType.UserInput);
+                process.StandardInput.WriteLineAsync(line);
+            };
+
+            //TODO CKE add server automation
+            //ServerAutomationManager.Instance.UpdateAutomation(viewModel);
+
+            _ = Task.Run(async () =>
+            {
+                //TODO CKE start performance tracker here
+                // var worker = new QueryStatsWorker(viewModel);
+
+                await process.WaitForExitAsync();
+                //TODO determine crash and normal stop
+                await ChangeServerStatusAsync(server, EntityStatus.Stopped);
+
+                serverStoppedTokenSource.Cancel();
+                //TODO CKE stop automation here
+                //ServerAutomationManager.Instance.UpdateAutomation(viewModel);
+            });
+
+            //Register new world if created
+            _ = Task.Run(async () =>
+            {
+                while (server.Status == EntityStatus.Starting) await Task.Delay(500);
+
+                if (server.Status == EntityStatus.Started)
+                {
+                    _logger.LogInformation("Started server " + server.Name);
+
+                    // TODO CKE update Worlds as a new one might have been created
+                    // viewModel.InitializeWorldsList();
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            await ChangeServerStatusAsync(server, EntityStatus.Stopped);
+            ExceptionDispatchInfo.Capture(e).Throw();
+        }
     }
 
     public async Task StopServerAsync(Server server)
@@ -331,7 +337,7 @@ public class ServerService : IServerService
             return false;
         }
 
-        HttpClient client = new HttpClient();
+        HttpClient client = new();
         HttpResponseMessage response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, fileSourceUrl));
         string lastModifiedString = response.Headers.GetValues("LastModified").FirstOrDefault();
         if (lastModifiedString == null)
@@ -366,7 +372,7 @@ public class ServerService : IServerService
                 .Replace("-", "") + ".zip"));
 
         //Download the resource pack
-        HttpClient client = new HttpClient();
+        HttpClient client = new();
         HttpResponseMessage response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, url));
         if (response.Headers.GetValues("ContentType").All(h => h != "application/zip"))
         {
@@ -380,7 +386,7 @@ public class ServerService : IServerService
         //Calculate sha-1
         await using (FileStream fs = resourcePackFile.OpenRead())
         {
-            await using BufferedStream bs = new BufferedStream(fs);
+            await using BufferedStream bs = new(fs);
             using (SHA1 sha1 = SHA1.Create())
             {
                 byte[] hash = await sha1.ComputeHashAsync(bs);
@@ -400,7 +406,7 @@ public class ServerService : IServerService
         while (!tokenSource.IsCancellationRequested && !process.HasExited)
             try
             {
-                EntityPerformanceNotification notification = new EntityPerformanceNotification
+                EntityPerformanceNotification notification = new()
                 {
                     EntityId = server.Id,
                     Uptime = DateTime.Now - process.StartTime,
