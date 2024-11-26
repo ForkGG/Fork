@@ -5,6 +5,7 @@ using Fork.Logic.Managers;
 using Fork.Logic.Services.EntityServices;
 using ForkCommon.Model.Entity.Pocos;
 using ForkCommon.Model.Entity.Transient.Console;
+using ForkCommon.Model.Entity.Transient.Console.Commands;
 using ForkCommon.Model.Payloads.Entity;
 using ForkCommon.Model.Privileges;
 using ForkCommon.Model.Privileges.Application;
@@ -21,16 +22,18 @@ namespace Fork.Controllers;
 /// </summary>
 public class EntityController : AbstractRestController
 {
+    private readonly CommandService _commandService;
     private readonly IEntityManager _entityManager;
     private readonly IEntityService _entityService;
     private readonly IServerService _serverService;
 
     public EntityController(ILogger<EntityController> logger, IEntityManager entityManager,
-        IEntityService entityService, IServerService serverService) : base(logger)
+        IEntityService entityService, IServerService serverService, CommandService commandService) : base(logger)
     {
         _entityManager = entityManager;
         _entityService = entityService;
         _serverService = serverService;
+        _commandService = commandService;
     }
 
     [HttpPost("createServer")]
@@ -128,7 +131,7 @@ public class EntityController : AbstractRestController
     [Privileges(typeof(ReadConsoleConsoleTabPrivilege))]
     public async Task<List<ConsoleMessage>> Console([FromRoute] ulong entityId)
     {
-        IEntity entity = await _entityManager.EntityById(entityId);
+        IEntity? entity = await _entityManager.EntityById(entityId);
         if (entity == null)
         {
             return new List<ConsoleMessage>();
@@ -136,5 +139,18 @@ public class EntityController : AbstractRestController
 
         int amountOfMessages = Math.Min(entity.ConsoleMessages.Count, 1000);
         return entity.ConsoleMessages.GetRange(entity.ConsoleMessages.Count - amountOfMessages, amountOfMessages);
+    }
+
+    [HttpGet("{entityId}/commands")]
+    [Privileges(typeof(ReadConsoleConsoleTabPrivilege))]
+    public async Task<Command?> Commands([FromRoute] ulong entityId)
+    {
+        IEntity? entity = await _entityManager.EntityById(entityId);
+        if (entity == null)
+        {
+            return null;
+        }
+
+        return await _commandService.GetCommandTreeForEntity(entity);
     }
 }

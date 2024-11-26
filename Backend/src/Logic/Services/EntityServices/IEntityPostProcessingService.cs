@@ -5,5 +5,5 @@ namespace Fork.Logic.Services.EntityServices;
 
 public interface IEntityPostProcessingService
 {
-    public Task PostProcessEntity(IEntity entity);
+    public Task PostProcessEntity(IEntity? entity);
 }

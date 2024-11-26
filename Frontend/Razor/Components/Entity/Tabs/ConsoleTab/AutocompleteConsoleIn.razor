@@ -1,0 +1,56 @@
+﻿@using ForkCommon.Model.Entity.Transient.Console.Commands
+@using ForkFrontend.Logic.Services.Connections
+@using ForkFrontend.Logic.Services.Managers
+@inject IEntityConnectionService _entityConnection
+
+<EditForm Model="@InputForm" OnSubmit="OnSubmit">
+    <div class="console-in-container clipping flex h-12">
+        <Checkbox class="self-start" @bind-Value="@InputForm.SayMode" DisplayName="Chat"></Checkbox>
+        <div class="flex-1 flex mx-6 self-center">
+            <span class="text-label mr-1 monospace">@Prefix</span>
+            <input class="flex-1 w-full bg-transparent text-text monospace outline-none" @bind="InputForm.Input"
+                   @oninput="OnChange"/>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+
+    [CascadingParameter] public EntityStateManager? EntityState { get; set; }
+
+    private ConsoleInput InputForm { get; set; } = new();
+
+    private string Prefix => InputForm.SayMode ? "/say " : "/";
+
+    private Command? commandForEntity;
+
+    private List<string> possibleCompletes = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        commandForEntity = await _entityConnection.GetCommandsAsync(EntityState!.Entity.Id);
+        
+        await base.OnInitializedAsync();
+    }
+
+    private async Task OnSubmit()
+    {
+        if (await _entityConnection.SubmitConsoleInAsync($"{Prefix}{InputForm.Input}", EntityState!.Entity.Id))
+        {
+            InputForm.Input = "";
+        }
+    }
+
+    private async Task OnChange(ChangeEventArgs e)
+    {
+        Console.Out.WriteLine(e.Value);
+    }
+
+    private class ConsoleInput
+    {
+        public bool SayMode { get; set; }
+
+        public string? Input { get; set; }
+    }
+
+}

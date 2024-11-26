@@ -27,7 +27,7 @@ public class EntityPostProcessingService : IEntityPostProcessingService
         _playerService = playerService;
     }
 
-    public async Task PostProcessEntity(IEntity entity)
+    public async Task PostProcessEntity(IEntity? entity)
     {
         await DoEntityPostProcessing(entity);
 
@@ -37,7 +37,7 @@ public class EntityPostProcessingService : IEntityPostProcessingService
         }
     }
 
-    private async Task DoEntityPostProcessing(IEntity entity)
+    private async Task DoEntityPostProcessing(IEntity? entity)
     {
         await Task.CompletedTask;
     }
@@ -111,7 +111,7 @@ public class EntityPostProcessingService : IEntityPostProcessingService
 
     private async Task<List<Player>> NamesToPlayersAsync(IEnumerable<string> names)
     {
-        List<Player> result = new List<Player>();
+        List<Player> result = new();
 
         foreach (string name in names) result.Add(await _playerService.PlayerByNameAsync(name));
 
@@ -120,7 +120,7 @@ public class EntityPostProcessingService : IEntityPostProcessingService
 
     private async Task<List<Player>> UidsToPlayersAsync(IEnumerable<string> uids)
     {
-        List<Player> result = new List<Player>();
+        List<Player> result = new();
 
         foreach (string uid in uids) result.Add(await _playerService.PlayerByUidAsync(uid));
 

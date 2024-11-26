@@ -1,4 +1,5 @@
 ﻿using ForkCommon.Model.Entity.Transient.Console;
+using ForkCommon.Model.Entity.Transient.Console.Commands;
 using ForkCommon.Model.Payloads.Entity;
 using ForkFrontend.Logic.Services.HttpsClients;
 
@@ -76,5 +77,10 @@ public class EntityConnectionService : AbstractConnectionService, IEntityConnect
     {
         HttpResponseMessage response = await PostAsJsonAsync($"{URL_BASE}/{entityId}/restart");
         return response.IsSuccessStatusCode;
+    }
+
+    public async Task<Command?> GetCommandsAsync(ulong entityId)
+    {
+        return await GetFromJsonAsync<Command>($"{URL_BASE}/{entityId}/commands");
     }
 }

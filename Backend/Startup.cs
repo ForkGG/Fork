@@ -50,8 +50,7 @@ public class Startup
                 .AllowAnyMethod());
         });
 
-        SqliteConnectionStringBuilder builder =
-            new SqliteConnectionStringBuilder(Configuration.GetConnectionString("DefaultConnection"));
+        SqliteConnectionStringBuilder builder = new(Configuration.GetConnectionString("DefaultConnection"));
         builder.DataSource = builder.DataSource.Replace("|datadirectory|",
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ForkApp",
                 "persistence"));
@@ -80,6 +79,7 @@ public class Startup
         services.AddSingleton<INotificationCenter, DefaultNotificationCenter>();
         services.AddSingleton<ITokenManager, TokenManager>();
         services.AddSingleton<IEntityManager, EntityManager>();
+        services.AddSingleton<CommandService>();
 
         // Scoped
         services.AddScoped<IAuthenticationService, AuthenticationService>();

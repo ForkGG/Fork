@@ -37,7 +37,7 @@ public class EntityManager : IEntityManager
     /// <summary>
     ///     Get an entity by ID and loads it form the DB if the entity is not yet loaded
     /// </summary>
-    public async Task<IEntity> EntityById(ulong entityId)
+    public async Task<IEntity?> EntityById(ulong entityId)
     {
         using IServiceScope scope = _scopeFactory.CreateScope();
 
@@ -112,8 +112,7 @@ public class EntityManager : IEntityManager
         await context.SaveChangesAsync();
 
         // Send notification
-        UpdatePlayerNotification notification = new UpdatePlayerNotification
-            { EntityId = server.Id, ServerPlayer = player };
+        UpdatePlayerNotification notification = new() { EntityId = server.Id, ServerPlayer = player };
         INotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
         await notificationCenter.BroadcastNotification(notification);
     }
@@ -156,7 +155,7 @@ public class EntityManager : IEntityManager
             default: throw new ArgumentException($"Unknown update type {updateType}");
         }
 
-        UpdateWhitelistPlayerNotification notification = new UpdateWhitelistPlayerNotification
+        UpdateWhitelistPlayerNotification notification = new()
             { EntityId = server.Id, Player = player, UpdateType = updateType };
         using IServiceScope scope = _scopeFactory.CreateScope();
         INotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
@@ -200,7 +199,7 @@ public class EntityManager : IEntityManager
             default: throw new ArgumentException($"Unknown update type {updateType}");
         }
 
-        UpdateBanlistPlayerNotification notification = new UpdateBanlistPlayerNotification
+        UpdateBanlistPlayerNotification notification = new()
             { EntityId = server.Id, Player = player, UpdateType = updateType };
         using IServiceScope scope = _scopeFactory.CreateScope();
         INotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();

@@ -8,6 +8,16 @@ namespace ForkCommon.Model.Entity.Pocos;
 
 public class ServerVersion
 {
+    public static readonly ServerVersion Version1_13 = new()
+    {
+        Version = "1.13"
+    };
+
+    public static readonly ServerVersion Version1_18 = new()
+    {
+        Version = "1.18"
+    };
+
     private readonly Regex _nonNumeric = new(@"[^\d.]");
 
     public ulong Id { get; set; }
@@ -81,6 +91,11 @@ public class ServerVersion
         }
 
         throw new ArgumentException("Object is not a Minecraft Version");
+    }
+
+    public bool IsEqualOrGreaterThan(ServerVersion other)
+    {
+        return CompareTo(other) > 0;
     }
 
     protected bool Equals(ServerVersion other)

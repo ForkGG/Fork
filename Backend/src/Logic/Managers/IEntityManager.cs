@@ -8,7 +8,7 @@ namespace Fork.Logic.Managers;
 
 public interface IEntityManager
 {
-    public Task<IEntity> EntityById(ulong entityId);
+    public Task<IEntity?> EntityById(ulong entityId);
     public Task<List<IEntity>> ListAllEntities();
 
     public Task UpdatePlayerOnPlayerList(Server server, ServerPlayer player);

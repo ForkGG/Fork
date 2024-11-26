@@ -1,4 +1,5 @@
 ﻿using ForkCommon.Model.Entity.Transient.Console;
+using ForkCommon.Model.Entity.Transient.Console.Commands;
 using ForkCommon.Model.Payloads.Entity;
 
 namespace ForkFrontend.Logic.Services.Connections;
@@ -12,4 +13,5 @@ public interface IEntityConnectionService
     public Task<bool> StartEntityAsync(ulong entityId);
     public Task<bool> StopEntityAsync(ulong entityId);
     public Task<bool> RestartEntityAsync(ulong entityId);
+    public Task<Command?> GetCommandsAsync(ulong entityId);
 }
