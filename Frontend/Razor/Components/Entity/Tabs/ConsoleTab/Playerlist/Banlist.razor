@@ -1,10 +1,10 @@
-﻿@using ForkFrontend.Logic.Services.Managers
-@using ForkCommon.Model.Entity.Pocos
+﻿@using ForkCommon.Model.Entity.Pocos
 @using ForkCommon.Model.Entity.Pocos.Player
+@using ForkFrontend.Logic.Services.Managers
 @implements ISimplePlayerlist
 <div class="h-full bg-forkBlue pt-3">
     @* Ban count *@
-    <span class="px-7 py-3 text-label-hover">@(Server?.Banlist?.Count ?? 0) - Banned</span>
+    <span class="px-7 py-3 text-label-hover">@(Server?.Banlist.Count ?? 0) - Banned</span>
     @* Player list *@
     <div class="h-full overflow-y-auto mt-3">
         @if (Server?.Banlist != null)
@@ -36,7 +36,11 @@
 
     protected override void OnInitialized()
     {
-        EntityState!.UpdateBanlistPlayerNotificationHandler.After += async _ => StateHasChanged();
+        EntityState!.UpdateBanlistPlayerNotificationHandler.After += _ =>
+        {
+            StateHasChanged();
+            return Task.CompletedTask;
+        };
     }
 
 }

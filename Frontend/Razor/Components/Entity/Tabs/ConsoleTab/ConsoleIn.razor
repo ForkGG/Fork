@@ -1,6 +1,6 @@
-﻿@using ForkFrontend.Logic.Services.Managers
-@using ForkFrontend.Logic.Services.Connections
-@inject IEntityConnectionService _entityConnection
+﻿@using ForkFrontend.Logic.Services.Connections
+@using ForkFrontend.Logic.Services.Managers
+@inject IEntityConnectionService EntityConnection
 
 <EditForm Model="@InputForm" OnSubmit="OnSubmit">
     <div class="console-in-container clipping flex h-12">
@@ -22,7 +22,7 @@
 
     private async Task OnSubmit()
     {
-        if (await _entityConnection.SubmitConsoleInAsync($"{Prefix}{InputForm.Input}", EntityState!.Entity.Id))
+        if (await EntityConnection.SubmitConsoleInAsync($"{Prefix}{InputForm.Input}", EntityState!.Entity.Id))
         {
             InputForm.Input = "";
         }

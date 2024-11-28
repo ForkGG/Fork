@@ -1,5 +1,5 @@
 ﻿using ForkCommon.Model.Application;
-using ForkFrontend.Model;
+using ForkFrontend.Model.Enums;
 
 namespace ForkFrontend.Logic.Services.Managers;
 

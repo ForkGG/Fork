@@ -1,7 +1,7 @@
 ﻿@using ForkCommon.Model.Entity.Transient.Console.Commands
 @using ForkFrontend.Logic.Services.Connections
 @using ForkFrontend.Logic.Services.Managers
-@inject IEntityConnectionService _entityConnection
+@inject IEntityConnectionService EntityConnection
 
 <EditForm Model="@InputForm" OnSubmit="OnSubmit">
     <div class="console-in-container clipping flex h-12">
@@ -22,20 +22,20 @@
 
     private string Prefix => InputForm.SayMode ? "/say" : "/";
 
-    private Command? commandForEntity;
+    private Command? _commandForEntity;
 
-    private List<string> possibleCompletes = new();
+    private List<string> _possibleCompletes = new();
 
     protected override async Task OnInitializedAsync()
     {
-        commandForEntity = await _entityConnection.GetCommandsAsync(EntityState!.Entity.Id);
+        _commandForEntity = await EntityConnection.GetCommandsAsync(EntityState!.Entity.Id);
 
         await base.OnInitializedAsync();
     }
 
     private async Task OnSubmit()
     {
-        if (await _entityConnection.SubmitConsoleInAsync($"{Prefix}{InputForm.Input}", EntityState!.Entity.Id))
+        if (await EntityConnection.SubmitConsoleInAsync($"{Prefix}{InputForm.Input}", EntityState!.Entity.Id))
         {
             InputForm.Input = "";
         }

@@ -1,12 +1,10 @@
-﻿@using ForkFrontend.Logic.Services.Managers
-@using ForkFrontend.Logic.Services.Notifications
-@using ForkCommon.Model.Entity.Pocos
+﻿@using ForkCommon.Model.Entity.Pocos
 @using ForkCommon.Model.Entity.Pocos.Player
+@using ForkFrontend.Logic.Services.Managers
 @implements ISimplePlayerlist
-@inject INotificationService _notificationService
 <div class="h-full bg-forkBlue pt-3">
     @* Whitelist count *@
-    <span class="px-7 py-3 text-label-hover">@(Server?.Whitelist?.Count ?? 0) - Whitelisted</span>
+    <span class="px-7 py-3 text-label-hover">@(Server?.Whitelist.Count ?? 0) - Whitelisted</span>
     @* Player list *@
     <div class="h-full overflow-y-auto mt-3">
         @if (Server?.Whitelist != null)
@@ -38,7 +36,11 @@
 
     protected override void OnInitialized()
     {
-        EntityState!.UpdateWhitelistPlayerNotificationHandler.After += async _ => StateHasChanged();
+        EntityState!.UpdateWhitelistPlayerNotificationHandler.After += _ =>
+        {
+            StateHasChanged();
+            return Task.CompletedTask;
+        };
     }
 
 }

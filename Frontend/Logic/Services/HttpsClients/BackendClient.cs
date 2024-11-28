@@ -9,8 +9,8 @@ public class BackendClient
 
     public HttpClient Client { get; }
 
-    public string GetBaseUrl()
+    public string? GetBaseUrl()
     {
-        return Client.BaseAddress.ToString();
+        return Client.BaseAddress?.ToString();
     }
 }

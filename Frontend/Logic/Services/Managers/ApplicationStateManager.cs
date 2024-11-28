@@ -2,7 +2,7 @@
 using ForkCommon.Model.Entity.Pocos;
 using ForkFrontend.Logic.Services.Connections;
 using ForkFrontend.Logic.Services.Notifications;
-using ForkFrontend.Model;
+using ForkFrontend.Model.Enums;
 
 namespace ForkFrontend.Logic.Services.Managers;
 
@@ -21,6 +21,10 @@ public class ApplicationStateManager : IApplicationStateManager
         _logger = logger;
         _applicationConnection = applicationConnection;
         _notificationService = notificationService;
+
+
+        ApplicationState = _applicationConnection.GetApplicationState().GetAwaiter().GetResult();
+        ForkExternalIp = _applicationConnection.GetIpAddress().GetAwaiter().GetResult();
 
         _notificationService.WebsocketStatusChanged += async newStatus =>
         {
@@ -91,7 +95,7 @@ public class ApplicationStateManager : IApplicationStateManager
             else
             {
                 // Add new entity
-                EntityStateManager entityManager = new EntityStateManager(entity, _notificationService);
+                EntityStateManager entityManager = new(entity, _notificationService);
                 EntityStateManagersById.Add(entity.Id, entityManager);
             }
     }

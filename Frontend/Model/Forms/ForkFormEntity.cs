@@ -9,12 +9,8 @@ public class ForkFormEntity<T, TU>
         Icon = icon;
     }
 
-    public ForkFormEntity()
-    {
-    }
-
-    public T? ModelValue { get; set; }
-    public TU? ViewValue { get; set; }
+    public T ModelValue { get; set; }
+    public TU ViewValue { get; set; }
 
     public string? Icon { get; set; }
 }

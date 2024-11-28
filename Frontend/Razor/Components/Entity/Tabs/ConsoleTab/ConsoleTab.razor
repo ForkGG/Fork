@@ -11,7 +11,7 @@
         <ConsoleOut></ConsoleOut>
 
         @* Console In *@
-        @if (EntityState?.Entity.Version.IsEqualOrGreaterThan(ServerVersion.Version1_13) ?? false)
+        @if (EntityState?.Entity.Version?.IsEqualOrGreaterThan(ServerVersion.Version1_13) ?? false)
         {
             <AutocompleteConsoleIn/>
         }
@@ -73,7 +73,7 @@
         string ip = Application.ForkExternalIp;
         if (EntityState?.Entity is Server server)
         {
-            return $"{ip}:{server.VanillaSettings.ServerPort}";
+            return $"{ip}:{server.VanillaSettings?.ServerPort}";
         }
 
         // TODO Add network support

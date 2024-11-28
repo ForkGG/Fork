@@ -1,4 +1,4 @@
-﻿namespace ForkFrontend.Model;
+﻿namespace ForkFrontend.Model.Enums;
 
 public enum RadioType
 {

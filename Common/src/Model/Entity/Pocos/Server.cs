@@ -46,9 +46,9 @@ public class Server : IEntity
 
     public List<AutomationTime>? AutomationTimes { get; set; }
 
-    public List<ServerPlayer>? ServerPlayers { get; set; }
-    [NotMapped] public List<Player.Player>? Whitelist { get; set; }
-    [NotMapped] public List<Player.Player>? Banlist { get; set; }
+    public List<ServerPlayer> ServerPlayers { get; set; } = new();
+    [NotMapped] public List<Player.Player> Whitelist { get; set; } = new();
+    [NotMapped] public List<Player.Player> Banlist { get; set; } = new();
 
     [NotMapped] public VanillaSettings? VanillaSettings { get; set; }
 

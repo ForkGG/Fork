@@ -1,13 +1,13 @@
-﻿@using ForkFrontend.Logic.Services.Managers
-@using ForkCommon.Model.Notifications.EntityNotifications
+﻿@using ForkCommon.Model.Entity.Enums.Console
 @using ForkCommon.Model.Entity.Transient.Console
-@using ForkCommon.Model.Entity.Enums.Console
+@using ForkCommon.Model.Notifications.EntityNotifications
 @using ForkFrontend.Logic.Services.Connections
+@using ForkFrontend.Logic.Services.Managers
 @implements IAsyncDisposable
 
-@inject IJSRuntime _js
-@inject ILogger<ConsoleOut> _logger
-@inject IEntityConnectionService _entityConnection
+@inject IJSRuntime Js
+@inject ILogger<ConsoleOut> Logger
+@inject IEntityConnectionService EntityConnection
 
 <div class="flex-1 flex flex-col console-out-container clipping">
     @*Controls*@
@@ -15,15 +15,21 @@
         <span style="width: 60px" content=" "></span>
         <span class="text-lg text-label font-bold p-3">Console</span>
         <div class="flex gap-3 mr-5 items-center">
-            <IconButton Size="23" IconSize="22" NoBackground="true" IconChar="'F'"></IconButton>
-            <IconButton Size="23" IconSize="22" NoBackground="true" IconChar="'O'"></IconButton>
+            @* TODO CKE Button click methods *@
+            <IconButton Size="23" IconSize="22" NoBackground="true" IconChar="'F'"
+                        OnClickMethod="() => { }"></IconButton>
+            <IconButton Size="23" IconSize="22" NoBackground="true" IconChar="'O'"
+                        OnClickMethod="() => { }"></IconButton>
         </div>
     </div>
 
     @* Console *@
     <div class="flex-1">
-        <div id="@($"consoleScrollArea{EntityState?.Entity.Id}")" class="clusterize-scroll p-3 overflow-ellipsis text-text overflow-y-auto max-h-full select-text" @ref="_consoleScroller" @onscroll="OnConsoleScroll">
-            <div id="@($"consoleContentArea{EntityState?.Entity.Id}")" class="clusterize-content console-text" @ref="_consoleContent">
+        <div id="@($"consoleScrollArea{EntityState?.Entity.Id}")"
+             class="clusterize-scroll p-3 overflow-ellipsis text-text overflow-y-auto max-h-full select-text"
+             @ref="_consoleScroller" @onscroll="OnConsoleScroll">
+            <div id="@($"consoleContentArea{EntityState?.Entity.Id}")" class="clusterize-content console-text"
+                 @ref="_consoleContent">
                 <div class="clusterize-no-data">Loading Console...</div>
             </div>
         </div>
@@ -53,8 +59,8 @@
         if (_isFirstRender)
         {
             _isFirstRender = false;
-            EntityState!.Entity.ConsoleMessages = await _entityConnection.GetConsoleMessagesAsync(EntityState!.Entity.Id);
-            await _js.InvokeVoidAsync("InitConsoleClusterize", EntityState!.Entity.ConsoleMessages.Select(ConsoleMessageToHtml).ToList(), _consoleScroller, _consoleContent);
+            EntityState!.Entity.ConsoleMessages = await EntityConnection.GetConsoleMessagesAsync(EntityState!.Entity.Id);
+            await Js.InvokeVoidAsync("InitConsoleClusterize", EntityState!.Entity.ConsoleMessages.Select(ConsoleMessageToHtml).ToList(), _consoleScroller, _consoleContent);
 
             // Scroll to bottom
             await ScrollToBottom();
@@ -69,12 +75,12 @@
     public async ValueTask DisposeAsync()
     {
         EntityState!.ConsoleAddNotificationHandler.After -= HandleNewConsoleLine;
-        await _js.InvokeVoidAsync("DestroyConsoleCluster", _consoleScroller);
+        await Js.InvokeVoidAsync("DestroyConsoleCluster", _consoleScroller);
     }
 
     private async Task HandleNewConsoleLine(ConsoleAddNotification notification)
     {
-        await _js.InvokeVoidAsync("AppendToConsole", ConsoleMessageToHtml(notification.NewConsoleMessage), _consoleScroller);
+        await Js.InvokeVoidAsync("AppendToConsole", ConsoleMessageToHtml(notification.NewConsoleMessage), _consoleScroller);
         StateHasChanged();
         if (_autoscroll)
         {
@@ -85,7 +91,7 @@
     private async Task ScrollToBottom()
     {
         _userscroll = false;
-        await _js.InvokeVoidAsync("ScrollToBottom", _consoleScroller);
+        await Js.InvokeVoidAsync("ScrollToBottom", _consoleScroller);
         _userscroll = true;
     }
 
@@ -95,7 +101,7 @@
     {
         if (_userscroll)
         {
-            _autoscroll = await _js.InvokeAsync<bool>("IsScrolledToBottom", new object[] { _consoleScroller });
+            _autoscroll = await Js.InvokeAsync<bool>("IsScrolledToBottom", new object[] { _consoleScroller });
         }
     }
 

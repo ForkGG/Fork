@@ -1,5 +1,5 @@
 ﻿using ForkCommon.Model.Notifications;
-using ForkFrontend.Model;
+using ForkFrontend.Model.Enums;
 
 namespace ForkFrontend.Logic.Services.Notifications;
 

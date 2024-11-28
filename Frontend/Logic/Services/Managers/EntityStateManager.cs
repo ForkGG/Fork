@@ -1,4 +1,5 @@
-﻿using ForkCommon.Model.Entity.Pocos;
+﻿using ForkCommon.Model.Application.Exceptions;
+using ForkCommon.Model.Entity.Pocos;
 using ForkCommon.Model.Notifications.EntityNotifications;
 using ForkCommon.Model.Notifications.EntityNotifications.PlayerNotifications;
 using ForkFrontend.Logic.Services.Notifications;
@@ -27,6 +28,11 @@ public class EntityStateManager
             UpdateBanlistPlayerNotificationHandler = new UpdateBanlistPlayerNotificationHandler(server);
             UpdatePlayerNotificationHandler = new UpdatePlayerNotificationHandler(server);
             UpdateWhitelistPlayerNotificationHandler = new UpdateWhitelistPlayerNotificationHandler(server);
+        }
+        else
+        {
+            // TODO CKE Implement for networks
+            throw new ForkException("Not implemented yet!");
         }
 
         RegisterHandlers();

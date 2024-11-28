@@ -13,9 +13,9 @@ public partial class Index : ComponentBase
 {
     // Screens can be shown instead of entities (add entity, Fork settings, ...)
     private AbstractScreenComponent? _openScreen;
-    [Inject] private IApplicationConnectionService ApplicationConnection { get; set; }
-    [Inject] private IApplicationStateManager ApplicationStateManager { get; set; }
-    [Inject] private INotificationService NotificationService { get; set; }
+    [Inject] private IApplicationConnectionService ApplicationConnection { get; set; } = default!;
+    [Inject] private IApplicationStateManager ApplicationStateManager { get; set; } = default!;
+    [Inject] private INotificationService NotificationService { get; set; } = default!;
 
     public IEntity? SelectedEntity { get; set; }
 
@@ -33,17 +33,17 @@ public partial class Index : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        _applicationState.AppStatusChanged += StateHasChanged;
-        _applicationState.AppStateChanged += () =>
+        ApplicationState.AppStatusChanged += StateHasChanged;
+        ApplicationState.AppStateChanged += () =>
         {
             if (SelectedEntity != null &&
-                _applicationState.ApplicationState.Entities.Any(e => e.Id == SelectedEntity.Id))
+                ApplicationState.ApplicationState.Entities.Any(e => e.Id == SelectedEntity.Id))
             {
-                SelectedEntity = _applicationState.ApplicationState.Entities.First(e => e.Id == SelectedEntity.Id);
+                SelectedEntity = ApplicationState.ApplicationState.Entities.First(e => e.Id == SelectedEntity.Id);
             }
             else
             {
-                SelectedEntity = _applicationState.ApplicationState.Entities.FirstOrDefault();
+                SelectedEntity = ApplicationState.ApplicationState.Entities.FirstOrDefault();
             }
 
             StateHasChanged();
@@ -51,10 +51,11 @@ public partial class Index : ComponentBase
         await NotificationService.StartupAsync();
     }
 
-    private async Task OnSelectEntity(IEntity entity)
+    private Task OnSelectEntity(IEntity entity)
     {
         SelectedEntity = entity;
         _openScreen = null;
         StateHasChanged();
+        return Task.CompletedTask;
     }
 }

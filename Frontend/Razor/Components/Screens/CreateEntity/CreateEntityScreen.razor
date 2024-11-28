@@ -1,13 +1,12 @@
-﻿@using ForkCommon.Model.Payloads.Entity
+﻿@using ForkCommon.Model.Entity.Enums
 @using ForkCommon.Model.Entity.Pocos
-@using ForkFrontend.Model.Forms
-@using ForkCommon.Model.Entity.Enums
+@using ForkCommon.Model.Payloads.Entity
 @using ForkFrontend.Logic.Services.Connections
-@using ForkFrontend.Model
+@using ForkFrontend.Model.Enums
+@using ForkFrontend.Model.Forms
 @inherits AbstractScreenComponent
 
-@inject ILogger<CreateEntityScreen> _logger
-@inject IEntityConnectionService _entityConnection;
+@inject IEntityConnectionService EntityConnection;
 
 <div class="flex flex-col h-full">
     @* Top Bar *@
@@ -25,7 +24,8 @@
                 </div>
 
                 <div>
-                    <ForkSelect Name="ServerVersion" @bind-Value="_serverPayload.ServerVersion" TModelValue="ServerVersion"
+                    <ForkSelect Name="ServerVersion" @bind-Value="_serverPayload.ServerVersion"
+                                TModelValue="ServerVersion"
                                 Values="Versions" Label="Choose Version">
                     </ForkSelect>
 
@@ -36,13 +36,16 @@
             <div class="px-4 pb-10">
                 <div class="flex gap-8">
                     <ForkText Name="ServerName" @bind-Value="_serverPayload.ServerName" Label="Server Name"></ForkText>
-                    <ForkText Name="ServerName" @bind-Value="_serverPayload.VanillaSettings.LevelName" Label="World Name"></ForkText>
+                    <ForkText Name="ServerName" @bind-Value="_serverPayload.VanillaSettings.LevelName"
+                              Label="World Name"></ForkText>
                 </div>
                 <div class="flex gap-8">
-                    <ForkSelect Name="Gamemode" @bind-Value="_serverPayload.VanillaSettings.CurrGamemode" TModelValue="Gamemode"
+                    <ForkSelect Name="Gamemode" @bind-Value="_serverPayload.VanillaSettings.CurrGamemode"
+                                TModelValue="Gamemode"
                                 Values="GetAvailableGameModes()" Label="Gamemode">
                     </ForkSelect>
-                    <ForkSelect Name="Gamemode" @bind-Value="_serverPayload.VanillaSettings.CurrDifficulty" TModelValue="Difficulty"
+                    <ForkSelect Name="Gamemode" @bind-Value="_serverPayload.VanillaSettings.CurrDifficulty"
+                                TModelValue="Difficulty"
                                 Values="GetAvailableDifficulties()" Label="Difficulty">
                     </ForkSelect>
                 </div>
@@ -68,7 +71,7 @@
         {
             _selectedVersionType = value;
             Versions = GetAvailableVersions(value);
-            _serverPayload.ServerVersion = Versions.FirstOrDefault()?.ModelValue;
+            _serverPayload.ServerVersion = Versions.First().ModelValue;
         }
     }
 
@@ -78,12 +81,12 @@
     {
         await base.OnInitializedAsync();
         Versions = GetAvailableVersions(_selectedVersionType);
-        _serverPayload.ServerVersion = Versions.FirstOrDefault()?.ModelValue;
+        _serverPayload.ServerVersion = Versions.First().ModelValue;
     }
 
     private async Task OnCreateEntity(IconButton _)
     {
-        ulong newEntityId = await Error.RunSafe(() => _entityConnection.CreateServerAsync(_serverPayload));
+        ulong newEntityId = await Error.RunSafe(() => EntityConnection.CreateServerAsync(_serverPayload));
     }
 
     // TODO CKE make "Values" allow async enumerables properly
@@ -94,25 +97,17 @@
         ServerVersion version1 = new()
         {
             Id = 0,
-            Type = VersionType.Vanilla,
+            Type = versionType,
             Version = "1.10.2"
         };
-        result.Add(new ForkFormEntity<ServerVersion, string>
-        {
-            ModelValue = version1,
-            ViewValue = version1.Version
-        });
+        result.Add(new ForkFormEntity<ServerVersion, string>(version1, version1.Version));
         ServerVersion version2 = new()
         {
             Id = 0,
-            Type = VersionType.Vanilla,
+            Type = versionType,
             Version = "1.10.1"
         };
-        result.Add(new ForkFormEntity<ServerVersion, string>
-        {
-            ModelValue = version2,
-            ViewValue = version2.Version
-        });
+        result.Add(new ForkFormEntity<ServerVersion, string>(version2, version2.Version));
         return result;
     }
 
@@ -120,16 +115,8 @@
     {
         List<ForkFormEntity<VersionType, string>> result = new()
         {
-            new ForkFormEntity<VersionType, string>
-            {
-                ModelValue = VersionType.Vanilla,
-                ViewValue = "Vanilla"
-            },
-            new ForkFormEntity<VersionType, string>
-            {
-                ModelValue = VersionType.Paper,
-                ViewValue = "Paper"
-            }
+            new ForkFormEntity<VersionType, string>(VersionType.Vanilla, "Vanilla"),
+            new ForkFormEntity<VersionType, string>(VersionType.Paper, "Paper")
         };
         return result;
     }
@@ -139,7 +126,7 @@
         List<ForkFormEntity<Gamemode, string>> result = new();
         foreach (Gamemode gameMode in _serverPayload.VanillaSettings.Gamemodes)
         {
-            result.Add(new ForkFormEntity<Gamemode, string> { ModelValue = gameMode, ViewValue = gameMode.ToString() });
+            result.Add(new ForkFormEntity<Gamemode, string>(gameMode, gameMode.ToString()));
         }
 
         return result;
@@ -150,7 +137,7 @@
         List<ForkFormEntity<Difficulty, string>> result = new();
         foreach (Difficulty difficulty in _serverPayload.VanillaSettings.Difficulties)
         {
-            result.Add(new ForkFormEntity<Difficulty, string> { ModelValue = difficulty, ViewValue = difficulty.ToString() });
+            result.Add(new ForkFormEntity<Difficulty, string>(difficulty, difficulty.ToString()));
         }
 
         return result;

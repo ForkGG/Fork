@@ -5,6 +5,7 @@ using System.Text;
 using ForkCommon.ExtensionMethods;
 using ForkCommon.Model.Notifications;
 using ForkFrontend.Model;
+using ForkFrontend.Model.Enums;
 
 namespace ForkFrontend.Logic.Services.Notifications;
 
@@ -92,7 +93,7 @@ public class NotificationService : INotificationService
 
     private async Task HandleMessage(string message)
     {
-        AbstractNotification notification = message.FromJson<AbstractNotification>();
+        AbstractNotification? notification = message.FromJson<AbstractNotification>();
         if (notification == null)
         {
             _logger.LogDebug("Can't handle notification because it was null");
@@ -119,15 +120,15 @@ public class NotificationService : INotificationService
         WebsocketStatus = WebsocketStatus.Connected;
         // TODO CKE actual token
         await SendMessageAsync("dummyToken", cancellationToken);
-        ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[BUFFER_SIZE]);
+        ArraySegment<byte> buffer = new(new byte[BUFFER_SIZE]);
         while (!cancellationToken.IsCancellationRequested)
         {
             WebSocketReceiveResult result;
-            await using MemoryStream ms = new MemoryStream();
+            await using MemoryStream ms = new();
             do
             {
                 result = await _webSocket.ReceiveAsync(buffer, cancellationToken);
-                Debug.Assert(buffer.Array != null, "buffer.Array != null");
+                Debug.Assert(buffer.Array != null);
                 ms.Write(buffer.Array, buffer.Offset, result.Count);
             } while (!result.EndOfMessage);
 
@@ -161,7 +162,7 @@ public class NotificationService : INotificationService
         _logger.LogDebug($"Sending message with {messageInBytes.Length} Bytes");
         for (int i = 0; i < messageInBytes.Length; i += BUFFER_SIZE)
         {
-            ArraySegment<byte> chunk = new ArraySegment<byte>(messageInBytes.Skip(i).Take(BUFFER_SIZE).ToArray());
+            ArraySegment<byte> chunk = new(messageInBytes.Skip(i).Take(BUFFER_SIZE).ToArray());
             await _webSocket.SendAsync(chunk, WebSocketMessageType.Text, i + BUFFER_SIZE >= messageInBytes.Length,
                 cancellationToken);
         }

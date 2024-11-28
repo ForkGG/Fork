@@ -51,7 +51,6 @@ public class EntityPostProcessingService : IEntityPostProcessingService
         server.VanillaSettings =
             new VanillaSettings(
                 await _fileReader.ReadVanillaSettingsAsync(serverPath));
-        server.ServerPlayers ??= new List<ServerPlayer>();
 
         // Update changed players by comparing database with files
         // TODO extend this if multiple worlds are possible

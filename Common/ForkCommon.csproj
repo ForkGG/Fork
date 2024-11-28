@@ -9,6 +9,11 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <LangVersion>latestmajor</LangVersion>
         <Nullable>enable</Nullable>
+
+        
+        <!-- Violations of EditorRequired (RZ2012) are turned into true errors -->
+        <!-- https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/errors-warnings -->
+        <WarningsAsErrors>RZ2012</WarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>

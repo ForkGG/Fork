@@ -1,10 +1,10 @@
-﻿@using ForkFrontend.Logic.Services.Managers
+﻿@using ForkCommon.Model.Entity.Enums
+@using ForkCommon.Model.Entity.Pocos
 @using ForkCommon.Model.Notifications.EntityNotifications
 @using ForkFrontend.Logic.Services.Connections
-@using ForkCommon.Model.Entity.Enums
-@using ForkCommon.Model.Entity.Pocos
-@inject ILogger<Entity> _logger
-@inject IEntityConnectionService _entityConnection
+@using ForkFrontend.Logic.Services.Managers
+@inject ILogger<Entity> Logger
+@inject IEntityConnectionService EntityConnection
 
 <CascadingValue Value="Value">
     <div class="flex h-full gap-6">
@@ -22,12 +22,19 @@
                 @* Entity Overview *@
                 <div class="flex-1 max-w-3xl p-2 bg-forkBlue flex justify-between items-center">
                     <div class="flex gap-2 p-1">
-                        <IconButton @ref="_startButton" IsDisabled="Value?.Entity.Status != EntityStatus.Stopped" Size="25" IconSize="11" IconChar="'s'" HoverColor="status-green" OnClickMethod="StartServer"></IconButton>
-                        <IconButton @ref="_stopButton" IsDisabled="Value?.Entity.Status != EntityStatus.Started" Size="25" IconSize="9" IconChar="'h'" HoverColor="status-red" OnClickMethod="StopServer"></IconButton>
-                        <IconButton @ref="_restartButton" IsDisabled="Value?.Entity.Status != EntityStatus.Started" Size="25" IconSize="13" IconChar="'r'" HoverColor="status-orange" OnClickMethod="RestartServer"></IconButton>
+                        <IconButton @ref="_startButton" IsDisabled="Value?.Entity.Status != EntityStatus.Stopped"
+                                    Size="25" IconSize="11" IconChar="'s'" HoverColor="status-green"
+                                    OnClickMethod="StartServer"></IconButton>
+                        <IconButton @ref="_stopButton" IsDisabled="Value?.Entity.Status != EntityStatus.Started"
+                                    Size="25" IconSize="9" IconChar="'h'" HoverColor="status-red"
+                                    OnClickMethod="StopServer"></IconButton>
+                        <IconButton @ref="_restartButton" IsDisabled="Value?.Entity.Status != EntityStatus.Started"
+                                    Size="25" IconSize="13" IconChar="'r'" HoverColor="status-orange"
+                                    OnClickMethod="RestartServer"></IconButton>
                     </div>
                     <span class="font-bold text-md text-label whitespace-nowrap">@Value?.Entity</span>
-                    <IconButton Size="30" NoBackground="true" IconChar="'D'" IconSize="19" HoverColor="status-red" OnClickMethod="DeleteServer"></IconButton>
+                    <IconButton Size="30" NoBackground="true" IconChar="'D'" IconSize="19" HoverColor="status-red"
+                                OnClickMethod="DeleteServer"></IconButton>
                 </div>
             </div>
             @* Content *@
@@ -92,11 +99,11 @@
     {
         try
         {
-            await _entityConnection.StartEntityAsync(Value!.Entity.Id);
+            await EntityConnection.StartEntityAsync(Value!.Entity.Id);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, $"Error while starting server {Value?.Entity.Name}");
+            Logger.LogError(e, $"Error while starting server {Value?.Entity.Name}");
         }
     }
 
@@ -104,11 +111,11 @@
     {
         try
         {
-            await _entityConnection.StopEntityAsync(Value!.Entity.Id);
+            await EntityConnection.StopEntityAsync(Value!.Entity.Id);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, $"Error while stopping server {Value?.Entity.Name}");
+            Logger.LogError(e, $"Error while stopping server {Value?.Entity.Name}");
         }
     }
 
@@ -116,11 +123,11 @@
     {
         try
         {
-            await _entityConnection.RestartEntityAsync(Value!.Entity.Id);
+            await EntityConnection.RestartEntityAsync(Value!.Entity.Id);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, $"Error while restarting server {Value?.Entity.Name}");
+            Logger.LogError(e, $"Error while restarting server {Value?.Entity.Name}");
         }
     }
 
@@ -128,11 +135,11 @@
     {
         try
         {
-            await _entityConnection.DeleteEntityAsync(Value!.Entity.Id);
+            await EntityConnection.DeleteEntityAsync(Value!.Entity.Id);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, $"Error while deleting server {Value?.Entity.Name}");
+            Logger.LogError(e, $"Error while deleting server {Value?.Entity.Name}");
         }
     }
 

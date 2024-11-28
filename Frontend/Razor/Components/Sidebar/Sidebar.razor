@@ -1,12 +1,12 @@
-﻿@using Index = Index
+﻿@using ForkCommon.Model.Entity.Enums
 @using ForkCommon.Model.Entity.Pocos
 @using ForkCommon.Model.Entity.Pocos.ServerSettings
 @using ForkCommon.Model.Payloads.Entity
-@using ForkFrontend.Logic.Services.Managers
 @using ForkFrontend.Logic.Services.Connections
-@using ForkCommon.Model.Entity.Enums
-@inject ILogger<Sidebar> _logger
-@inject IEntityConnectionService _entityConnection
+@using ForkFrontend.Logic.Services.Managers
+@using Index = Index
+@inject ILogger<Sidebar> Logger
+@inject IEntityConnectionService EntityConnection
 
 
 <div class="w-80 flex flex-col text-label">
@@ -31,20 +31,22 @@
             {
                 @foreach (KeyValuePair<ulong, EntityStateManager> entityManager in EntityManagers)
                 {
-                    <SidebarEntity Value="@entityManager.Value" OnClickCallback="OnSelectEntity" IsSelected="@(SelectedEntity?.Id == entityManager.Key)"></SidebarEntity>
+                    <SidebarEntity Value="@entityManager.Value" OnClickCallback="OnSelectEntity"
+                                   IsSelected="@(SelectedEntity?.Id == entityManager.Key)"></SidebarEntity>
                 }
             }
         </div>
 
         @* Controls *@
         <div class="flex justify-end gap-3 p-3">
-            <IconButton IconChar="'I'" IconSize="24" Size="45"></IconButton>
+            <IconButton IconChar="'I'" IconSize="24" Size="45" OnClickMethod="() => { }"></IconButton> @*TODO CKE*@
             <IconButton IconChar="'C'" IconSize="24" Size="45" OnClickMethod="OpenCreateEntityScreen"></IconButton>
         </div>
     </div>
 </div>
 
 @code
+
 {
     [Parameter] public Index? Parent { get; set; }
 
@@ -68,7 +70,7 @@
 
     private async Task CreateServerHandler(IconButton button)
     {
-        CreateServerPayload createPayload = new CreateServerPayload();
+        CreateServerPayload createPayload = new();
         createPayload.ServerName = "test";
         createPayload.JavaSettings = new JavaSettings();
         createPayload.ServerVersion = new ServerVersion { Build = 0, Type = VersionType.Vanilla, Version = "1.18.1", JarLink = "https://launcher.mojang.com/v1/objects/125e5adf40c659fd3bce3e66e67a16bb49ecc1b9/server.jar" };
@@ -76,11 +78,11 @@
 
         try
         {
-            _logger.LogError(await _entityConnection.CreateServerAsync(createPayload) + "");
+            Logger.LogError(await EntityConnection.CreateServerAsync(createPayload) + "");
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error while creating server");
+            Logger.LogError(e, "Error while creating server");
         }
     }
 }

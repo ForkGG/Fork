@@ -8,7 +8,8 @@
         <label for="@Name" class="text-label text-md">@Label</label>
         <div class="select-wrapper ml-5 mt-2 w-max">
             @* Good enough option for now. Replace with fully custom select in the future *@
-            <InputSelect @bind-Value="SelectedHash" id="@Name" class="appearance-none bg-forkBlue-light py-1 px-5 text-text-dark font-bold">
+            <InputSelect @bind-Value="SelectedHash" id="@Name"
+                         class="appearance-none bg-forkBlue-light py-1 px-5 text-text-dark font-bold">
                 @foreach (ForkFormEntity<TModelValue, string> value in Values!)
                 {
                     <option value="@value.ModelValue?.GetHashCode()">@value.ViewValue</option>
@@ -34,13 +35,13 @@
         }
     }
 
-    protected override bool TryParseValueFromString(string? value, out TModelValue result, out string? validationErrorMessage)
+    protected override bool TryParseValueFromString(string? value, out TModelValue result, out string validationErrorMessage)
     {
         throw new NotSupportedException($"This component does not parse string inputs. Bind to the '{nameof(CurrentValue)}' property, not '{nameof(CurrentValueAsString)}'.");
     }
 
     /// <summary>
-    ///     Override to make sure <see cref="Values"> is set
+    ///     Override to make sure <see cref="Values" /> is set
     /// </summary>
     public override Task SetParametersAsync(ParameterView parameters)
     {

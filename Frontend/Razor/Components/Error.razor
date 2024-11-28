@@ -28,20 +28,12 @@
             ex.GetType(), ex.Message);
         if (ex is ForkException fe)
         {
-            AddMessage(new UiMessage
-            {
-                Type = UiMessageType.Error,
-                Message = fe.Message
-            });
+            AddMessage(new UiMessage(fe.Message, UiMessageType.Error));
         }
         else
         {
             Logger.LogError(ex, "Unexpected Exception occured");
-            AddMessage(new UiMessage
-            {
-                Type = UiMessageType.Error,
-                Message = "Oops! An unexpected error happened. Sorry for that!"
-            });
+            AddMessage(new UiMessage("Oops! An unexpected error happened. Sorry for that!", UiMessageType.Error));
         }
     }
 

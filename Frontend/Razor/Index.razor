@@ -1,14 +1,15 @@
 ﻿@page "/"
 @using ForkFrontend.Logic.Services.Managers
-@inject IApplicationStateManager _applicationState
+@inject IApplicationStateManager ApplicationState
 
 <div class="flex flex-1">
-    @if (_applicationState.IsApplicationReady)
+    @if (ApplicationState.IsApplicationReady)
     {
         <div class="flex flex-1 mx-6 my-10 gap-10 overflow-hidden">
             @* Sidebar *@
             <CascadingValue Name="@nameof(SelectedEntity)" Value="SelectedEntity">
-                <Sidebar Parent="this" OnSelectEntity="OnSelectEntity" EntityManagers="_applicationState.EntityStateManagersById"/>
+                <Sidebar Parent="this" OnSelectEntity="OnSelectEntity"
+                         EntityManagers="ApplicationState.EntityStateManagersById"/>
             </CascadingValue>
             @* Content *@
             <div class="flex-1">
@@ -24,9 +25,9 @@
                         </ErrorContent>
                     </ErrorBoundary>
                 }
-                @if (_applicationState.EntityStateManagersById.Count > 0)
+                @if (ApplicationState.EntityStateManagersById.Count > 0)
                 {
-                    foreach (KeyValuePair<ulong, EntityStateManager> entity in _applicationState.EntityStateManagersById)
+                    foreach (KeyValuePair<ulong, EntityStateManager> entity in ApplicationState.EntityStateManagersById)
                     {
                         <div class="@(entity.Key == SelectedEntity?.Id ? "h-full" : "hidden")">
                             <Entity @key="@entity.Key" Value="entity.Value"></Entity>
@@ -44,7 +45,7 @@
     else
     {
         <div class="w-screen h-screen flex justify-center items-center bg-forkBlue-dark flex-col">
-            <span class="text-label text-lg">@_applicationState.ApplicationStatus</span>
+            <span class="text-label text-lg">@ApplicationState.ApplicationStatus</span>
             <img style="width: 116px; height: 122px" src="ressources/img/loading.gif"/>
         </div>
     }

@@ -97,8 +97,6 @@ public class EntityManager : IEntityManager
     /// </summary>
     public async Task UpdatePlayerOnPlayerList(Server server, ServerPlayer player)
     {
-        server.ServerPlayers ??= [];
-
         // Player already exists -> update
         ServerPlayer? existingPlayer = server.ServerPlayers.FirstOrDefault(p => p.Player.Uid == player.Player.Uid);
         if (existingPlayer != null)
@@ -124,8 +122,6 @@ public class EntityManager : IEntityManager
 
     public async Task UpdatePlayerOnWhitelist(Server server, Player player, PlayerlistUpdateType updateType)
     {
-        server.Whitelist ??= [];
-
         switch (updateType)
         {
             case PlayerlistUpdateType.Add:
@@ -162,7 +158,7 @@ public class EntityManager : IEntityManager
             default: throw new ArgumentException($"Unknown update type {updateType}");
         }
 
-        UpdateWhitelistPlayerNotification notification = new(server.Id,updateType,  player);
+        UpdateWhitelistPlayerNotification notification = new(server.Id, updateType, player);
         using IServiceScope scope = _scopeFactory.CreateScope();
         INotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
         await notificationCenter.BroadcastNotification(notification);
@@ -170,8 +166,6 @@ public class EntityManager : IEntityManager
 
     public async Task UpdatePlayerOnBanList(Server server, Player player, PlayerlistUpdateType updateType)
     {
-        server.Banlist ??= [];
-
         switch (updateType)
         {
             case PlayerlistUpdateType.Add:

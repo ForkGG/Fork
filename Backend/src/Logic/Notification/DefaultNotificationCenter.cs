@@ -14,11 +14,11 @@ namespace Fork.Logic.Notification;
 
 /// <summary>
 ///     <b>Default implementation of the NotificationCenter</b>
-///     <br>
-///         This is a large wrapper for all kinds of notifications. It creates them and sends them to all subscribers
-///         of the websocket.
-///         <br>
-///             This should be used as a singleton to only create one WebSocket instance per application
+///     <br />
+///     This is a large wrapper for all kinds of notifications. It creates them and sends them to all subscribers
+///     of the websocket.
+///     <br />
+///     This should be used as a singleton to only create one WebSocket instance per application
 /// </summary>
 public class DefaultNotificationCenter : INotificationCenter
 {

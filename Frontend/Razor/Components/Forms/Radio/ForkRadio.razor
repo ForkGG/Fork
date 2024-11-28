@@ -1,8 +1,8 @@
 ﻿@typeparam TModelValue
 @inherits AbstractForkInput<TModelValue>
-@using ForkFrontend.Model.Forms
-@using ForkFrontend.Model
 @using System.Diagnostics.CodeAnalysis
+@using ForkFrontend.Model.Enums
+@using ForkFrontend.Model.Forms
 @implements IValueListInput<TModelValue, string>
 
 <div class="mt-3">
@@ -38,7 +38,8 @@
             @foreach (ForkFormEntity<TModelValue, string> value in Values!)
             {
                 <div>
-                    <input type="radio" name="@Name" id="@($"{Name}{index}")" @onchange="@(_ => CurrentValue = value.ModelValue)"/>
+                    <input type="radio" name="@Name" id="@($"{Name}{index}")"
+                           @onchange="@(_ => CurrentValue = value.ModelValue)"/>
                     <label for="@($"{Name}{index}")">@value.ViewValue</label>
                 </div>
                 index++;
@@ -60,7 +61,7 @@
     }
 
     /// <summary>
-    ///     Override to make sure <see cref="Values"> is set
+    ///     Override to make sure <see cref="Values" /> is set
     /// </summary>
     public override Task SetParametersAsync(ParameterView parameters)
     {
