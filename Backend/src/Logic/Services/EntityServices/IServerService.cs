@@ -15,5 +15,5 @@ public interface IServerService
     public Task ChangeServerStatusAsync(Server server, EntityStatus newStatus);
 
     public Task<ulong> CreateServerAsync(string name, ServerVersion version, VanillaSettings settings,
-        JavaSettings javaSettings, string worldPath);
+        JavaSettings javaSettings, string? worldPath);
 }

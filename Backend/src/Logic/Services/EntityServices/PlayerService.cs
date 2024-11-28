@@ -30,7 +30,7 @@ public class PlayerService : IPlayerService
 
     public async Task<Player> PlayerByNameAsync(string name)
     {
-        Player cachedPlayer = _applicationDbContext.PlayerSet.FirstOrDefault(p => p.Name == name);
+        Player? cachedPlayer = _applicationDbContext.PlayerSet.FirstOrDefault(p => p.Name == name);
         if (cachedPlayer != null && !cachedPlayer.LastUpdated.IsOlderThan(TimeSpan.FromHours(24)))
         {
             return cachedPlayer;
@@ -38,7 +38,7 @@ public class PlayerService : IPlayerService
 
         try
         {
-            string uid = await _mojangApi.UidForNameAsync(name);
+            string? uid = await _mojangApi.UidForNameAsync(name);
             if (uid != null)
             {
                 return await PlayerByUidAsync(uid);
@@ -47,17 +47,17 @@ public class PlayerService : IPlayerService
         catch (ExternalServiceException e)
         {
             _logger.LogError(e, "Failed to get player by name");
-            return null;
         }
 
         // If the player is not in the Mojang API we handle him like an offline player
-        return new Player { Name = name, Head = "TODO", LastUpdated = DateTime.Now, IsOfflinePlayer = true };
+        return new Player("Offline-" + Guid.NewGuid())
+            { Name = name, Head = "TODO", LastUpdated = DateTime.Now, IsOfflinePlayer = true };
     }
 
     public async Task<Player> PlayerByUidAsync(string uid)
     {
         uid = uid.Replace("-", "");
-        Player existingPlayer = await _applicationDbContext.PlayerSet.FirstOrDefaultAsync(p => p.Uid == uid);
+        Player? existingPlayer = await _applicationDbContext.PlayerSet.FirstOrDefaultAsync(p => p.Uid == uid);
         if (existingPlayer != null && !existingPlayer.LastUpdated.IsOlderThan(TimeSpan.FromHours(24)))
         {
             return existingPlayer;
@@ -65,8 +65,8 @@ public class PlayerService : IPlayerService
 
         try
         {
-            PlayerProfile playerProfile = await _mojangApi.ProfileForUidAsync(uid);
-            if (playerProfile != null)
+            PlayerProfile? playerProfile = await _mojangApi.ProfileForUidAsync(uid);
+            if (playerProfile?.Properties != null && playerProfile.Id != null)
             {
                 if (existingPlayer != null)
                 {
@@ -78,10 +78,9 @@ public class PlayerService : IPlayerService
                 }
                 else
                 {
-                    _applicationDbContext.PlayerSet.Add(new Player
+                    _applicationDbContext.PlayerSet.Add(new Player(playerProfile.Id)
                     {
                         Name = playerProfile.Name,
-                        Uid = playerProfile.Id,
                         Head = await _mojangApi.Base64HeadFromTextureProperty(playerProfile.Properties
                             .Where(p => p.Name == "textures").Select(p => p.Value).FirstOrDefault()),
                         LastUpdated = DateTime.Now,
@@ -91,7 +90,11 @@ public class PlayerService : IPlayerService
 
                 await _applicationDbContext.SaveChangesAsync();
 
-                return await _applicationDbContext.PlayerSet.FirstOrDefaultAsync(p => p.Uid == uid);
+                Player? result = await _applicationDbContext.PlayerSet.FirstOrDefaultAsync(p => p.Uid == uid);
+                if (result != null)
+                {
+                    return result;
+                }
             }
         }
         catch (ExternalServiceException e)
@@ -101,7 +104,7 @@ public class PlayerService : IPlayerService
         }
 
         // If the player is not in the Mojang API we handle him like an offline player
-        return new Player { Uid = uid, Head = "TODO", LastUpdated = DateTime.Now, IsOfflinePlayer = true };
+        return new Player(uid) { Head = "TODO", LastUpdated = DateTime.Now, IsOfflinePlayer = true };
     }
 
     public async Task<ISet<string>> PlayerUidsForWorldsAsync(List<string> worldPaths)

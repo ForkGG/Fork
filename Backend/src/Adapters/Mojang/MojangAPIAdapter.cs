@@ -21,18 +21,18 @@ public class MojangApiAdapter : AbstractAdapter, IMojangApiAdapter
     {
     }
 
-    public async Task<string> UidForNameAsync(string name)
+    public async Task<string?> UidForNameAsync(string name)
     {
         string encodedName = Uri.EscapeDataString(name);
-        PlayerByName response =
+        PlayerByName? response =
             await GetAsync<PlayerByName>($"https://api.mojang.com/users/profiles/minecraft/{encodedName}");
         return response?.Id;
     }
 
-    public async Task<PlayerProfile> ProfileForUidAsync(string uid)
+    public async Task<PlayerProfile?> ProfileForUidAsync(string uid)
     {
         string encodedUid = Uri.EscapeDataString(uid.Replace("-", ""));
-        PlayerProfile response =
+        PlayerProfile? response =
             await GetAsync<PlayerProfile>($"https://sessionserver.mojang.com/session/minecraft/profile/{encodedUid}");
         return response;
     }
@@ -41,9 +41,9 @@ public class MojangApiAdapter : AbstractAdapter, IMojangApiAdapter
     ///     This method will retrieve the Texture of a player from its encoded profile and build a base64 representation of the
     ///     Head
     /// </summary>
-    public async Task<string> Base64HeadFromTextureProperty(string encodedTextureProfile)
+    public async Task<string> Base64HeadFromTextureProperty(string? encodedTextureProfile)
     {
-        await using MemoryStream imageStream = new MemoryStream();
+        await using MemoryStream imageStream = new();
 
         if (encodedTextureProfile == null)
         {
@@ -55,10 +55,10 @@ public class MojangApiAdapter : AbstractAdapter, IMojangApiAdapter
         {
             byte[] profileJson = Convert.FromBase64String(encodedTextureProfile);
             string profileJsonString = Encoding.UTF8.GetString(profileJson).Replace("\n", "");
-            PlayerTextureProfile profile = JsonConvert.DeserializeObject<PlayerTextureProfile>(profileJsonString);
+            PlayerTextureProfile? profile = JsonConvert.DeserializeObject<PlayerTextureProfile>(profileJsonString);
 
 
-            if (profile?.Textures?.Skin?.Url is not string url)
+            if (profile?.Textures?.Skin?.Url is not { } url)
             {
                 string defaultPath =
                     Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DefaultHead.png");
@@ -67,8 +67,8 @@ public class MojangApiAdapter : AbstractAdapter, IMojangApiAdapter
             }
             else
             {
-                using HttpClient client = new HttpClient();
-                Uri uri = new Uri(url);
+                using HttpClient client = new();
+                Uri uri = new(url);
                 HttpResponseMessage response = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
                 while (response.StatusCode == (HttpStatusCode)429)
                 {

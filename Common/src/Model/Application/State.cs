@@ -8,5 +8,10 @@ namespace ForkCommon.Model.Application;
 /// </summary>
 public class State
 {
+    public State(List<IEntity> entities)
+    {
+        Entities = entities;
+    }
+
     public List<IEntity> Entities { get; set; }
 }

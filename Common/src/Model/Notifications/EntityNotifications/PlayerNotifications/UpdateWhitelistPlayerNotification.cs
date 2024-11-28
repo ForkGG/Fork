@@ -11,6 +11,13 @@ namespace ForkCommon.Model.Notifications.EntityNotifications.PlayerNotifications
 [Privileges(typeof(ReadWhitelistConsoleTabPrivilege))]
 public class UpdateWhitelistPlayerNotification : AbstractEntityNotification
 {
+    public UpdateWhitelistPlayerNotification(ulong entityId, PlayerlistUpdateType updateType, Player player) :
+        base(entityId)
+    {
+        UpdateType = updateType;
+        Player = player;
+    }
+
     public PlayerlistUpdateType UpdateType { get; set; }
     public Player Player { get; set; }
 }

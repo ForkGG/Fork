@@ -42,41 +42,41 @@ public class Server : IEntity
     }
 
     public bool AutoSetSha1 { get; set; } = true;
-    public DateTime ResourcePackHashAge { get; set; } = DateTime.MinValue;
+    public DateTime? ResourcePackHashAge { get; set; } = DateTime.MinValue;
 
-    public List<AutomationTime> AutomationTimes { get; set; }
+    public List<AutomationTime>? AutomationTimes { get; set; }
 
-    public List<ServerPlayer> ServerPlayers { get; set; }
-    [NotMapped] public List<Player.Player> Whitelist { get; set; }
-    [NotMapped] public List<Player.Player> Banlist { get; set; }
+    public List<ServerPlayer>? ServerPlayers { get; set; }
+    [NotMapped] public List<Player.Player>? Whitelist { get; set; }
+    [NotMapped] public List<Player.Player>? Banlist { get; set; }
 
-    [NotMapped] public VanillaSettings VanillaSettings { get; set; }
+    [NotMapped] public VanillaSettings? VanillaSettings { get; set; }
 
-    [NotMapped] [JsonIgnore] public string FullName => Name + " (" + Version.Version + ")";
+    [NotMapped] [JsonIgnore] public string FullName => Name + " (" + Version?.Version + ")";
 
-    [NotMapped] [JsonIgnore] public string JarLink => Version.JarLink;
+    [NotMapped] [JsonIgnore] public string? JarLink => Version?.JarLink;
 
     public ulong Id { get; set; }
-    public string Name { get; set; }
-    public ServerVersion Version { get; set; }
-    public JavaSettings JavaSettings { get; set; }
+    public string? Name { get; set; }
+    public ServerVersion? Version { get; set; }
+    public JavaSettings? JavaSettings { get; set; }
 
     public bool Initialized { get; set; } = false;
     public bool StartWithFork { get; set; } = false;
     public int ServerIconId { get; set; }
 
     [NotMapped] [JsonIgnore] public List<ConsoleMessage> ConsoleMessages { get; set; } = new();
-    [NotMapped] public EntityStatus Status { get; set; } = EntityStatus.Stopped;
-    [NotMapped] [JsonIgnore] public Action<string> ConsoleHandler { get; set; }
+    [NotMapped] public EntityStatus? Status { get; set; } = EntityStatus.Stopped;
+    [NotMapped] [JsonIgnore] public Action<string>? ConsoleHandler { get; set; }
 
     public override string ToString()
     {
-        string name = Name;
-        if (Name.Length > 10)
+        string? name = Name;
+        if (Name?.Length > 10)
         {
-            name = name.Substring(0, 10);
+            name = name?.Substring(0, 10);
         }
 
-        return name + " (" + Version.Version + ")";
+        return name + " (" + Version?.Version + ")";
     }
 }

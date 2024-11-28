@@ -32,7 +32,7 @@ public static class JsonExtensionMethods
     /// <param name="json">Json representation of the object</param>
     /// <typeparam name="T">Type of the object</typeparam>
     /// <returns>Deserialized object</returns>
-    public static T FromJson<T>(this string json)
+    public static T? FromJson<T>(this string json)
     {
         JsonSerializerSettings options = new()
         {

@@ -5,6 +5,11 @@
 /// </summary>
 public abstract class AbstractEntityNotification : AbstractNotification
 {
+    protected AbstractEntityNotification(ulong entityId)
+    {
+        EntityId = entityId;
+    }
+
     // ID of the entity this notification belongs to
     public ulong EntityId { get; set; }
 }

@@ -23,7 +23,7 @@ public class AuthenticationMiddleware
 
     public async Task InvokeAsync(HttpContext context, IAuthenticationService authenticationService)
     {
-        string token = context.Request.Headers.Authorization.FirstOrDefault();
+        string? token = context.Request.Headers.Authorization.FirstOrDefault();
         if (string.IsNullOrWhiteSpace(token))
         {
             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
@@ -33,10 +33,9 @@ public class AuthenticationMiddleware
         try
         {
             authenticationService.AuthenticateToken(token);
-            bool authenticated = true;
-            ControllerActionDescriptor metadata =
+            ControllerActionDescriptor? metadata =
                 context.GetEndpoint()!.Metadata.GetMetadata<ControllerActionDescriptor>();
-            authenticated = metadata!.EndpointMetadata
+            bool authenticated = metadata!.EndpointMetadata
                 .All(a => a is not PrivilegesAttribute ||
                           (a is PrivilegesAttribute p && authenticationService.IsAuthenticated(p.Privilege)));
             if (!authenticated)

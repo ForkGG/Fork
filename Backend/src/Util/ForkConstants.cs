@@ -5,21 +5,21 @@ namespace Fork.Util;
 
 public static class ForkConstants
 {
-    private static string applicationPath;
+    private static string? _applicationPath;
 
     public static string ApplicationPath
     {
         get
         {
-            if (applicationPath == null)
+            if (_applicationPath == null)
             {
                 DirectoryInfo directoryInfo = Directory.CreateDirectory(
                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Fork"));
-                applicationPath = directoryInfo.FullName;
-                Console.WriteLine("Data directory of Fork is: " + applicationPath);
+                _applicationPath = directoryInfo.FullName;
+                Console.WriteLine("Data directory of Fork is: " + _applicationPath);
             }
 
-            return applicationPath;
+            return _applicationPath;
         }
     }
 }

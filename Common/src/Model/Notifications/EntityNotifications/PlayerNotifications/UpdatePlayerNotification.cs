@@ -10,5 +10,10 @@ namespace ForkCommon.Model.Notifications.EntityNotifications.PlayerNotifications
 [Privileges(typeof(ReadPlayerlistConsoleTabPrivilege))]
 public class UpdatePlayerNotification : AbstractEntityNotification
 {
+    public UpdatePlayerNotification(ulong entityId, ServerPlayer serverPlayer) : base(entityId)
+    {
+        ServerPlayer = serverPlayer;
+    }
+
     public ServerPlayer ServerPlayer { get; set; }
 }

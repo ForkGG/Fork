@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Fork.Logic.Managers;
 using Fork.Logic.Services.FileServices;
+using Fork.Util.ExtensionMethods;
 using ForkCommon.Model.Entity.Pocos;
 using ForkCommon.Model.Entity.Pocos.Player;
 using ForkCommon.Model.Entity.Pocos.ServerSettings;
@@ -44,7 +45,7 @@ public class EntityPostProcessingService : IEntityPostProcessingService
 
     private async Task DoServerPostProcessing(Server server)
     {
-        string serverPath = Path.Combine(_application.EntityPath, server.Name);
+        string serverPath = server.GetPath(_application);
 
         // Read settings files
         server.VanillaSettings =
@@ -58,7 +59,7 @@ public class EntityPostProcessingService : IEntityPostProcessingService
         List<Player> playersInWorlds = await UidsToPlayersAsync(await _playerService.PlayerUidsForWorldsAsync(worlds));
         foreach (Player player in playersInWorlds)
         {
-            ServerPlayer serverPlayer = server.ServerPlayers.FirstOrDefault(s => s.Player.Uid == player.Uid);
+            ServerPlayer? serverPlayer = server.ServerPlayers.FirstOrDefault(s => s.Player.Uid == player.Uid);
             if (serverPlayer != null)
             {
                 serverPlayer.Player.Name = player.Name;
@@ -68,13 +69,13 @@ public class EntityPostProcessingService : IEntityPostProcessingService
             }
             else
             {
-                server.ServerPlayers.Add(new ServerPlayer { Player = player, Server = server, ServerId = server.Id });
+                server.ServerPlayers.Add(new ServerPlayer(player, server));
             }
         }
 
         // Read whitelist, banlist and oplist
         // Version 1.7.5 and earlier have txt files
-        if (server.Version.CompareTo(new ServerVersion { Version = "1.7.5" }) <= 0)
+        if (server.Version?.CompareTo(new ServerVersion { Version = "1.7.5" }) <= 0)
         {
             List<string> whitelistNames = await _fileReader.ReadWhiteListTxt(serverPath);
             server.Whitelist = await NamesToPlayersAsync(whitelistNames);
@@ -83,7 +84,7 @@ public class EntityPostProcessingService : IEntityPostProcessingService
             List<string> opListNames = await _fileReader.ReadOpListTxt(serverPath);
             foreach (string opName in opListNames)
             {
-                ServerPlayer serverPlayer = server.ServerPlayers.FirstOrDefault(p => p.Player.Name == opName);
+                ServerPlayer? serverPlayer = server.ServerPlayers.FirstOrDefault(p => p.Player.Name == opName);
                 if (serverPlayer != null)
                 {
                     serverPlayer.IsOp = true;
@@ -99,7 +100,7 @@ public class EntityPostProcessingService : IEntityPostProcessingService
             List<string> opListUids = await _fileReader.ReadOpListJson(serverPath);
             foreach (string opUid in opListUids)
             {
-                ServerPlayer serverPlayer =
+                ServerPlayer? serverPlayer =
                     server.ServerPlayers.FirstOrDefault(p => p.Player.Uid == opUid.Replace("-", ""));
                 if (serverPlayer != null)
                 {

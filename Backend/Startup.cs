@@ -97,7 +97,7 @@ public class Startup
         services.AddTransient<IConsoleInterpreter, ConsoleInterpreter>();
         // Transient adapters
         services.AddTransient<IMojangApiAdapter, MojangApiAdapter>();
-        services.AddTransient<IForkAPIAdapter, ForkAPIAdapter>();
+        services.AddTransient<IForkApiAdapter, ForkApiAdapter>();
 
         services.AddSwaggerGen(c =>
         {

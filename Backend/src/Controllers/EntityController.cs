@@ -50,7 +50,7 @@ public class EntityController : AbstractRestController
     [Privileges(typeof(DeleteEntityPrivilege))]
     public async Task<StatusCodeResult> DeleteEntity([FromRoute] ulong entityId)
     {
-        IEntity entity = await _entityManager.EntityById(entityId);
+        IEntity? entity = await _entityManager.EntityById(entityId);
         if (entity == null)
         {
             return BadRequest();
@@ -64,7 +64,7 @@ public class EntityController : AbstractRestController
     [Privileges(typeof(WriteConsoleTabPrivilege))]
     public async Task<StatusCodeResult> StartEntity([FromRoute] ulong entityId)
     {
-        IEntity entity = await _entityManager.EntityById(entityId);
+        IEntity? entity = await _entityManager.EntityById(entityId);
         if (entity == null)
         {
             return BadRequest();
@@ -78,7 +78,7 @@ public class EntityController : AbstractRestController
     [Privileges(typeof(WriteConsoleTabPrivilege))]
     public async Task<StatusCodeResult> StopEntity([FromRoute] ulong entityId)
     {
-        IEntity entity = await _entityManager.EntityById(entityId);
+        IEntity? entity = await _entityManager.EntityById(entityId);
         if (entity == null)
         {
             return BadRequest();
@@ -92,7 +92,7 @@ public class EntityController : AbstractRestController
     [Privileges(typeof(WriteConsoleTabPrivilege))]
     public async Task<StatusCodeResult> RestartEntity([FromRoute] ulong entityId)
     {
-        IEntity entity = await _entityManager.EntityById(entityId);
+        IEntity? entity = await _entityManager.EntityById(entityId);
         if (entity == null)
         {
             return BadRequest();
@@ -112,7 +112,7 @@ public class EntityController : AbstractRestController
             return BadRequest();
         }
 
-        IEntity entity = await _entityManager.EntityById(entityId);
+        IEntity? entity = await _entityManager.EntityById(entityId);
         if (entity == null)
         {
             return BadRequest();

@@ -25,20 +25,20 @@ public class Program
                 string persistencePath = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "ForkApp", "persistence");
-                DirectoryInfo persistenceDir = new DirectoryInfo(persistencePath);
+                DirectoryInfo persistenceDir = new(persistencePath);
                 if (!persistenceDir.Exists)
                 {
                     persistenceDir.Create();
                 }
 
-                FileInfo databaseFile = new FileInfo(Path.Combine(persistencePath, "app.db"));
+                FileInfo databaseFile = new(Path.Combine(persistencePath, "app.db"));
                 if (!databaseFile.Exists)
                 {
                     databaseFile.Create().Close();
                 }
 
-                using ApplicationDbContext context = services.GetService<ApplicationDbContext>();
-                context.Database.Migrate();
+                using ApplicationDbContext? context = services.GetService<ApplicationDbContext>();
+                context?.Database.Migrate();
                 logger.LogInformation("Finished database migration");
             }
             catch (Exception e)

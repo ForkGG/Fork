@@ -50,7 +50,7 @@ public class ServerService : IServerService
 
 
     public async Task<ulong> CreateServerAsync(string serverName, ServerVersion serverVersion, VanillaSettings settings,
-        JavaSettings javaSettings, string worldPath)
+        JavaSettings javaSettings, string? worldPath)
     {
         serverName = RefineName(serverName);
         string serverPath = Path.Combine(_application.EntityPath, serverName);
@@ -103,7 +103,7 @@ public class ServerService : IServerService
         //     await Downloader.CancelJarDownloadAsync(serverViewModel);
         // }
 
-        DirectoryInfo serverDirectory = new(Path.Combine(_application.EntityPath, server.Name));
+        DirectoryInfo serverDirectory = new(server.GetPath(_application));
         serverDirectory.Delete(true);
         _context.ServerSet.Remove(server);
         await _context.SaveChangesAsync();
@@ -118,7 +118,7 @@ public class ServerService : IServerService
         }
 
         await ChangeServerStatusAsync(server, EntityStatus.Starting);
-        _logger.LogInformation($"Starting server {server.Name} on world {server.VanillaSettings.LevelName}");
+        _logger.LogInformation($"Starting server {server.Name} on world {server.VanillaSettings?.LevelName}");
 
         try
         {
@@ -131,13 +131,13 @@ public class ServerService : IServerService
                 throw new ForkException($"Supplied server \"{server.Name}\" has no directory!");
             }
 
-            JavaVersion javaVersion = JavaVersionUtils.GetInstalledJavaVersion(server.JavaSettings.JavaPath);
+            JavaVersion? javaVersion = JavaVersionUtils.GetInstalledJavaVersion(server.JavaSettings?.JavaPath);
             if (javaVersion == null)
             {
                 await _console.WriteError(server,
-                    $"No valid Java installation was found for the configured java path:\n{server.JavaSettings.JavaPath}");
+                    $"No valid Java installation was found for the configured java path:\n{server.JavaSettings?.JavaPath}");
                 throw new ForkException(
-                    $"No valid Java installation was found for the configured java path:\n{server.JavaSettings.JavaPath}");
+                    $"No valid Java installation was found for the configured java path:\n{server.JavaSettings?.JavaPath}");
             }
 
             if (!javaVersion.Is64Bit)
@@ -160,7 +160,7 @@ public class ServerService : IServerService
                     "WARN: The Java installation selected for this server is outdated. Please update Java to version 16 or higher.");
             }
 
-            if (server.VanillaSettings.ResourcePack != "" && server.AutoSetSha1)
+            if (server.VanillaSettings?.ResourcePack != "" && server.AutoSetSha1)
             {
                 await UpdateResourcePackHash(server);
             }
@@ -172,10 +172,10 @@ public class ServerService : IServerService
                 RedirectStandardError = true,
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true,
-                FileName = server.JavaSettings.JavaPath ?? "java",
+                FileName = server.JavaSettings?.JavaPath ?? "java",
                 WorkingDirectory = serverDirectory.FullName,
-                Arguments = "-Xmx" + server.JavaSettings.MaxRam + "m " +
-                            server.JavaSettings.StartupParameters + " -jar server.jar nogui",
+                Arguments = "-Xmx" + server.JavaSettings?.MaxRam + "m " +
+                            server.JavaSettings?.StartupParameters + " -jar server.jar nogui",
                 WindowStyle = ProcessWindowStyle.Hidden,
                 CreateNoWindow = true
             };
@@ -183,7 +183,7 @@ public class ServerService : IServerService
             process.Start();
             CancellationTokenSource serverStoppedTokenSource = new();
             Task.Run(() => TrackServerPerformance(server, process, serverStoppedTokenSource));
-            await _console.BindProcessToConsole(server, process.StandardOutput, process.StandardError,
+            _console.BindProcessToConsole(server, process.StandardOutput, process.StandardError,
                 status => _ = ChangeServerStatusAsync(server, status));
             server.ConsoleHandler = delegate(string line)
             {
@@ -281,8 +281,7 @@ public class ServerService : IServerService
     public async Task ChangeServerStatusAsync(Server server, EntityStatus newStatus)
     {
         server.Status = newStatus;
-        await _notificationCenter.BroadcastNotification(new EntityStatusChangedNotification
-            { EntityId = server.Id, NewEntityStatus = newStatus });
+        await _notificationCenter.BroadcastNotification(new EntityStatusChangedNotification(server.Id, newStatus));
     }
 
     private string RefineName(string rawName)
@@ -302,8 +301,10 @@ public class ServerService : IServerService
 
     private async Task UpdateResourcePackHash(Server server)
     {
+        Debug.Assert(server.VanillaSettings != null);
+
         await _console.WriteLine(server, "Generating Resource Pack hash...");
-        string resourcePackUrl = server.VanillaSettings.ResourcePack.Replace("\\", "");
+        string? resourcePackUrl = server.VanillaSettings.ResourcePack.Replace("\\", "");
         bool isHashUpToDate = await IsHashUpToDate(server.ResourcePackHashAge, resourcePackUrl, server);
         if (!string.IsNullOrEmpty(server.VanillaSettings.ResourcePackSha1) && isHashUpToDate)
         {
@@ -330,7 +331,7 @@ public class ServerService : IServerService
         }
     }
 
-    private async Task<bool> IsHashUpToDate(DateTime hashDate, string fileSourceUrl, Server server)
+    private async Task<bool> IsHashUpToDate(DateTime? hashDate, string? fileSourceUrl, Server server)
     {
         if (string.IsNullOrEmpty(fileSourceUrl))
         {
@@ -339,7 +340,7 @@ public class ServerService : IServerService
 
         HttpClient client = new();
         HttpResponseMessage response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, fileSourceUrl));
-        string lastModifiedString = response.Headers.GetValues("LastModified").FirstOrDefault();
+        string? lastModifiedString = response.Headers.GetValues("LastModified").FirstOrDefault();
         if (lastModifiedString == null)
         {
             await _console.WriteError(server,
@@ -406,13 +407,10 @@ public class ServerService : IServerService
         while (!tokenSource.IsCancellationRequested && !process.HasExited)
             try
             {
-                EntityPerformanceNotification notification = new()
-                {
-                    EntityId = server.Id,
-                    Uptime = DateTime.Now - process.StartTime,
-                    RamPercentage = await process.CalculateMemLoad(server.JavaSettings.MaxRam),
-                    CpuPercentage = await process.CalculateCpuLoad(TimeSpan.FromSeconds(1))
-                };
+                EntityPerformanceNotification notification = new(server.Id,
+                    await process.CalculateCpuLoad(TimeSpan.FromSeconds(1)),
+                    await process.CalculateMemLoad(server.JavaSettings!.MaxRam),
+                    DateTime.Now - process.StartTime);
                 await _notificationCenter.BroadcastNotification(notification);
             }
             catch (Exception e)

@@ -25,7 +25,7 @@ public abstract class AbstractAdapter
     /// <summary>
     ///     Makes a GET request to the given path and returns the deserialized body as <see cref="T" />>
     /// </summary>
-    protected async Task<T> GetAsync<T>(string path)
+    protected async Task<T?> GetAsync<T>(string path)
     {
         string body = await GetBodyAsync(path);
         return JsonConvert.DeserializeObject<T>(body);

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Fork.Logic.Managers;
+using Fork.Util.ExtensionMethods;
 using ForkCommon.ExtensionMethods;
 using ForkCommon.Model.Application.Exceptions;
 using ForkCommon.Model.Entity.Pocos;
@@ -45,7 +46,7 @@ public class CommandService
     private async Task<string> GetCommandsJsonForEntity(IEntity entity)
     {
         string commandsJsonFilePath =
-            Path.Combine(_application.EntityPath, entity.Name, "generated", "reports", "commands.json");
+            Path.Combine(entity.GetPath(_application), "generated", "reports", "commands.json");
         FileInfo commandsJsonFile = new(commandsJsonFilePath);
 
         if (!commandsJsonFile.Exists)
@@ -65,7 +66,7 @@ public class CommandService
 
     private async Task GenerateCommandsForEntity(IEntity entity)
     {
-        string serverDirectory = Path.Combine(_application.EntityPath, entity.Name);
+        string serverDirectory = entity.GetPath(_application);
 
         Process process = new();
         ProcessStartInfo startInfo = new()
@@ -73,17 +74,17 @@ public class CommandService
             RedirectStandardError = true,
             RedirectStandardOutput = true,
             UseShellExecute = false,
-            FileName = entity.JavaSettings.JavaPath ?? "java",
+            FileName = entity.JavaSettings?.JavaPath ?? "java",
             WorkingDirectory = serverDirectory,
             WindowStyle = ProcessWindowStyle.Hidden,
             CreateNoWindow = true
         };
 
-        if (entity.Version.IsEqualOrGreaterThan(ServerVersion.Version1_18))
+        if (entity.Version?.IsEqualOrGreaterThan(ServerVersion.Version1_18) == true)
         {
             startInfo.Arguments = "-DbundlerMainClass=net.minecraft.data.Main -jar server.jar --reports";
         }
-        else if (entity.Version.IsEqualOrGreaterThan(ServerVersion.Version1_13))
+        else if (entity.Version?.IsEqualOrGreaterThan(ServerVersion.Version1_13) == true)
         {
             startInfo.Arguments = "-cp server.jar net.minecraft.data.Main --reports";
         }

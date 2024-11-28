@@ -19,10 +19,10 @@ public class ApplicationController : AbstractRestController
 {
     private readonly IApplicationStateService _applicationState;
     private readonly IAuthenticationService _authentication;
-    private readonly IForkAPIAdapter _forkApi;
+    private readonly IForkApiAdapter _forkApi;
 
     public ApplicationController(ILogger<ApplicationController> logger, IApplicationStateService applicationState,
-        IAuthenticationService authentication, IForkAPIAdapter forkApi) : base(logger)
+        IAuthenticationService authentication, IForkApiAdapter forkApi) : base(logger)
     {
         _applicationState = applicationState;
         _authentication = authentication;
@@ -42,7 +42,7 @@ public class ApplicationController : AbstractRestController
     [Privileges(typeof(IPrivilege))]
     public IEnumerable<IPrivilege> Privileges()
     {
-        return _authentication.Privileges;
+        return _authentication.Privileges!;
     }
 
     /// <summary>

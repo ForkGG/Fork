@@ -18,8 +18,7 @@ public class ApplicationStateService : IApplicationStateService
     //TODO CKE check permission before adding stuff
     public async Task<State> BuildAppState()
     {
-        State result = new();
-        result.Entities = await _entityManager.ListAllEntities();
+        State result = new(await _entityManager.ListAllEntities());
         return result;
     }
 }

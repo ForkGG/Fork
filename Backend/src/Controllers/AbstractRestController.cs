@@ -7,15 +7,15 @@ namespace Fork.Controllers;
 [Route("v1/[controller]")]
 public abstract class AbstractRestController : ControllerBase
 {
-    protected readonly ILogger _logger;
+    protected readonly ILogger Logger;
 
     public AbstractRestController(ILogger logger)
     {
-        _logger = logger;
+        Logger = logger;
     }
 
     protected void LogRequest()
     {
-        _logger.LogDebug($"New request: {Request.Method} {Request.Path}");
+        Logger.LogDebug($"New request: {Request.Method} {Request.Path}");
     }
 }

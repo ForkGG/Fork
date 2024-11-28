@@ -35,18 +35,13 @@ public class TokenSecurityFilter : IOperationFilter
                             In = ParameterLocation.Header,
                             BearerFormat = "Token"
                         },
-                        new string[] { }
+                        []
                     }
                 });
             string privilegesString = string.Join(", ", privilegeAttributes.Select(a =>
             {
-                object value = a.ConstructorArguments.FirstOrDefault().Value;
-                if (value != null)
-                {
-                    return ((Type)value).FriendlyName();
-                }
-
-                return "Parse Error!";
+                object? value = a.ConstructorArguments.FirstOrDefault().Value;
+                return value != null ? ((Type)value).FriendlyName() : "Parse Error!";
             }));
             operation.Description =
                 $"<b>Required {(privilegeAttributes.Count > 1 ? "privileges" : "privilege")}:</b> {privilegesString}<br/>" +

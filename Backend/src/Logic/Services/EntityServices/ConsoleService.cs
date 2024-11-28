@@ -31,8 +31,7 @@ public class ConsoleService : IConsoleService
     {
         ConsoleMessage consoleMessage = new(message, type);
         entity.ConsoleMessages.Add(consoleMessage);
-        await _notificationCenter.BroadcastNotification(new ConsoleAddNotification
-            { EntityId = entity.Id, NewConsoleMessage = consoleMessage });
+        await _notificationCenter.BroadcastNotification(new ConsoleAddNotification(entity.Id, consoleMessage));
     }
 
     public async Task WriteError(IEntity entity, string message)
@@ -50,14 +49,14 @@ public class ConsoleService : IConsoleService
         await WriteLine(entity, message, ConsoleMessageType.Success);
     }
 
-    public async Task BindProcessToConsole(IEntity entity, StreamReader stdOut, StreamReader errOut,
+    public void BindProcessToConsole(IEntity entity, StreamReader stdOut, StreamReader errOut,
         Action<EntityStatus> entityStatusUpdateAction)
     {
         async void HandleStdOut()
         {
             while (!stdOut.EndOfStream)
             {
-                string line = await stdOut.ReadLineAsync();
+                string? line = await stdOut.ReadLineAsync();
                 if (line != null)
                 {
                     if (line.Contains(@"WARN Advanced terminal features are not available in this environment"))
@@ -93,7 +92,7 @@ public class ConsoleService : IConsoleService
         {
             while (!errOut.EndOfStream)
             {
-                string line = await errOut.ReadLineAsync();
+                string? line = await errOut.ReadLineAsync();
                 if (line != null)
                 {
                     bool isSuccess = false;

@@ -23,7 +23,7 @@ namespace Fork.Logic.Notification;
 public class DefaultNotificationCenter : INotificationCenter
 {
     private readonly ILogger<DefaultNotificationCenter> _logger;
-    private readonly Dictionary<IWebSocketConnection, IReadOnlySet<IPrivilege>> _privilegesByConnection;
+    private readonly Dictionary<IWebSocketConnection, IReadOnlySet<IPrivilege>?> _privilegesByConnection;
     private readonly WebSocketServer _server;
     private readonly ITokenManager _tokenManager;
 
@@ -36,7 +36,7 @@ public class DefaultNotificationCenter : INotificationCenter
 
         _server = new WebSocketServer("ws://0.0.0.0:35566");
         // A Dictionary containing all active sockets and their privileges (or null if no token was provided yet)
-        _privilegesByConnection = new Dictionary<IWebSocketConnection, IReadOnlySet<IPrivilege>>();
+        _privilegesByConnection = new Dictionary<IWebSocketConnection, IReadOnlySet<IPrivilege>?>();
         _server.RestartAfterListenError = true;
         //_server.ListenerSocket.NoDelay = true;
         _server.Start(socket =>
@@ -74,7 +74,7 @@ public class DefaultNotificationCenter : INotificationCenter
         string message = notification.ToJson();
         _logger.LogTrace($"Sending notification to {_privilegesByConnection.Count} clients: {message}");
         int actualMessagesSent = 0;
-        foreach (KeyValuePair<IWebSocketConnection, IReadOnlySet<IPrivilege>> privilegeByConnection in
+        foreach (KeyValuePair<IWebSocketConnection, IReadOnlySet<IPrivilege>?> privilegeByConnection in
                  _privilegesByConnection)
             // If the socket has not provided a valid token don't send any messages
             if (privilegeByConnection.Value != null)

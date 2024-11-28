@@ -20,7 +20,7 @@
 
     private ConsoleInput InputForm { get; set; } = new();
 
-    private string Prefix => InputForm.SayMode ? "/say " : "/";
+    private string Prefix => InputForm.SayMode ? "/say" : "/";
 
     private Command? commandForEntity;
 
@@ -29,7 +29,7 @@
     protected override async Task OnInitializedAsync()
     {
         commandForEntity = await _entityConnection.GetCommandsAsync(EntityState!.Entity.Id);
-        
+
         await base.OnInitializedAsync();
     }
 

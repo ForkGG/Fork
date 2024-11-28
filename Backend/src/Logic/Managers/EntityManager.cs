@@ -19,7 +19,7 @@ namespace Fork.Logic.Managers;
 
 public class EntityManager : IEntityManager
 {
-    private static readonly SemaphoreSlim _semaphore = new(1);
+    private static readonly SemaphoreSlim Semaphore = new(1);
 
     // This contains all loaded entities (Database cache and state keeping)
     private readonly Dictionary<ulong, IEntity> _entities;
@@ -42,16 +42,16 @@ public class EntityManager : IEntityManager
         using IServiceScope scope = _scopeFactory.CreateScope();
 
         // We need a lock here to ensure that we don't get multiple instances of the same entity
-        await _semaphore.WaitAsync();
+        await Semaphore.WaitAsync();
         if (_entities.ContainsKey(entityId))
         {
-            _semaphore.Release();
+            Semaphore.Release();
             return _entities[entityId];
         }
 
         // TODO extend once we got networks
         ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        IEntity result = await context.ServerSet.Where(s => s.Id == entityId)
+        IEntity? result = await context.ServerSet.Where(s => s.Id == entityId)
             .Include(s => s.AutomationTimes)
             .ThenInclude(a => a.Time)
             .Include(s => s.JavaSettings)
@@ -70,7 +70,7 @@ public class EntityManager : IEntityManager
             scope.ServiceProvider.GetRequiredService<IEntityPostProcessingService>();
         await postProcessing.PostProcessEntity(result);
         await context.SaveChangesAsync();
-        _semaphore.Release();
+        Semaphore.Release();
         return result;
     }
 
@@ -82,8 +82,11 @@ public class EntityManager : IEntityManager
         ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         foreach (ulong serverId in context.ServerSet.Select(s => s.Id))
         {
-            IEntity entity = await EntityById(serverId);
-            result.Add(entity);
+            IEntity? entity = await EntityById(serverId);
+            if (entity != null)
+            {
+                result.Add(entity);
+            }
         }
 
         return result;
@@ -94,8 +97,10 @@ public class EntityManager : IEntityManager
     /// </summary>
     public async Task UpdatePlayerOnPlayerList(Server server, ServerPlayer player)
     {
+        server.ServerPlayers ??= [];
+
         // Player already exists -> update
-        ServerPlayer existingPlayer = server.ServerPlayers.FirstOrDefault(p => p.Player.Uid == player.Player.Uid);
+        ServerPlayer? existingPlayer = server.ServerPlayers.FirstOrDefault(p => p.Player.Uid == player.Player.Uid);
         if (existingPlayer != null)
         {
             existingPlayer.IsOnline = player.IsOnline;
@@ -112,13 +117,15 @@ public class EntityManager : IEntityManager
         await context.SaveChangesAsync();
 
         // Send notification
-        UpdatePlayerNotification notification = new() { EntityId = server.Id, ServerPlayer = player };
+        UpdatePlayerNotification notification = new(server.Id, player);
         INotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
         await notificationCenter.BroadcastNotification(notification);
     }
 
     public async Task UpdatePlayerOnWhitelist(Server server, Player player, PlayerlistUpdateType updateType)
     {
+        server.Whitelist ??= [];
+
         switch (updateType)
         {
             case PlayerlistUpdateType.Add:
@@ -136,7 +143,7 @@ public class EntityManager : IEntityManager
 
                 break;
             case PlayerlistUpdateType.Update:
-                Player existingPlayer = server.Whitelist.FirstOrDefault(p => p.Uid == player.Uid);
+                Player? existingPlayer = server.Whitelist.FirstOrDefault(p => p.Uid == player.Uid);
                 if (existingPlayer == null)
                 {
                     _logger.LogWarning("Tried to update entry on the whitelist which is not present. Adding it...");
@@ -155,8 +162,7 @@ public class EntityManager : IEntityManager
             default: throw new ArgumentException($"Unknown update type {updateType}");
         }
 
-        UpdateWhitelistPlayerNotification notification = new()
-            { EntityId = server.Id, Player = player, UpdateType = updateType };
+        UpdateWhitelistPlayerNotification notification = new(server.Id,updateType,  player);
         using IServiceScope scope = _scopeFactory.CreateScope();
         INotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
         await notificationCenter.BroadcastNotification(notification);
@@ -164,6 +170,8 @@ public class EntityManager : IEntityManager
 
     public async Task UpdatePlayerOnBanList(Server server, Player player, PlayerlistUpdateType updateType)
     {
+        server.Banlist ??= [];
+
         switch (updateType)
         {
             case PlayerlistUpdateType.Add:
@@ -180,7 +188,7 @@ public class EntityManager : IEntityManager
 
                 break;
             case PlayerlistUpdateType.Update:
-                Player existingPlayer = server.Banlist.FirstOrDefault(p => p.Uid == player.Uid);
+                Player? existingPlayer = server.Banlist.FirstOrDefault(p => p.Uid == player.Uid);
                 if (existingPlayer == null)
                 {
                     _logger.LogWarning("Tried to update entry on the banlist which is not present. Adding it...");
@@ -199,8 +207,7 @@ public class EntityManager : IEntityManager
             default: throw new ArgumentException($"Unknown update type {updateType}");
         }
 
-        UpdateBanlistPlayerNotification notification = new()
-            { EntityId = server.Id, Player = player, UpdateType = updateType };
+        UpdateBanlistPlayerNotification notification = new(server.Id, updateType, player);
         using IServiceScope scope = _scopeFactory.CreateScope();
         INotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
         await notificationCenter.BroadcastNotification(notification);

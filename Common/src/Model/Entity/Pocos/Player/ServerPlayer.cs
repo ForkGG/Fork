@@ -11,6 +11,14 @@ namespace ForkCommon.Model.Entity.Pocos.Player;
 /// </summary>
 public class ServerPlayer : IComparable
 {
+    public ServerPlayer(Player player, Server server)
+    {
+        Player = player;
+        PlayerId = player.Uid;
+        Server = server;
+        ServerId = server.Id;
+    }
+
     [Key] public ulong Id { get; set; }
 
     // The player this instance is relating to
@@ -26,7 +34,6 @@ public class ServerPlayer : IComparable
     [NotMapped] public bool IsOp { get; set; }
 
     [NotMapped] public bool IsOnline { get; set; }
-
 
     public int CompareTo(object? obj)
     {
@@ -55,25 +62,16 @@ public class ServerPlayer : IComparable
         return string.Compare(Player.Name, other.Player.Name, StringComparison.Ordinal);
     }
 
-    public bool Equals(ServerPlayer other)
+    protected bool Equals(ServerPlayer other)
     {
-        if (ReferenceEquals(null, other))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(this, other))
-        {
-            return true;
-        }
-
-        return Equals(Player, other.Player) && IsOp == other.IsOp &&
+        return Id == other.Id && Player.Equals(other.Player) && PlayerId == other.PlayerId &&
+               Server.Equals(other.Server) && ServerId == other.ServerId && IsOp == other.IsOp &&
                IsOnline == other.IsOnline;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(null, obj))
+        if (obj is null)
         {
             return false;
         }
@@ -93,6 +91,6 @@ public class ServerPlayer : IComparable
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Player, IsOp, IsOnline);
+        return HashCode.Combine(Id, Player, PlayerId, Server, ServerId, IsOp, IsOnline);
     }
 }

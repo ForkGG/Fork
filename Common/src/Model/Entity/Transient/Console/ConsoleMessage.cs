@@ -10,10 +10,6 @@ public class ConsoleMessage
         MessageType = type;
     }
 
-    public ConsoleMessage()
-    {
-    }
-
     public string Message { get; set; }
     public ConsoleMessageType MessageType { get; set; }
 }

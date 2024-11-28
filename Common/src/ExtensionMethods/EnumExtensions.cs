@@ -20,10 +20,10 @@ public static class EnumExtensions
     }
 
     // Friendly names for enums if [Description] is applied
-    public static string FriendlyName(this Enum GenericEnum)
+    public static string FriendlyName(this Enum genericEnum)
     {
-        Type genericEnumType = GenericEnum.GetType();
-        MemberInfo[] memberInfo = genericEnumType.GetMember(GenericEnum.ToString());
+        Type genericEnumType = genericEnum.GetType();
+        MemberInfo[] memberInfo = genericEnumType.GetMember(genericEnum.ToString());
         if (memberInfo.Length > 0)
         {
             object[] attribs = memberInfo[0]
@@ -34,6 +34,6 @@ public static class EnumExtensions
             }
         }
 
-        return GenericEnum.ToString();
+        return genericEnum.ToString();
     }
 }

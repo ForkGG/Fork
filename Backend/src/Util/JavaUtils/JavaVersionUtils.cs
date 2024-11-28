@@ -7,10 +7,10 @@ namespace Fork.Util.JavaUtils;
 
 public class JavaVersionUtils
 {
-    private static readonly Regex versionRegex = new(".* version \"([0-9._]*)\"");
-    private static readonly string bitPattern = "64-Bit";
+    private const string BIT_PATTERN = "64-Bit";
+    private static readonly Regex VersionRegex = new(".* version \"([0-9._]*)\"");
 
-    public static JavaVersion GetInstalledJavaVersion(string javaPath)
+    public static JavaVersion? GetInstalledJavaVersion(string? javaPath)
     {
         if (string.IsNullOrEmpty(javaPath))
         {
@@ -22,7 +22,7 @@ public class JavaVersionUtils
         return CheckForPathJava(javaPath);
     }
 
-    private static JavaVersion CheckForPathJava(string javaPath)
+    private static JavaVersion? CheckForPathJava(string javaPath)
     {
         try
         {
@@ -42,14 +42,9 @@ public class JavaVersionUtils
         }
     }
 
-    private static JavaVersion InterpretJavaVersionOutput(string output)
+    private static JavaVersion? InterpretJavaVersionOutput(string output)
     {
-        if (output == null)
-        {
-            return null;
-        }
-
-        Match versionMatch = versionRegex.Match(output);
+        Match versionMatch = VersionRegex.Match(output);
         if (versionMatch.Success)
         {
             JavaVersion result = new() { Version = versionMatch.Groups[1].Value };
@@ -63,7 +58,7 @@ public class JavaVersionUtils
                 result.VersionComputed = computedVersion;
             }
 
-            if (output.Contains(bitPattern))
+            if (output.Contains(BIT_PATTERN))
             {
                 result.Is64Bit = true;
             }
@@ -76,6 +71,6 @@ public class JavaVersionUtils
 
     private static bool TryParseJavaVersion(string versionString, out int version)
     {
-        return int.TryParse(versionString, out version) || int.TryParse(versionString?.Split(".")[1], out version);
+        return int.TryParse(versionString, out version) || int.TryParse(versionString.Split(".")[1], out version);
     }
 }

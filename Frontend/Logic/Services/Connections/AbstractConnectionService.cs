@@ -66,11 +66,12 @@ public abstract class AbstractConnectionService
     {
         if ((int)response.StatusCode >= 500)
         {
-            throw new ForkException("Internal Server Error occured");
+            throw new ForkException("Internal Server Error occured, try restarting Fork");
         }
 
         if (!response.IsSuccessStatusCode)
         {
+            // throw new ForkException(response);
         }
     }
 }

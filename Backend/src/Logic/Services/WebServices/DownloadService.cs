@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Fork.Logic.Managers;
+using Fork.Util.ExtensionMethods;
 using ForkCommon.ExtensionMethods;
 using ForkCommon.Model.Application.Exceptions;
 using ForkCommon.Model.Entity.Pocos;
@@ -27,9 +28,9 @@ public class DownloadService : IDownloadService
         using HttpClient client = new();
         client.Timeout = TimeSpan.FromMinutes(5);
         await using FileStream fileStream = new(
-            Path.Combine(_application.EntityPath, entity.Name, "server.jar"),
+            Path.Combine(entity.GetPath(_application), "server.jar"),
             FileMode.Create, FileAccess.Write, FileShare.None);
-        if (entity.Version.JarLink == null)
+        if (entity.Version?.JarLink == null)
         {
             throw new IllegalInternalStateException("Version is missing JarLink! Version setup is wrong");
         }

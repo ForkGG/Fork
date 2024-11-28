@@ -9,5 +9,5 @@ public class CreateServerPayload : AbstractPayload
     public ServerVersion ServerVersion { get; set; } = new();
     public VanillaSettings VanillaSettings { get; set; } = new("world");
     public JavaSettings JavaSettings { get; set; } = new();
-    public string WorldPath { get; set; } = null;
+    public string? WorldPath { get; set; } = null;
 }

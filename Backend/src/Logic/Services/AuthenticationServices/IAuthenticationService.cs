@@ -9,7 +9,7 @@ namespace Fork.Logic.Services.AuthenticationServices;
 /// </summary>
 public interface IAuthenticationService
 {
-    public IReadOnlySet<IPrivilege> Privileges { get; }
+    public IReadOnlySet<IPrivilege>? Privileges { get; }
 
     void AuthenticateToken(string token);
     bool IsAuthenticated(Type privilegeType);

@@ -1,5 +1,5 @@
-﻿@using ForkFrontend.Model
-@using ForkCommon.Model.Application.Exceptions
+﻿@using ForkCommon.Model.Application.Exceptions
+@using ForkFrontend.Model
 @inject ILogger<Error> Logger
 
 <CascadingValue Value="this">
@@ -36,6 +36,7 @@
         }
         else
         {
+            Logger.LogError(ex, "Unexpected Exception occured");
             AddMessage(new UiMessage
             {
                 Type = UiMessageType.Error,

@@ -5,16 +5,21 @@ namespace ForkCommon.Model.Entity.Pocos.Player;
 
 public class Player : IComparable
 {
-    [Key] public string Uid { get; set; }
+    public Player(string uid)
+    {
+        Uid = uid;
+    }
+
+    [Key] public string Uid { get; }
 
     //This is set if the player is not found in the Mojang player API
     public bool IsOfflinePlayer { get; set; } = false;
 
     // Name of the player
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     // Base 64 of the players Head
-    public string Head { get; set; }
+    public string? Head { get; set; }
 
     // Last time the player got updated (Players are cached for a certain time in the database)
     public DateTime LastUpdated { get; set; } = DateTime.MinValue;
@@ -30,24 +35,15 @@ public class Player : IComparable
     }
 
 
-    public bool Equals(Player other)
+    protected bool Equals(Player other)
     {
-        if (ReferenceEquals(null, other))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(this, other))
-        {
-            return true;
-        }
-
-        return IsOfflinePlayer == other.IsOfflinePlayer && Name == other.Name && Uid == other.Uid;
+        return Uid == other.Uid && IsOfflinePlayer == other.IsOfflinePlayer && Name == other.Name &&
+               Head == other.Head && LastUpdated.Equals(other.LastUpdated);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(null, obj))
+        if (obj is null)
         {
             return false;
         }
@@ -67,6 +63,6 @@ public class Player : IComparable
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(IsOfflinePlayer, Name, Uid);
+        return HashCode.Combine(Uid, IsOfflinePlayer, Name, Head, LastUpdated);
     }
 }

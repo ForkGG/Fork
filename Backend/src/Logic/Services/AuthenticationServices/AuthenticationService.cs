@@ -18,7 +18,7 @@ public class AuthenticationService : IAuthenticationService
         _tokenManager = tokenManager;
     }
 
-    public IReadOnlySet<IPrivilege> Privileges { get; private set; }
+    public IReadOnlySet<IPrivilege>? Privileges { get; private set; }
 
     public void AuthenticateToken(string token)
     {

@@ -33,10 +33,15 @@ public class ApplicationDbContext : DbContext
         AppSettings result = new();
         foreach (SettingsKeyValue setting in result)
         {
+            if (setting.Key == null)
+            {
+                continue;
+            }
+
             SettingsKeyValue? entry = AppSettingsSet.FirstOrDefault(s => s.Key == setting.Key);
             if (entry != null)
             {
-                PropertyInfo property = result.GetType().GetProperty(setting.Key);
+                PropertyInfo? property = result.GetType().GetProperty(setting.Key);
                 if (property != null && property.CanWrite)
                 {
                     Type type = property.PropertyType;
@@ -87,14 +92,19 @@ public class ApplicationDbContext : DbContext
 
     public async Task WriteAppSettings(AppSettings settings)
     {
-        List<string> writtenKeys = new List<string>();
+        List<string> writtenKeys = new();
 
         // Add or Update all keys in the settings
         foreach (SettingsKeyValue setting in settings)
         {
-            SettingsKeyValue entry = AppSettingsSet.FirstOrDefault(s => s.Key == setting.Key);
+            if (setting.Key == null)
+            {
+                continue;
+            }
 
+            SettingsKeyValue? entry = AppSettingsSet.FirstOrDefault(s => s.Key == setting.Key);
             writtenKeys.Add(setting.Key);
+
             if (entry == null)
             {
                 entry = new SettingsKeyValue { Key = setting.Key };
@@ -105,7 +115,7 @@ public class ApplicationDbContext : DbContext
         }
 
         // Remove keys which got removed
-        AppSettingsSet.RemoveRange(AppSettingsSet.Where(s => !writtenKeys.Contains(s.Key)));
+        AppSettingsSet.RemoveRange(AppSettingsSet.Where(s => s.Key != null && !writtenKeys.Contains(s.Key)));
 
         await SaveChangesAsync();
     }

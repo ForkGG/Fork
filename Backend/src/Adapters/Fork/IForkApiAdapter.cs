@@ -2,7 +2,7 @@
 
 namespace Fork.Adapters.Fork;
 
-public interface IForkAPIAdapter
+public interface IForkApiAdapter
 {
     /// <summary>
     ///     Get the external IP of this system

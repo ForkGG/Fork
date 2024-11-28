@@ -1,5 +1,6 @@
 ﻿using ForkCommon.ExtensionMethods;
 using ForkCommon.Model.Application;
+using ForkCommon.Model.Application.Exceptions;
 using ForkFrontend.Logic.Services.HttpsClients;
 
 namespace ForkFrontend.Logic.Services.Connections;
@@ -25,12 +26,16 @@ public class ApplicationConnectionService : AbstractConnectionService, IApplicat
         try
         {
             State? result = message.FromJson<State>();
+            if (result == null)
+            {
+                throw new ForkException("Invalid response from server");
+            }
+
             return result;
         }
         catch (Exception e)
         {
-            _logger.LogError("Error during deserialization of app state: \n" + e);
-            return new State();
+            throw new ForkException("Invalid response from server", e);
         }
     }
 

@@ -8,24 +8,15 @@ namespace ForkCommon.Model.Entity.Pocos.ServerSettings;
 
 public class VanillaSettings : AbstractSettings
 {
-    [Obsolete("Only used by JSON deserializer")]
-    public VanillaSettings()
+    public VanillaSettings(string levelname) : base(new Dictionary<string, string>())
     {
-        SettingsDictionary = new Dictionary<string, string>();
-    }
-
-    public VanillaSettings(string levelname)
-    {
-        SettingsDictionary = new Dictionary<string, string>();
-
         InitializeValues(levelname);
     }
 
-    public VanillaSettings(Dictionary<string, string> settingsDictionary)
+    public VanillaSettings(Dictionary<string, string> settingsDictionary) : base(
+        new Dictionary<string, string>(settingsDictionary))
     {
-        SettingsDictionary = new Dictionary<string, string>();
-
-        if (settingsDictionary != null && settingsDictionary.ContainsKey("LevelName"))
+        if (settingsDictionary.ContainsKey("LevelName"))
         {
             InitializeValues(settingsDictionary["LevelName"]);
         }

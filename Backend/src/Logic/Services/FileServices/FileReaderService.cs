@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ForkCommon.Model.Application.Exceptions;
 using ForkCommon.Model.Entity.Pocos.ServerSettings;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -37,8 +37,7 @@ public class FileReaderService : IFileReaderService
         {
             // Open the text file using a stream reader.
             using StreamReader sr = new(propertiesFile.FullName);
-            string line;
-            while ((line = await sr.ReadLineAsync()) != null)
+            while (await sr.ReadLineAsync() is { } line)
                 if (!line.StartsWith("#"))
                 {
                     string[] args = line.Split('=');
@@ -50,7 +49,7 @@ public class FileReaderService : IFileReaderService
         catch (IOException e)
         {
             _logger.LogError(e, "The file could not be read");
-            return null;
+            throw new ForkException(e);
         }
     }
 
@@ -91,8 +90,7 @@ public class FileReaderService : IFileReaderService
         List<string> list = new();
         FileStream fs = new(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         using StreamReader sr = new(fs);
-        string line;
-        while ((line = await sr.ReadLineAsync()) != null)
+        while (await sr.ReadLineAsync() is { } line)
         {
             if (line.StartsWith("#") || line.Length == 0)
             {
@@ -127,8 +125,7 @@ public class FileReaderService : IFileReaderService
         List<string> result = new();
         FileStream fs = new(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         using StreamReader sr = new(fs);
-        string line;
-        while ((line = await sr.ReadLineAsync()) != null)
+        while (await sr.ReadLineAsync() is { } line)
         {
             if (line.StartsWith("#") || line.Length == 0)
             {
@@ -150,20 +147,24 @@ public class FileReaderService : IFileReaderService
     {
         if (!File.Exists(filePath))
         {
-            return new List<string>();
+            return [];
         }
 
         string json;
-        using (FileStream fs = new(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+        await using (FileStream fs = new(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
         using (StreamReader sr = new(fs))
             json = await sr.ReadToEndAsync();
 
-        dynamic deserialized = JsonConvert.DeserializeObject(json);
-        List<string> uuids = new();
+        dynamic? deserialized = JsonConvert.DeserializeObject(json);
+        List<string> uuids = [];
         if (deserialized is JArray deserializedArray)
         {
-            dynamic[] players = deserializedArray.ToObject<dynamic[]>();
-            uuids.AddRange(players?.Select(player => player.uuid.Value as string) ?? Array.Empty<string>());
+            dynamic[]? players = deserializedArray.ToObject<dynamic[]>();
+            IEnumerable<string?>? matchingPlayers = players?.Select(player => player.uuid.Value as string);
+            if (matchingPlayers != null)
+            {
+                uuids.AddRange(matchingPlayers.OfType<string>());
+            }
         }
 
 

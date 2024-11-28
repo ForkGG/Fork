@@ -11,6 +11,13 @@ namespace ForkCommon.Model.Notifications.EntityNotifications.PlayerNotifications
 [Privileges(typeof(ReadBanlistConsoleTabPrivilege))]
 public class UpdateBanlistPlayerNotification : AbstractEntityNotification
 {
+    public UpdateBanlistPlayerNotification(ulong entityId, PlayerlistUpdateType updateType, Player player) :
+        base(entityId)
+    {
+        UpdateType = updateType;
+        Player = player;
+    }
+
     public PlayerlistUpdateType UpdateType { get; set; }
     public Player Player { get; set; }
 }
