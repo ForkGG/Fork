@@ -10,7 +10,7 @@ public class Player : IComparable
         Uid = uid;
     }
 
-    [Key] public string Uid { get; }
+    [Key] public string Uid { get; set; }
 
     //This is set if the player is not found in the Mojang player API
     public bool IsOfflinePlayer { get; set; } = false;

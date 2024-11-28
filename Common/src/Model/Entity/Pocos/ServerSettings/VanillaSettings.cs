@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using ForkCommon.ExtensionMethods;
 using ForkCommon.Model.Entity.Enums;
+using Newtonsoft.Json;
 
 namespace ForkCommon.Model.Entity.Pocos.ServerSettings;
 
 public class VanillaSettings : AbstractSettings
 {
+    [JsonConstructor]
+    private VanillaSettings() : base(new Dictionary<string, string>())
+    {
+    }
+
     public VanillaSettings(string levelname) : base(new Dictionary<string, string>())
     {
         InitializeValues(levelname);

@@ -12,6 +12,8 @@ public class ForkExceptionFilterAttribute : ExceptionFilterAttribute
     {
         if (context.Exception is ForkException exception)
         {
+            context.HttpContext.Response.StatusCode = 500;
+            context.HttpContext.Response.ContentType = "application/json";
             await context.HttpContext.Response.WriteAsync(exception.ToJson());
             context.ExceptionHandled = true;
         }

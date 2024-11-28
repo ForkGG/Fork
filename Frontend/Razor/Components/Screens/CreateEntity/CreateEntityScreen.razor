@@ -98,14 +98,16 @@
         {
             Id = 0,
             Type = versionType,
-            Version = "1.10.2"
+            Version = "1.10.2",
+            JarLink = "https://piston-data.mojang.com/v1/objects/15c777e2cfe0556eef19aab534b186c0c6f277e1/server.jar"
         };
         result.Add(new ForkFormEntity<ServerVersion, string>(version1, version1.Version));
         ServerVersion version2 = new()
         {
             Id = 0,
             Type = versionType,
-            Version = "1.10.1"
+            Version = "1.10.1",
+            JarLink = "https://piston-data.mojang.com/v1/objects/15c777e2cfe0556eef19aab534b186c0c6f277e1/server.jar"
         };
         result.Add(new ForkFormEntity<ServerVersion, string>(version2, version2.Version));
         return result;

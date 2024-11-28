@@ -19,15 +19,21 @@ public class ServerPlayer : IComparable
         ServerId = server.Id;
     }
 
+    // EF Constructor
+    [JsonConstructor]
+    private ServerPlayer()
+    {
+    }
+
     [Key] public ulong Id { get; set; }
 
     // The player this instance is relating to
-    public Player Player { get; set; }
+    public Player Player { get; set; } = default!;
 
-    [ForeignKey(nameof(Player))] public string PlayerId { get; set; }
+    [ForeignKey(nameof(Player))] public string PlayerId { get; set; } = default!;
 
     // The server this instance is relating to
-    [JsonIgnore] public Server Server { get; set; }
+    [JsonIgnore] public Server? Server { get; set; }
 
     public ulong ServerId { get; set; }
 

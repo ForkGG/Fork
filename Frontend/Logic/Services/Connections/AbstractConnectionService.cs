@@ -48,7 +48,7 @@ public abstract class AbstractConnectionService
             payload != null ? new StringContent(payload.ToJson(), Encoding.UTF8, "application/json") : null;
         HttpResponseMessage response =
             await _client.PostAsync(url, content);
-        HandleServerError(response);
+        await HandleServerError(response);
         return response;
     }
 
@@ -58,20 +58,29 @@ public abstract class AbstractConnectionService
             payload != null ? new StringContent(payload) : null;
         HttpResponseMessage response =
             await _client.PostAsync(url, content);
-        HandleServerError(response);
+        await HandleServerError(response);
         return response;
     }
 
-    private void HandleServerError(HttpResponseMessage response)
+    private async Task HandleServerError(HttpResponseMessage response)
     {
-        if ((int)response.StatusCode >= 500)
+        if ((int)response.StatusCode < 400)
+        {
+            return;
+        }
+
+        if (response.Content.Headers.ContentType?.MediaType != "application/json")
         {
             throw new ForkException("Internal Server Error occured, try restarting Fork");
         }
 
-        if (!response.IsSuccessStatusCode)
+        string errorJson = await response.Content.ReadAsStringAsync();
+        ForkException? errorObject = errorJson.FromJson<ForkException>();
+        if (errorObject != null)
         {
-            // throw new ForkException(response);
+            throw errorObject;
         }
+
+        throw new ForkException("Internal Server Error occured, try restarting Fork");
     }
 }

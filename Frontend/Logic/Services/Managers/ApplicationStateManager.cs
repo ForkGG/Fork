@@ -22,9 +22,8 @@ public class ApplicationStateManager : IApplicationStateManager
         _applicationConnection = applicationConnection;
         _notificationService = notificationService;
 
-
-        ApplicationState = _applicationConnection.GetApplicationState().GetAwaiter().GetResult();
-        ForkExternalIp = _applicationConnection.GetIpAddress().GetAwaiter().GetResult();
+        ApplicationState = new State(new List<IEntity>());
+        ForkExternalIp = "";
 
         _notificationService.WebsocketStatusChanged += async newStatus =>
         {
