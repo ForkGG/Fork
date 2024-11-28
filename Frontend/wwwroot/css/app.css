@@ -1,4 +1,4 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -26,7 +26,7 @@
 
     @font-face {
         font-family: "icomoon";
-        src: url("/ressources/fonts/icons.ttf");
+        src: url("/resources/fonts/icons.ttf");
     }
 
     .icon {
@@ -40,13 +40,8 @@
 }
 
 @layer components {
-    .icon-button {
-        clip-path: polygon(0 0, 100% 0, 100% 75%, 75% 100%, 0 100%);
-    }
 
-    .clipping {
-        position: relative;
-    }
+
 
     .clipping::before, .clipping::before {
         content: "";
@@ -174,7 +169,7 @@
     }
 
     .select-wrapper select {
-        clip-path: polygon(0 0, 100% 0, 100% 100%, calc(100% - 6px) 100%, calc(100% - 12px) calc(100% - 6px), calc(100% - 12px) 0, calc(100% - 18px) 0, calc(100% - 18px) calc(100% - 6px), calc(100% - 24px) 100%, 0 100%);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, calc(100% - 6px) 100%, calc(100% - 12px) calc(100% - 0px), calc(100% - 12px) 0, calc(100% - 18px) 0, calc(100% - 18px) calc(100% - 6px), calc(100% - 18px) 100%, 0 100%);
         cursor: pointer;
         padding-left: 1rem;
         padding-right: 2rem;

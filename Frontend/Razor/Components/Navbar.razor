@@ -1,11 +1,12 @@
 ﻿@using ForkFrontend.Logic.Services.Translation
 @inject ITranslationService _translation
 
-<div class="navbar w-full bg-forkBlue-light">
+<div class="navbar flex px-3 w-full bg-new-nav h-12">
     @* Icon *@
+    <img class="w-fit" width="32" src="resources/img/Fork Icon.jpg"/>
 
     @* Options *@
-    <nav class="flex content-center text-md font-bold">
+    <nav class="flex content-center text-xs w-full">
         <div class="p-4">
             <NavLink href="" Match="NavLinkMatch.All">
                 <Translated Path="common.navbar.servers"></Translated>

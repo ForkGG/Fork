@@ -10,13 +10,11 @@
 @inject IEntityConnectionService _entityConnection;
 
 <div class="flex flex-col h-full">
-    @* Top Bar *@
-    <div style="height: 50px" class="mb-5"></div>
 
     @* Main *@
     <EditForm Model="_serverPayload">
-        <div class="flex-1 bg-forkBlue max-w-5xl p-4 overflow-auto">
-            <span class="text-lg font-bold text-label">Create A Server</span>
+        <div class="flex-1 bg-new-panel max-w-5xl p-4 overflow-auto">
+            <span class="text-lg font-bold ">Create A Server</span>
             <div class="px-4 pb-10">
                 <div>
                     <ForkRadio Name="ServerType" @bind-Value="SelectedVersionType" TModelValue="VersionType"
@@ -32,7 +30,7 @@
                 </div>
             </div>
 
-            <span class="text-lg font-bold text-label">Configure Basic Settings</span>
+            <span class="text-lg font-bold">Configure Basic Settings</span>
             <div class="px-4 pb-10">
                 <div class="flex gap-8">
                     <ForkText Name="ServerName" @bind-Value="_serverPayload.ServerName" Label="Server Name"></ForkText>

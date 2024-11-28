@@ -9,114 +9,114 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0-rc.2.21480.10"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0-rc.2.21480.10" PrivateAssets="all"/>
-        <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0-rc.2.21480.10" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0-rc.2.21480.10" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <_ContentIncludedByDefault Remove="Razor-old\Counter.razor"/>
-        <_ContentIncludedByDefault Remove="Razor-old\FetchData.razor"/>
-        <_ContentIncludedByDefault Remove="Razor-old\Index.razor"/>
-        <_ContentIncludedByDefault Remove="Shared-old\MainLayout.razor"/>
-        <_ContentIncludedByDefault Remove="Shared-old\NavMenu.razor"/>
-        <_ContentIncludedByDefault Remove="Shared-old\SurveyPrompt.razor"/>
-        <_ContentIncludedByDefault Remove="Razor\Index.razor"/>
-        <_ContentIncludedByDefault Remove="Razor\Welcome.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Buttons\IconButton.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Entity.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\ConsoleIn.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\ConsoleOut.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\ConsoleTab.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\PerformanceMonitor.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\Banlist.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\PlayerComponent.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\Playerlist.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\ServerPlayerComponent.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\Whitelist.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Forms\Radio\ForkRadio.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Forms\Select\ForkSelect.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Forms\Text\ForkText.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Inputs\Checkbox.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Inputs\Textfield.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Navbar.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Screens\CreateEntity\CreateEntityScreen.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Shared\IconTab.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Shared\IconTabControl.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Shared\SelectedIndicatorVertical.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Sidebar\Sidebar.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Sidebar\SidebarEntity.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Sidebar\StatusIndicator.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\Components\Translated.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\EmptyLayout.razor"/>
-        <_ContentIncludedByDefault Remove="Shared\MainLayout.razor"/>
-        <_ContentIncludedByDefault Remove="src\Razor\Index.razor"/>
-        <_ContentIncludedByDefault Remove="src\Razor\Welcome.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Buttons\IconButton.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Entity.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\ConsoleIn.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\ConsoleOut.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\ConsoleTab.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\PerformanceMonitor.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\Banlist.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\PlayerComponent.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\Playerlist.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\ServerPlayerComponent.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\Whitelist.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Forms\Radio\ForkRadio.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Forms\Select\ForkSelect.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Forms\Text\ForkText.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Inputs\Checkbox.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Inputs\Textfield.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Navbar.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Screens\CreateEntity\CreateEntityScreen.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Shared\IconTab.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Shared\IconTabControl.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Shared\SelectedIndicatorVertical.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Sidebar\Sidebar.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Sidebar\SidebarEntity.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Sidebar\StatusIndicator.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\Components\Translated.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\EmptyLayout.razor"/>
-        <_ContentIncludedByDefault Remove="src\Shared\MainLayout.razor"/>
+        <_ContentIncludedByDefault Remove="Razor-old\Counter.razor" />
+        <_ContentIncludedByDefault Remove="Razor-old\FetchData.razor" />
+        <_ContentIncludedByDefault Remove="Razor-old\Index.razor" />
+        <_ContentIncludedByDefault Remove="Shared-old\MainLayout.razor" />
+        <_ContentIncludedByDefault Remove="Shared-old\NavMenu.razor" />
+        <_ContentIncludedByDefault Remove="Shared-old\SurveyPrompt.razor" />
+        <_ContentIncludedByDefault Remove="Razor\Index.razor" />
+        <_ContentIncludedByDefault Remove="Razor\Welcome.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Buttons\IconButton.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Entity.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\ConsoleIn.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\ConsoleOut.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\ConsoleTab.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\PerformanceMonitor.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\Banlist.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\PlayerComponent.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\Playerlist.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\ServerPlayerComponent.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\Whitelist.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Forms\Radio\ForkRadio.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Forms\Select\ForkSelect.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Forms\Text\ForkText.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Inputs\Checkbox.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Inputs\Textfield.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Navbar.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Screens\CreateEntity\CreateEntityScreen.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Shared\IconTab.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Shared\IconTabControl.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Shared\SelectedIndicatorVertical.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Sidebar\Sidebar.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Sidebar\SidebarEntity.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Sidebar\StatusIndicator.razor" />
+        <_ContentIncludedByDefault Remove="Shared\Components\Translated.razor" />
+        <_ContentIncludedByDefault Remove="Shared\EmptyLayout.razor" />
+        <_ContentIncludedByDefault Remove="Shared\MainLayout.razor" />
+        <_ContentIncludedByDefault Remove="src\Razor\Index.razor" />
+        <_ContentIncludedByDefault Remove="src\Razor\Welcome.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Buttons\IconButton.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Entity.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\ConsoleIn.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\ConsoleOut.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\ConsoleTab.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\PerformanceMonitor.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\Banlist.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\PlayerComponent.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\Playerlist.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\ServerPlayerComponent.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Entity\Tabs\ConsoleTab\Playerlist\Whitelist.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Forms\Radio\ForkRadio.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Forms\Select\ForkSelect.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Forms\Text\ForkText.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Inputs\Checkbox.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Inputs\Textfield.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Navbar.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Screens\CreateEntity\CreateEntityScreen.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Shared\IconTab.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Shared\IconTabControl.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Shared\SelectedIndicatorVertical.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Sidebar\Sidebar.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Sidebar\SidebarEntity.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Sidebar\StatusIndicator.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\Components\Translated.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\EmptyLayout.razor" />
+        <_ContentIncludedByDefault Remove="src\Shared\MainLayout.razor" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Common\ForkCommon.csproj"/>
+        <ProjectReference Include="..\Common\ForkCommon.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Content Update="wwwroot\ressources\translation.json">
+        <Content Update="wwwroot\resources\translation.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="Razor\Components\Buttons\IconButton.razor"/>
-        <AdditionalFiles Include="Razor\Components\Entity\Entity.razor"/>
-        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\ConsoleIn.razor"/>
-        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\ConsoleOut.razor"/>
-        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\ConsoleTab.razor"/>
-        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\PerformanceMonitor.razor"/>
-        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\Playerlist\Banlist.razor"/>
-        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\Playerlist\PlayerComponent.razor"/>
-        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\Playerlist\Playerlist.razor"/>
-        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\Playerlist\ServerPlayerComponent.razor"/>
-        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\Playerlist\Whitelist.razor"/>
-        <AdditionalFiles Include="Razor\Components\Forms\Radio\ForkRadio.razor"/>
-        <AdditionalFiles Include="Razor\Components\Forms\Select\ForkSelect.razor"/>
-        <AdditionalFiles Include="Razor\Components\Forms\Text\ForkText.razor"/>
-        <AdditionalFiles Include="Razor\Components\Inputs\Checkbox.razor"/>
-        <AdditionalFiles Include="Razor\Components\Inputs\Textfield.razor"/>
-        <AdditionalFiles Include="Razor\Components\Navbar.razor"/>
-        <AdditionalFiles Include="Razor\Components\Screens\CreateEntity\CreateEntityScreen.razor"/>
-        <AdditionalFiles Include="Razor\Components\Shared\IconTab.razor"/>
-        <AdditionalFiles Include="Razor\Components\Shared\IconTabControl.razor"/>
-        <AdditionalFiles Include="Razor\Components\Shared\SelectedIndicatorVertical.razor"/>
-        <AdditionalFiles Include="Razor\Components\Sidebar\Sidebar.razor"/>
-        <AdditionalFiles Include="Razor\Components\Sidebar\SidebarEntity.razor"/>
-        <AdditionalFiles Include="Razor\Components\Sidebar\StatusIndicator.razor"/>
-        <AdditionalFiles Include="Razor\Components\Translated.razor"/>
+        <AdditionalFiles Include="Razor\Components\Buttons\IconButton.razor" />
+        <AdditionalFiles Include="Razor\Components\Entity\Entity.razor" />
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\ConsoleIn.razor" />
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\ConsoleOut.razor" />
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\ConsoleTab.razor" />
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\PerformanceMonitor.razor" />
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\Playerlist\Banlist.razor" />
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\Playerlist\PlayerComponent.razor" />
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\Playerlist\Playerlist.razor" />
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\Playerlist\ServerPlayerComponent.razor" />
+        <AdditionalFiles Include="Razor\Components\Entity\Tabs\ConsoleTab\Playerlist\Whitelist.razor" />
+        <AdditionalFiles Include="Razor\Components\Forms\Radio\ForkRadio.razor" />
+        <AdditionalFiles Include="Razor\Components\Forms\Select\ForkSelect.razor" />
+        <AdditionalFiles Include="Razor\Components\Forms\Text\ForkText.razor" />
+        <AdditionalFiles Include="Razor\Components\Inputs\Checkbox.razor" />
+        <AdditionalFiles Include="Razor\Components\Inputs\Textfield.razor" />
+        <AdditionalFiles Include="Razor\Components\Navbar.razor" />
+        <AdditionalFiles Include="Razor\Components\Screens\CreateEntity\CreateEntityScreen.razor" />
+        <AdditionalFiles Include="Razor\Components\Shared\IconTab.razor" />
+        <AdditionalFiles Include="Razor\Components\Shared\IconTabControl.razor" />
+        <AdditionalFiles Include="Razor\Components\Shared\SelectedIndicatorVertical.razor" />
+        <AdditionalFiles Include="Razor\Components\Sidebar\Sidebar.razor" />
+        <AdditionalFiles Include="Razor\Components\Sidebar\SidebarEntity.razor" />
+        <AdditionalFiles Include="Razor\Components\Sidebar\StatusIndicator.razor" />
+        <AdditionalFiles Include="Razor\Components\Translated.razor" />
     </ItemGroup>
 
 </Project>

@@ -5,7 +5,7 @@
 <div class="flex flex-1">
     @if (_applicationState.IsApplicationReady)
     {
-        <div class="flex flex-1 mx-6 my-10 gap-10 overflow-hidden">
+        <div class="flex flex-1  gap-2 overflow-hidden">
             @* Sidebar *@
             <CascadingValue Name="@nameof(SelectedEntity)" Value="SelectedEntity">
                 <Sidebar Parent="this" OnSelectEntity="OnSelectEntity" EntityManagers="_applicationState.EntityStateManagersById"/>
@@ -43,9 +43,9 @@
     }
     else
     {
-        <div class="w-screen h-screen flex justify-center items-center bg-forkBlue-dark flex-col">
-            <span class="text-label text-lg">@_applicationState.ApplicationStatus</span>
-            <img style="width: 116px; height: 122px" src="ressources/img/loading.gif"/>
+        <div class="w-screen h-screen flex justify-center items-center bg-new-black flex-col">
+            <span class="text-new-offwhite text-lg">@_applicationState.ApplicationStatus</span>
+            <img style="width: 116px; height: 122px" src="resources/img/loading.gif"/>
         </div>
     }
 
