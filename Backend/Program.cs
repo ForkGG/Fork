@@ -37,7 +37,7 @@ public class Program
                     databaseFile.Create().Close();
                 }
 
-                using ApplicationDbContext? context = services.GetRequiredService<ApplicationDbContext>();
+                using ApplicationDbContext context = services.GetRequiredService<ApplicationDbContext>();
                 context.Database.Migrate();
                 logger.LogInformation("Finished database migration");
             }

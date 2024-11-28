@@ -71,8 +71,7 @@ public class ServerPlayer : IComparable
     protected bool Equals(ServerPlayer other)
     {
         return Id == other.Id && Player.Equals(other.Player) && PlayerId == other.PlayerId &&
-               Server.Equals(other.Server) && ServerId == other.ServerId && IsOp == other.IsOp &&
-               IsOnline == other.IsOnline;
+               ServerId == other.ServerId && IsOp == other.IsOp && IsOnline == other.IsOnline;
     }
 
     public override bool Equals(object? obj)

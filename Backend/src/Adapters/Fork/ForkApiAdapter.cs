@@ -34,7 +34,7 @@ public class ForkApiAdapter : AbstractAdapter, IForkApiAdapter
         }
         catch (ExternalServiceException e)
         {
-            Logger.LogWarning("Fork API is not operational");
+            Logger.LogError(e, "Fork API is not operational");
             return false;
         }
     }

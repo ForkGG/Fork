@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
+        <RuntimeFrameworkVersion>8.0.11</RuntimeFrameworkVersion>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RunPostBuildEvent>Always</RunPostBuildEvent>
@@ -10,9 +11,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.0" PrivateAssets="all"/>
-        <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.11"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.11" PrivateAssets="all"/>
+        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1"/>
+        <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="8.0.11"/>
+        <PackageReference Include="Microsoft.NET.Sdk.WebAssembly.Pack" Version="8.0.11"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -83,10 +86,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Common\ForkCommon.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <Content Update="wwwroot\ressources\translation.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
@@ -118,6 +117,10 @@
         <AdditionalFiles Include="Razor\Components\Sidebar\SidebarEntity.razor"/>
         <AdditionalFiles Include="Razor\Components\Sidebar\StatusIndicator.razor"/>
         <AdditionalFiles Include="Razor\Components\Translated.razor"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Common\ForkCommon.csproj"/>
     </ItemGroup>
 
 </Project>
