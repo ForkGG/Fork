@@ -5,7 +5,7 @@
 <div class="flex flex-1">
     @if (_applicationState.IsApplicationReady)
     {
-        <div class="flex flex-1  gap-2 overflow-hidden">
+        <div class="flex flex-1 gap-2 overflow-hidden">
             @* Sidebar *@
             <CascadingValue Name="@nameof(SelectedEntity)" Value="SelectedEntity">
                 <Sidebar Parent="this" OnSelectEntity="OnSelectEntity" EntityManagers="_applicationState.EntityStateManagersById"/>

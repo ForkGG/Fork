@@ -9,11 +9,11 @@
 @inject ILogger<ConsoleOut> _logger
 @inject IEntityConnectionService _entityConnection
 
-<div class="flex-1 flex flex-col console-out-container clipping">
+<div class="flex-1 flex flex-col console-out-container">
     @*Controls*@
-    <div class="flex justify-between">
+    <div class="flex justify-between bg-new-black ">
         <span style="width: 60px" content=" "></span>
-        <span class="text-lg text-label font-bold p-3">Console</span>
+        <span class="text-lg text-new-offwhite font-bold p-3">Console</span>
         <div class="flex gap-3 mr-5 items-center">
             <IconButton Size="23" IconSize="22" NoBackground="true" IconChar="'F'"></IconButton>
             <IconButton Size="23" IconSize="22" NoBackground="true" IconChar="'O'"></IconButton>
@@ -21,7 +21,7 @@
     </div>
 
     @* Console *@
-    <div class="flex-1">
+    <div class="flex-1 bg-new-black mt-2">
         <div id="@($"consoleScrollArea{EntityState?.Entity.Id}")" class="clusterize-scroll p-3 overflow-ellipsis text-text overflow-y-auto max-h-full select-text" @ref="_consoleScroller" @onscroll="OnConsoleScroll">
             <div id="@($"consoleContentArea{EntityState?.Entity.Id}")" class="clusterize-content console-text" @ref="_consoleContent">
                 <div class="clusterize-no-data">Loading Console...</div>

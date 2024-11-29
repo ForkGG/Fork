@@ -4,7 +4,7 @@ This component is used multiple times in Fork as control to switch tab contexts
 It displays a list of `IconTab` components as children
 *@
 <CascadingValue Value="this">
-    <div class="flex" style="height: 50px">
+    <div class="flex @(IsVertical ? "flex-col max-w-12" : "max-h-12")">
         @ChildContent
     </div>
 </CascadingValue>
@@ -15,9 +15,13 @@ It displays a list of `IconTab` components as children
 
     [Parameter] public EventCallback<IconTab> OnTabSelected { get; set; }
 
+    [Parameter] public bool IsVertical { get; set; }
+
     public IconTab? ActiveTab { get; set; }
 
     public List<IconTab> Tabs { get; set; } = new();
+
+
 
     internal async Task AddTabAsync(IconTab tab)
     {

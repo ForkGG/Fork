@@ -1,7 +1,7 @@
 ﻿<div style="@SizeString"
-     class="@(IsDisabled ? "opacity-50" : $"cursor-pointer hover:text-{HoverColor}")
+     class="@(IsDisabled ? "opacity-25 cursor-not-allowed" : $"cursor-pointer hover:text-{HoverColor}")
         @(NoBackground ? "text-new-offwhite" : "text-new-black bg-new-offwhite")
-        icon-button flex justify-center items-center"
+         flex justify-center items-center"
      @onclick="ClickHandler">
     <span class="icon" style="font-size: @IconSizeString">@IconChar</span>
 </div>

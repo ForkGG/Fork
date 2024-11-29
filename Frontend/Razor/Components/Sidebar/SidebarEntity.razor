@@ -4,7 +4,7 @@
 @inject ILogger<SidebarEntity> _logger
 @inject INotificationService _notificationService
 
-<div class="@(IsSelected ? "bg-forkBlue-hover text-label-hover" : "text-label hover:text-label-hover") w-full flex items-center py-3 pl-5 cursor-pointer" @onclick="OnSelectEntity">
+<div class="@(IsSelected ? "bg-forkBlue-hover text-label-hover" : "text-label hover:text-label-hover") h-20 w-full flex items-center py-3 pl-5 cursor-pointer" @onclick="OnSelectEntity">
     @* Status *@
     <StatusIndicator Status="Value!.Entity.Status"></StatusIndicator>
     @* Icon *@

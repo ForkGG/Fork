@@ -2,7 +2,7 @@
 @using ForkCommon.Model.Entity.Pocos
 @using ForkCommon.Model.Entity.Pocos.Player
 @using ForkCommon.Model.Notifications.EntityNotifications.PlayerNotifications
-<div class="h-full bg-forkBlue pt-3">
+<div class="h-full bg-new-panel pt-3">
     @* Player count *@
     <span class="px-7 py-3 text-label-hover">@(Server?.ServerPlayers?.Count(p => p.IsOnline) ?? 0) / @(Server?.VanillaSettings?.MaxPlayers ?? 0) - Online</span>
 
