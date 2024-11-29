@@ -9,22 +9,10 @@
 @inject IEntityConnectionService EntityConnection
 
 
-<div class="w-80 flex flex-col text-label">
-    @* Part over server list *@
-    <div class="bg-forkBlue flex py-2 px-4 items-center" style="height: 50px">
-        <div class="flex-1 flex flex-col">
-            <span class="text-md leading-none">v1.0.0</span>
-            <span class="text-sm">You are up to date</span>
-        </div>
-        @* TODO only show if update privilege is granted *@
-        @if (true)
-        {
-            <IconButton IconChar="'r'" IconSize="18" NoBackground="true" OnClickMethod="TestClickHandler"></IconButton>
-        }
-    </div>
+<div class="w-64 flex flex-col text-label">
 
     @* Server List *@
-    <div class="bg-forkBlue-light flex-1 mt-5 flex flex-col">
+    <div class="bg-new-light_panel flex-1 flex flex-col">
         @* Server *@
         <div class="flex-1 overflow-y-auto scroll-left">
             @if (EntityManagers != null)
@@ -42,6 +30,19 @@
             <IconButton IconChar="'I'" IconSize="24" Size="45" OnClickMethod="() => { }"></IconButton> @*TODO CKE*@
             <IconButton IconChar="'C'" IconSize="24" Size="45" OnClickMethod="OpenCreateEntityScreen"></IconButton>
         </div>
+    </div>
+
+    @* Fork Version Checker *@
+    <div class="bg-new-panel flex px-4 py-8 items-center" style="height: 50px">
+        <div class="flex-1 flex flex-col">
+            <span class="leading-none">v1.0.0</span>
+            <span class="text-xs">You are up to date</span>
+        </div>
+        @* TODO only show if update privilege is granted *@
+        @if (true)
+        {
+            <IconButton IconChar="'r'" IconSize="18" NoBackground="true" OnClickMethod="TestClickHandler"></IconButton>
+        }
     </div>
 </div>
 

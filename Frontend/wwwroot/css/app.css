@@ -1,4 +1,4 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -26,7 +26,7 @@
 
     @font-face {
         font-family: "icomoon";
-        src: url("/ressources/fonts/icons.ttf");
+        src: url("/resources/fonts/icons.ttf");
     }
 
     .icon {

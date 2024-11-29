@@ -4,9 +4,31 @@
 @inherits EntityTab
 @inject IApplicationStateManager Application
 
-<div class="flex-1 flex bg-forkBlue gap-4 p-4 overflow-hidden">
+<div class="flex-1 bg-new-panel flex gap-4 p-4 overflow-hidden">
     @* Center Part *@
-    <div class="flex-1 flex flex-col gap-4">
+    <div class="flex-1 flex flex-col gap-2">
+
+        <div class="flex opacity-75 min-h-4">
+            @* IP *@
+            <div class="flex h-full gap-2 text-sm">
+                <span class="">IP Address: </span>
+                <span class="monospace">@BuildIpString()</span>
+            </div>
+
+            @* Server Type *@
+            <div class="flex h-full gap-2 text-sm ml-6">
+                <span class="">Type: </span>
+                <span class="monospace">Paper</span>
+            </div>
+
+            @* Server Type *@
+            <div class="flex h-full gap-2 text-sm ml-6">
+                <span class="">Restarts in: </span>
+                <span class="monospace">10h 1m</span>
+            </div>
+        </div>
+
+
         @* Console Out *@
         <ConsoleOut></ConsoleOut>
 
@@ -19,20 +41,41 @@
         {
             <ConsoleIn></ConsoleIn>
         }
-
-        @* IP and Restart Counter *@
-        <div class="ip-container clipping h-12 max-w-max">
-            <div class="flex h-full">
-                <span class="text-xs text-label py-1">IP Address</span>
-                <span class="mx-8 self-center text-text monospace">@BuildIpString()</span>
-            </div>
-        </div>
     </div>
 
     @* Hardware Stats *@
-    <div class="flex flex-col gap-4 overflow-auto scroll-hidden">
-        <PerformanceMonitor Content="@CpuPercentage.ToString()" SubTitle="%" Name="CPU"
-                            ColorIntensity="@(Math.Min(CpuPercentage - CpuPercentage % 10, 100))"></PerformanceMonitor>
+    <div class="flex flex-col gap-4 overflow-auto scroll-hidden mt-7 items-center">
+
+        <div class="flex flex-col w-24 items-center">
+            <div class="flex items-center justify-center w-full bg-gradient-to-t from-percentage-p@(Math.Min(CpuPercentage - CpuPercentage % 10, 100))/10 to-percentage-p10/0 p-3 text-percentage-p@(Math.Min(CpuPercentage - CpuPercentage % 10, 100))">
+                <span class="text-2xl font-bold">@CpuPercentage.ToString()</span>
+                <span class="text-sm opacity-75">&nbsp%</span>
+            </div>
+            <div class="h-1 w-full bg-percentage-p@(Math.Min(CpuPercentage - CpuPercentage % 10, 100))"></div>
+            <span class="text-sm opacity-75 mt-2">CPU</span>
+        </div>
+
+        <div class="flex flex-col w-24 items-center">
+            <div class="flex items-center justify-center w-full bg-gradient-to-t from-percentage-p@(Math.Min(MemoryPercentage - MemoryPercentage % 10, 100))/10 to-percentage-p10/0 p-3 text-percentage-p@(Math.Min(MemoryPercentage - MemoryPercentage % 10, 100))">
+                <span class="text-2xl font-bold">@MemoryPercentage.ToString()</span>
+                <span class="text-sm opacity-75">&nbsp%</span>
+            </div>
+            <div class="h-1 w-full bg-percentage-p@(Math.Min(MemoryPercentage - MemoryPercentage % 10, 100))"></div>
+            <span class="text-sm opacity-75 mt-2">RAM</span>
+        </div>
+
+        <div class="flex flex-col w-24 items-center">
+            <div class="flex items-center justify-center w-full bg-gradient-to-t from-percentage-p0/10 to-percentage-p0/0 p-3 text-percentage-p0">
+                <span class="text-2xl font-bold">@Uptime.TotalHours.ToString("0")</span>
+                <span class="text-sm opacity-75">h</span>&nbsp
+                <span class="text-2xl font-bold">@Uptime.Minutes.ToString("0")</span>
+                <span class="text-sm opacity-75">m</span>&nbsp
+            </div>
+            <div class="h-1 w-full bg-percentage-p0"></div>
+            <span class="text-sm opacity-75 mt-2">UPTIME</span>
+        </div>
+
+        @* <PerformanceMonitor Content="@CpuPercentage.ToString()" SubTitle="%" Name="CPU" ColorIntensity="@(Math.Min(CpuPercentage - CpuPercentage % 10, 100))"></PerformanceMonitor>
         <div class="performance-container">
             <PerformanceMonitor Content="@MemoryPercentage.ToString()" SubTitle="%" Name="RAM"
                                 ColorIntensity="@(Math.Min(MemoryPercentage - MemoryPercentage % 10, 100))"></PerformanceMonitor>
@@ -41,8 +84,7 @@
                 <span class="leading-none ml-1">...</span>
             </div>
         </div>
-        <PerformanceMonitor Content="@($"{Uptime.TotalHours:00}:{Uptime.Minutes:00}")" SubTitle="H:M" Name="UP<br>TIME"
-                            ColorIntensity="0"></PerformanceMonitor>
+        <PerformanceMonitor Content="@($"{Uptime.TotalHours:00}:{Uptime.Minutes:00}")" SubTitle="H:M" Name="UP<br>TIME" ColorIntensity="0"></PerformanceMonitor> *@
     </div>
 </div>
 
@@ -50,8 +92,8 @@
 
     [CascadingParameter] public EntityStateManager? EntityState { get; set; }
 
-    private int CpuPercentage { get; set; }
-    private int MemoryPercentage { get; set; }
+    private int CpuPercentage { get; set; } = 0;
+    private int MemoryPercentage { get; set; } = 0;
     private TimeSpan Uptime { get; set; } = TimeSpan.Zero;
 
     protected override void OnInitialized()

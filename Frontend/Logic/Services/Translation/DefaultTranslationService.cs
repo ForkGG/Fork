@@ -20,7 +20,7 @@ public class DefaultTranslationService : ITranslationService
             try
             {
                 _translationJson =
-                    JsonConvert.DeserializeObject(await client.Client.GetStringAsync("ressources/translation.json"));
+                    JsonConvert.DeserializeObject(await client.Client.GetStringAsync("resources/translation.json"));
             }
             catch (Exception e)
             {

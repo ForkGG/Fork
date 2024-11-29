@@ -5,20 +5,20 @@
 @using ForkFrontend.Model.Forms
 @implements IValueListInput<TModelValue, string>
 
-<div class="mt-3">
-    <label class="text-label text-md">@Label</label>
+<div class="mt-5">
+    <label class="text-new-offwhite opacity-75">@Label</label>
     @if (RadioType == RadioType.ButtonRow)
     {
-        <div class="flex flex-wrap gap-4 ml-5 mt-2">
+        <div class="flex flex-wrap gap-4 ml-1 mt-1">
             @{ int index = 0; }
             @foreach (ForkFormEntity<TModelValue, string> value in Values!)
             {
                 <div>
                     <input type="radio" name="@Name" id="@($"{Name}{index}")" class="hidden"
                            @onchange="@(_ => CurrentValue = value.ModelValue)"/>
-                    <div class="flex px-4 py-0.5 bg-button clip-bottom-right">
+                    <div class="flex  bg-new-offwhite ">
                         <label for="@($"{Name}{index}")"
-                               class="cursor-pointer font-bold @(CurrentValue != null && CurrentValue.Equals(value.ModelValue) ? "text-label-hover" : "hover:text-label-hover text-forkBlue")">
+                               class="cursor-pointer px-4 py-0.5 @(CurrentValue != null && CurrentValue.Equals(value.ModelValue) ? "text-new-white" : "hover:text-new-white text-forkBlue")">
                             @if (value.Icon != null)
                             {
                                 <span class="pr-2 font-normal icon">@value.Icon</span>

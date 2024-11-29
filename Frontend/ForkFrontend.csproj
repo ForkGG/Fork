@@ -118,9 +118,4 @@
         <AdditionalFiles Include="Razor\Components\Sidebar\StatusIndicator.razor"/>
         <AdditionalFiles Include="Razor\Components\Translated.razor"/>
     </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\Common\ForkCommon.csproj"/>
-    </ItemGroup>
-
 </Project>

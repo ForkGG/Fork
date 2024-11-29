@@ -7,20 +7,13 @@
 @inject IEntityConnectionService EntityConnection
 
 <CascadingValue Value="Value">
-    <div class="flex h-full gap-6">
+    <div class="flex h-full gap-2 text-new-offwhite">
         @* Center Part *@
         <div class="flex-1 flex flex-col">
             @* Top Bar *@
-            <div class="flex gap-6 mb-5">
-                @* Navigation *@
-                <IconTabControl OnTabSelected="EntityTabSelected">
-                    <IconTab RelatedType="typeof(ConsoleTab)" IconCharacter="'T'"></IconTab>
-                    <IconTab IconCharacter="'S'"></IconTab>
-                    <IconTab IconCharacter="'P'"></IconTab>
-                    <IconTab IconCharacter="'W'"></IconTab>
-                </IconTabControl>
+            <div class="flex gap-2 mb-2">
                 @* Entity Overview *@
-                <div class="flex-1 max-w-3xl p-2 bg-forkBlue flex justify-between items-center">
+                <div class="flex-1 max-w-3xl p-2 bg-new-panel flex justify-between items-center">
                     <div class="flex gap-2 p-1">
                         <IconButton @ref="_startButton" IsDisabled="Value?.Entity.Status != EntityStatus.Stopped"
                                     Size="25" IconSize="11" IconChar="'s'" HoverColor="status-green"
@@ -32,31 +25,37 @@
                                     Size="25" IconSize="13" IconChar="'r'" HoverColor="status-orange"
                                     OnClickMethod="RestartServer"></IconButton>
                     </div>
-                    <span class="font-bold text-md text-label whitespace-nowrap">@Value?.Entity</span>
+                    <span class="font-bold text-md text-new-offwhite whitespace-nowrap">@Value?.Entity</span>
                     <IconButton Size="30" NoBackground="true" IconChar="'D'" IconSize="19" HoverColor="status-red"
                                 OnClickMethod="DeleteServer"></IconButton>
                 </div>
             </div>
-            @* Content *@
-            @if (SelectedEntityTabType != null)
-            {
-                <DynamicComponent Type="SelectedEntityTabType"></DynamicComponent>
-            }
+            <div class="flex h-full">
+                @* Navigation *@
+                <IconTabControl OnTabSelected="EntityTabSelected" IsVertical="true">
+                    <IconTab RelatedType="typeof(ConsoleTab)" IconCharacter="'T'"></IconTab>
+                    <IconTab IconCharacter="'S'"></IconTab>
+                    <IconTab IconCharacter="'P'"></IconTab>
+                    <IconTab IconCharacter="'W'"></IconTab>
+                </IconTabControl>
+                @* Content *@
+                @if (SelectedEntityTabType != null)
+                {
+                    <DynamicComponent Type="SelectedEntityTabType"></DynamicComponent>
+                }
+            </div>
         </div>
 
         @* Player list *@
         @if (SelectedEntityTabType == typeof(ConsoleTab) && Value?.Entity is Server)
         {
-            <div class="w-60">
+            <div class="w-60 flex flex-col mt-2">
                 @* Top Bar *@
-                <div class="mb-5">
-                    <IconTabControl OnTabSelected="PlayerListTabSelected">
-                        <IconTab RelatedType="typeof(Playerlist)" IconCharacter="'p'"></IconTab>
-                        <IconTab RelatedType="typeof(Banlist)" IconCharacter="'b'"></IconTab>
-                        <IconTab RelatedType="typeof(Whitelist)" IconCharacter="'w'"></IconTab>
-                    </IconTabControl>
-                </div>
-
+                <IconTabControl OnTabSelected="PlayerListTabSelected">
+                    <IconTab RelatedType="typeof(Playerlist)" IconCharacter="'p'"></IconTab>
+                    <IconTab RelatedType="typeof(Banlist)" IconCharacter="'b'"></IconTab>
+                    <IconTab RelatedType="typeof(Whitelist)" IconCharacter="'w'"></IconTab>
+                </IconTabControl>
 
                 @* Content *@
                 @if (SelectedPlayerListTabType != null)

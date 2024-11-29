@@ -6,38 +6,24 @@ module.exports = {
     ],
     safelist: [
         {
-            pattern: /(bg|text)-percentage-p(|1|2|3|4|5|6|7|8|9|10)0/,
+            pattern: /(bg|text|from|to)-percentage-p(|1|2|3|4|5|6|7|8|9|10)0/,
             variants: ['before']
-        },
-        {
-            pattern: /text-.*/,
-            variants: ['hover']
-        },
-        {
-            pattern: /-my-.*/
-        },
-        {
-            pattern: /.*visible/
-        },
-        {
-            pattern: /bg-status-.*/
         }
     ],
     //darkMode: false, // or 'media' or 'class'
     theme: {
-        fontSize: {
-            'xs': '8pt',
-            'sm': '10pt',
-            'md': '12pt',
-            'base': '12pt',
-            'lg': '16px',
-            'xl': '20px',
-            '2xl': '24px',
-            '3xl': '32px'
-        },
         colors: {
             transparent: 'transparent',
             current: 'currentColor',
+            new: {
+                black: "#0F101A",
+                white: "#FFFFFF",
+                offwhite: "#747AAC",
+                nav: "#131420",
+                panel: "#131420",
+                light_panel: "#1B1C2D",
+                red: "#F76060"
+            },
             forkBlue: {
                 dark: '#151622',
                 DEFAULT: '#1D2030',
