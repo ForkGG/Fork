@@ -2,7 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <RuntimeFrameworkVersion>8.0.11</RuntimeFrameworkVersion>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RunPostBuildEvent>Always</RunPostBuildEvent>
@@ -117,5 +116,9 @@
         <AdditionalFiles Include="Razor\Components\Sidebar\SidebarEntity.razor"/>
         <AdditionalFiles Include="Razor\Components\Sidebar\StatusIndicator.razor"/>
         <AdditionalFiles Include="Razor\Components\Translated.razor"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Common\ForkCommon.csproj" />
     </ItemGroup>
 </Project>
