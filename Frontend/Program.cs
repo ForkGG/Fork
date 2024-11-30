@@ -14,6 +14,8 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Logging.SetMinimumLevel(LogLevel.Debug);
 //builder.Logging.AddFork(options => { });
 
+builder.Services.AddBlazorContextMenu();
+
 //TODO CKE replace with customizable backend port
 builder.Services.AddHttpClient<BackendClient>(client => client.BaseAddress = new Uri("http://localhost:35565"));
 builder.Services.AddHttpClient<LocalClient>(client =>

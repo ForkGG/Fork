@@ -2,27 +2,37 @@
 @using ForkCommon.Model.Entity.Pocos
 @using ForkFrontend.Logic.Services.Managers
 @using ForkFrontend.Logic.Services.Notifications
+@using ForkFrontend.Razor.Components.Shared.Icons
 @inject ILogger<SidebarEntity> Logger
 @inject INotificationService NotificationService
 
-<div
-    class="@(IsSelected ? "bg-forkBlue-hover text-label-hover" : "text-label hover:text-label-hover") h-20 w-full flex items-center py-3 pl-5 cursor-pointer"
-    @onclick="OnSelectEntity">
-    @* Status *@
-    <StatusIndicator Status="Value!.Entity.Status ?? EntityStatus.Stopped"></StatusIndicator>
-    @* Icon *@
-    <span class="icon px-3 text-2xl">2</span>
-    @* Content *@
-    <div class="flex-1">
-        <p class="text-md">@Value?.Entity.Name</p>
-        @if (Value?.Entity is Server server)
-        {
-            <p class="text-sm">@(server.ServerPlayers.Count(p => p.IsOnline)) / @(server.VanillaSettings?.MaxPlayers ?? 0)</p>
-        }
-    </div>
-    @* Selected Indicator *@
-    <SelectedIndicatorVertical IsVisible="IsSelected" ParentHeight="72"
-                               NegativeYMargins="3"></SelectedIndicatorVertical>
+<ContextMenu Id="contextMenu">
+    <ContextMenuItem>test</ContextMenuItem>
+</ContextMenu>
+
+<div @oncontextmenu="OnSelectEntity">
+    <ContextMenuTrigger MenuId="contextMenu">
+        <div
+            class="@(IsSelected ? "bg-forkBlue-hover text-label-hover" : "text-label hover:text-label-hover") h-20 w-full flex items-center py-3 pl-5 cursor-pointer"
+            @onclick="OnSelectEntity">
+            @* Status *@
+            <StatusIndicator Status="Value!.Entity.Status ?? EntityStatus.Stopped"></StatusIndicator>
+            @* Icon TODO CKE *@
+            <ArrowDownIcon Width="28" Height="28"/>
+            <!--span class="icon px-3 text-2xl">2</!--span-->
+            @* Content *@
+            <div class="flex-1">
+                <p class="text-md">@Value?.Entity.Name</p>
+                @if (Value?.Entity is Server server)
+                {
+                    <p class="text-sm">@(server.ServerPlayers.Count(p => p.IsOnline)) / @(server.VanillaSettings?.MaxPlayers ?? 0)</p>
+                }
+            </div>
+            @* Selected Indicator *@
+            <SelectedIndicatorVertical IsVisible="IsSelected" ParentHeight="72"
+                                       NegativeYMargins="3"></SelectedIndicatorVertical>
+        </div>
+    </ContextMenuTrigger>
 </div>
 
 @code {

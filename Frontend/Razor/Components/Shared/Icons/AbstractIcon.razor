@@ -1,0 +1,29 @@
+﻿<div class="icon-container"
+     style="--icon-width:@GetWidth(); --icon-height:@GetHeight()">
+    @Svg
+</div>
+
+<!--suppress CssUnresolvedCustomProperty -->
+<style>
+    .icon-container svg {
+        width: var(--icon-width);
+        height: var(--icon-height);
+    }
+</style>
+
+@code {
+    [Parameter] public required RenderFragment Svg { get; set; }
+    [Parameter] public uint Height { get; set; } = 15;
+    [Parameter] public uint Width { get; set; } = 15;
+
+    private string GetWidth()
+    {
+        return $"{Width}px";
+    }
+
+    private string GetHeight()
+    {
+        return $"{Height}px";
+    }
+
+}
