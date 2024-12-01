@@ -10,15 +10,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Fork.Logic.Services.EntityServices;
 
-public class EntityService : IEntityService
+public class EntityService
 {
-    private readonly IEntityManager _entityManager;
+    private readonly EntityManager _entityManager;
     private readonly ILogger<EntityService> _logger;
-    private readonly INotificationCenter _notificationCenter;
-    private readonly IServerService _serverService;
+    private readonly NotificationCenter _notificationCenter;
+    private readonly ServerService _serverService;
 
-    public EntityService(ILogger<EntityService> logger, IServerService serverService,
-        INotificationCenter notificationCenter, IEntityManager entityManager)
+    public EntityService(ILogger<EntityService> logger, ServerService serverService,
+        NotificationCenter notificationCenter, EntityManager entityManager)
     {
         _logger = logger;
         _serverService = serverService;

@@ -17,7 +17,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Fork.Logic.Managers;
 
-public class EntityManager : IEntityManager
+public class EntityManager
 {
     private static readonly SemaphoreSlim Semaphore = new(1);
 
@@ -66,8 +66,8 @@ public class EntityManager : IEntityManager
         }
 
         // Post processing can be done without the lock
-        IEntityPostProcessingService postProcessing =
-            scope.ServiceProvider.GetRequiredService<IEntityPostProcessingService>();
+        EntityPostProcessingService postProcessing =
+            scope.ServiceProvider.GetRequiredService<EntityPostProcessingService>();
         await postProcessing.PostProcessEntity(result);
         await context.SaveChangesAsync();
         Semaphore.Release();
@@ -116,7 +116,7 @@ public class EntityManager : IEntityManager
 
         // Send notification
         UpdatePlayerNotification notification = new(server.Id, player);
-        INotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
+        NotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<NotificationCenter>();
         await notificationCenter.BroadcastNotification(notification);
     }
 
@@ -160,7 +160,7 @@ public class EntityManager : IEntityManager
 
         UpdateWhitelistPlayerNotification notification = new(server.Id, updateType, player);
         using IServiceScope scope = _scopeFactory.CreateScope();
-        INotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
+        NotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<NotificationCenter>();
         await notificationCenter.BroadcastNotification(notification);
     }
 
@@ -203,7 +203,7 @@ public class EntityManager : IEntityManager
 
         UpdateBanlistPlayerNotification notification = new(server.Id, updateType, player);
         using IServiceScope scope = _scopeFactory.CreateScope();
-        INotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
+        NotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<NotificationCenter>();
         await notificationCenter.BroadcastNotification(notification);
     }
 

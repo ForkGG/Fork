@@ -5,11 +5,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Fork.Adapters.Fork;
 
-public class ForkApiAdapter : AbstractAdapter, IForkApiAdapter
+public class ForkApiAdapter : AbstractAdapter
 {
     private const string API_BASE = "https://api.fork.gg/";
 
-    public ForkApiAdapter(ILogger<ForkApiAdapter> logger, IApplicationManager applicationManager) : base(logger,
+    public ForkApiAdapter(ILogger<ForkApiAdapter> logger, ApplicationManager applicationManager) : base(logger,
         applicationManager)
     {
     }

@@ -12,16 +12,16 @@ using ForkCommon.Model.Notifications.EntityNotifications;
 
 namespace Fork.Logic.Services.EntityServices;
 
-public class ConsoleService : IConsoleService
+public class ConsoleService
 {
     private const string WATERFALL_STARTED_REGEX = @"\[([0-9]+:?)* INFO\]: Listening on /.*$";
     private const string WARN_REGEX = @"^\[(?:[0-9]{1,2}:){2}[0-9]{1,2}\] \[.*\/WARN\]:.*";
     private const string WERROR_REGEX = @"^\[(?:[0-9]{1,2}:){2}[0-9]{1,2}\] \[.*\/ERROR\]:.*";
-    private readonly IConsoleInterpreter _consoleInterpreter;
+    private readonly ConsoleInterpreter _consoleInterpreter;
 
-    private readonly INotificationCenter _notificationCenter;
+    private readonly NotificationCenter _notificationCenter;
 
-    public ConsoleService(INotificationCenter notificationCenter, IConsoleInterpreter consoleInterpreter)
+    public ConsoleService(NotificationCenter notificationCenter, ConsoleInterpreter consoleInterpreter)
     {
         _notificationCenter = notificationCenter;
         _consoleInterpreter = consoleInterpreter;

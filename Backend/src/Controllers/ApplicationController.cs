@@ -17,12 +17,12 @@ namespace Fork.Controllers;
 /// </summary>
 public class ApplicationController : AbstractRestController
 {
-    private readonly IApplicationStateService _applicationState;
-    private readonly IAuthenticationService _authentication;
-    private readonly IForkApiAdapter _forkApi;
+    private readonly ApplicationStateService _applicationState;
+    private readonly AuthenticationService _authentication;
+    private readonly ForkApiAdapter _forkApi;
 
-    public ApplicationController(ILogger<ApplicationController> logger, IApplicationStateService applicationState,
-        IAuthenticationService authentication, IForkApiAdapter forkApi) : base(logger)
+    public ApplicationController(ILogger<ApplicationController> logger, ApplicationStateService applicationState,
+        AuthenticationService authentication, ForkApiAdapter forkApi) : base(logger)
     {
         _applicationState = applicationState;
         _authentication = authentication;

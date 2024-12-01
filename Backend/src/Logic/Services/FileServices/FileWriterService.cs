@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Fork.Logic.Services.FileServices;
 
-public class FileWriterService : IFileWriterService
+public class FileWriterService
 {
     public async Task WriteEula(string folderPath)
     {

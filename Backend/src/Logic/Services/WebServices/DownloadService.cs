@@ -12,12 +12,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Fork.Logic.Services.WebServices;
 
-public class DownloadService : IDownloadService
+public class DownloadService
 {
-    private readonly IApplicationManager _application;
+    private readonly ApplicationManager _application;
     private readonly ILogger<DownloadService> _logger;
 
-    public DownloadService(ILogger<DownloadService> logger, IApplicationManager application)
+    public DownloadService(ILogger<DownloadService> logger, ApplicationManager application)
     {
         _logger = logger;
         _application = application;

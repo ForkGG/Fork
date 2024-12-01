@@ -25,19 +25,19 @@ using Microsoft.Extensions.Logging;
 
 namespace Fork.Logic.Services.EntityServices;
 
-public class ServerService : IServerService
+public class ServerService
 {
-    private readonly IApplicationManager _application;
-    private readonly IConsoleService _console;
+    private readonly ApplicationManager _application;
+    private readonly ConsoleService _console;
     private readonly ApplicationDbContext _context;
-    private readonly IDownloadService _download;
-    private readonly IFileWriterService _fileWriter;
+    private readonly DownloadService _download;
+    private readonly FileWriterService _fileWriter;
     private readonly ILogger<ServerService> _logger;
-    private readonly INotificationCenter _notificationCenter;
+    private readonly NotificationCenter _notificationCenter;
 
-    public ServerService(ILogger<ServerService> logger, ApplicationDbContext context, IApplicationManager application,
-        IConsoleService console, IDownloadService download, IFileWriterService fileWriter,
-        INotificationCenter notificationCenter)
+    public ServerService(ILogger<ServerService> logger, ApplicationDbContext context, ApplicationManager application,
+        ConsoleService console, DownloadService download, FileWriterService fileWriter,
+        NotificationCenter notificationCenter)
     {
         _logger = logger;
         _context = context;

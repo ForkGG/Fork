@@ -23,12 +23,12 @@ namespace Fork.Controllers;
 public class EntityController : AbstractRestController
 {
     private readonly CommandService _commandService;
-    private readonly IEntityManager _entityManager;
-    private readonly IEntityService _entityService;
-    private readonly IServerService _serverService;
+    private readonly EntityManager _entityManager;
+    private readonly EntityService _entityService;
+    private readonly ServerService _serverService;
 
-    public EntityController(ILogger<EntityController> logger, IEntityManager entityManager,
-        IEntityService entityService, IServerService serverService, CommandService commandService) : base(logger)
+    public EntityController(ILogger<EntityController> logger, EntityManager entityManager,
+        EntityService entityService, ServerService serverService, CommandService commandService) : base(logger)
     {
         _entityManager = entityManager;
         _entityService = entityService;

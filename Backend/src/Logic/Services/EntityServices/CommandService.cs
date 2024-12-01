@@ -14,11 +14,11 @@ namespace Fork.Logic.Services.EntityServices;
 
 public class CommandService
 {
-    private readonly IApplicationManager _application;
+    private readonly ApplicationManager _application;
     private readonly Dictionary<ulong, Command> _commandsCache = new();
     private readonly ILogger<CommandService> _logger;
 
-    public CommandService(ILogger<CommandService> logger, IApplicationManager application)
+    public CommandService(ILogger<CommandService> logger, ApplicationManager application)
     {
         _logger = logger;
         _application = application;

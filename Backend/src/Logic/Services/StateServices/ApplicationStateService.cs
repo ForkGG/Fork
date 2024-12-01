@@ -4,12 +4,12 @@ using ForkCommon.Model.Application;
 
 namespace Fork.Logic.Services.StateServices;
 
-public class ApplicationStateService : IApplicationStateService
+public class ApplicationStateService
 {
-    private readonly IApplicationManager _applicationManager;
-    private readonly IEntityManager _entityManager;
+    private readonly ApplicationManager _applicationManager;
+    private readonly EntityManager _entityManager;
 
-    public ApplicationStateService(IApplicationManager applicationManager, IEntityManager entityManager)
+    public ApplicationStateService(ApplicationManager applicationManager, EntityManager entityManager)
     {
         _applicationManager = applicationManager;
         _entityManager = entityManager;

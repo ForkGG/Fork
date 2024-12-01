@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Fork.Logic.Managers;
 
-public class TokenManager : ITokenManager
+public class TokenManager
 {
     private readonly ILogger<TokenManager> _logger;
 

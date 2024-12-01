@@ -14,11 +14,11 @@ namespace Fork.Logic.Persistence;
 
 public class ApplicationDbContext : DbContext
 {
-    private readonly IFileReaderService _fileReader;
+    private readonly FileReaderService _fileReader;
     private readonly ILogger<ApplicationDbContext> _logger;
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ILogger<ApplicationDbContext> logger,
-        IFileReaderService fileReader) : base(options)
+        FileReaderService fileReader) : base(options)
     {
         _logger = logger;
         _fileReader = fileReader;

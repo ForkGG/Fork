@@ -21,7 +21,7 @@ public class AuthenticationMiddleware
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context, IAuthenticationService authenticationService)
+    public async Task InvokeAsync(HttpContext context, AuthenticationService authenticationService)
     {
         string? token = context.Request.Headers.Authorization.FirstOrDefault();
         if (string.IsNullOrWhiteSpace(token))

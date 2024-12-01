@@ -25,7 +25,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using AuthenticationService = Fork.Logic.Services.AuthenticationServices.AuthenticationService;
-using IAuthenticationService = Fork.Logic.Services.AuthenticationServices.IAuthenticationService;
 
 namespace Fork;
 
@@ -75,29 +74,29 @@ public class Startup
 
 
         // Singletons
-        services.AddSingleton<IApplicationManager, ApplicationManager>();
-        services.AddSingleton<INotificationCenter, DefaultNotificationCenter>();
-        services.AddSingleton<ITokenManager, TokenManager>();
-        services.AddSingleton<IEntityManager, EntityManager>();
+        services.AddSingleton<ApplicationManager>();
+        services.AddSingleton< NotificationCenter>();
+        services.AddSingleton< TokenManager>();
+        services.AddSingleton< EntityManager>();
         services.AddSingleton<CommandService>();
 
         // Scoped
-        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<AuthenticationService>();
 
         // Transient
-        services.AddTransient<IDownloadService, DownloadService>();
-        services.AddTransient<IConsoleService, ConsoleService>();
-        services.AddTransient<IServerService, ServerService>();
-        services.AddTransient<IEntityService, EntityService>();
-        services.AddTransient<IFileWriterService, FileWriterService>();
-        services.AddTransient<IFileReaderService, FileReaderService>();
-        services.AddTransient<IEntityPostProcessingService, EntityPostProcessingService>();
-        services.AddTransient<IApplicationStateService, ApplicationStateService>();
-        services.AddTransient<IPlayerService, PlayerService>();
-        services.AddTransient<IConsoleInterpreter, ConsoleInterpreter>();
+        services.AddTransient< DownloadService>();
+        services.AddTransient< ConsoleService>();
+        services.AddTransient< ServerService>();
+        services.AddTransient< EntityService>();
+        services.AddTransient< FileWriterService>();
+        services.AddTransient< FileReaderService>();
+        services.AddTransient< EntityPostProcessingService>();
+        services.AddTransient< ApplicationStateService>();
+        services.AddTransient< PlayerService>();
+        services.AddTransient< ConsoleInterpreter>();
         // Transient adapters
-        services.AddTransient<IMojangApiAdapter, MojangApiAdapter>();
-        services.AddTransient<IForkApiAdapter, ForkApiAdapter>();
+        services.AddTransient<MojangApiAdapter>();
+        services.AddTransient<ForkApiAdapter>();
 
         services.AddSwaggerGen(c =>
         {
@@ -117,7 +116,8 @@ public class Startup
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        app.ApplicationServices.GetService<INotificationCenter>();
+        // Eager init NotificationCenter for WebSockets
+        app.ApplicationServices.GetService<NotificationCenter>();
 
         if (env.IsDevelopment())
         {

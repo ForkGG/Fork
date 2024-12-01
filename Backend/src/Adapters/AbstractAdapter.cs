@@ -16,7 +16,7 @@ public abstract class AbstractAdapter
     protected readonly ILogger Logger;
     protected readonly string UserAgent;
 
-    public AbstractAdapter(ILogger logger, IApplicationManager applicationManager)
+    public AbstractAdapter(ILogger logger, ApplicationManager applicationManager)
     {
         Logger = logger;
         UserAgent = applicationManager.UserAgent;

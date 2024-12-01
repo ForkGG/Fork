@@ -14,14 +14,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Fork.Logic.Services.EntityServices;
 
-public class PlayerService : IPlayerService
+public class PlayerService
 {
     private readonly ApplicationDbContext _applicationDbContext;
     private readonly ILogger<PlayerService> _logger;
-    private readonly IMojangApiAdapter _mojangApi;
+    private readonly MojangApiAdapter _mojangApi;
 
     public PlayerService(ILogger<PlayerService> logger, ApplicationDbContext applicationDbContext,
-        IMojangApiAdapter mojangApi)
+        MojangApiAdapter mojangApi)
     {
         _logger = logger;
         _applicationDbContext = applicationDbContext;

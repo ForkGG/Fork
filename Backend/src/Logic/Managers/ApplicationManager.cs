@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Fork.Logic.Managers;
 
-public class ApplicationManager : IApplicationManager
+public class ApplicationManager
 {
     public ApplicationManager(ILogger<ApplicationManager> logger, IServiceScopeFactory scopeFactory,
         IConfiguration configuration)

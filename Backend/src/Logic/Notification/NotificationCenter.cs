@@ -20,14 +20,14 @@ namespace Fork.Logic.Notification;
 ///     <br />
 ///     This should be used as a singleton to only create one WebSocket instance per application
 /// </summary>
-public class DefaultNotificationCenter : INotificationCenter
+public class NotificationCenter
 {
-    private readonly ILogger<DefaultNotificationCenter> _logger;
+    private readonly ILogger<NotificationCenter> _logger;
     private readonly Dictionary<IWebSocketConnection, IReadOnlySet<IPrivilege>?> _privilegesByConnection;
     private readonly WebSocketServer _server;
-    private readonly ITokenManager _tokenManager;
+    private readonly TokenManager _tokenManager;
 
-    public DefaultNotificationCenter(ILogger<DefaultNotificationCenter> logger, ITokenManager tokenManager)
+    public NotificationCenter(ILogger<NotificationCenter> logger, TokenManager tokenManager)
     {
         _logger = logger;
         _tokenManager = tokenManager;

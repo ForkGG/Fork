@@ -10,12 +10,12 @@ using Newtonsoft.Json.Linq;
 
 namespace Fork.Logic.Services.FileServices;
 
-public class FileReaderService : IFileReaderService
+public class FileReaderService
 {
-    private readonly IFileWriterService _fileWriter;
+    private readonly FileWriterService _fileWriter;
     private readonly ILogger<FileReaderService> _logger;
 
-    public FileReaderService(ILogger<FileReaderService> logger, IFileWriterService fileWriter)
+    public FileReaderService(ILogger<FileReaderService> logger, FileWriterService fileWriter)
     {
         _logger = logger;
         _fileWriter = fileWriter;

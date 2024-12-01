@@ -7,12 +7,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Fork.Logic.Services.AuthenticationServices;
 
-public class AuthenticationService : IAuthenticationService
+public class AuthenticationService
 {
     private readonly ILogger<AuthenticationService> _logger;
-    private readonly ITokenManager _tokenManager;
+    private readonly TokenManager _tokenManager;
 
-    public AuthenticationService(ILogger<AuthenticationService> logger, ITokenManager tokenManager)
+    public AuthenticationService(ILogger<AuthenticationService> logger, TokenManager tokenManager)
     {
         _logger = logger;
         _tokenManager = tokenManager;

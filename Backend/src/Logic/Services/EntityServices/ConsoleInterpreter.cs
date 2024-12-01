@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Fork.Logic.Services.EntityServices;
 
-public class ConsoleInterpreter : IConsoleInterpreter
+public class ConsoleInterpreter
 {
     private const string BASE = @"^\[[0-9]{2}:[0-9]{2}:[0-9]{2}\] \[.*\]: ";
     private const string PLAYER = @"([0-9A-Za-z_]+)";
@@ -18,7 +18,7 @@ public class ConsoleInterpreter : IConsoleInterpreter
     private readonly Regex _banlistAddRegex = new(BASE + @"Banned " + PLAYER + @": .*\.$");
     private readonly Regex _banlistRemoveRegex = new(BASE + @"Unbanned (?:player )?" + PLAYER + @"$");
 
-    private readonly IEntityManager _entityManager;
+    private readonly EntityManager _entityManager;
 
     // TODO CKE check if this works for spigot and paper
     private readonly Regex _joinRegex = new(BASE + PLAYER + @" joined the game$");
@@ -34,7 +34,7 @@ public class ConsoleInterpreter : IConsoleInterpreter
     private readonly Regex _whitelistAddRegex = new(BASE + @"Added " + PLAYER + @" to the whitelist$");
     private readonly Regex _whitelistRemoveRegex = new(BASE + @"Removed " + PLAYER + @" from the whitelist$");
 
-    public ConsoleInterpreter(ILogger<ConsoleInterpreter> logger, IEntityManager entityManager,
+    public ConsoleInterpreter(ILogger<ConsoleInterpreter> logger, EntityManager entityManager,
         IServiceScopeFactory serviceScopeFactory)
     {
         _logger = logger;
@@ -167,7 +167,7 @@ public class ConsoleInterpreter : IConsoleInterpreter
         // We need to create a new DI scope here, because we are in a background thread outside any request
         // If we don't do this here, the DBContext in the PlayerService will be disposed by the time we call it
         using IServiceScope scope = _serviceScopeFactory.CreateScope();
-        IPlayerService playerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
+        PlayerService playerService = scope.ServiceProvider.GetRequiredService<PlayerService>();
         return await playerService.PlayerByNameAsync(name);
     }
 }

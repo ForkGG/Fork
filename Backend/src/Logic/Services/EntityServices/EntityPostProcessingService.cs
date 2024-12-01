@@ -12,15 +12,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Fork.Logic.Services.EntityServices;
 
-public class EntityPostProcessingService : IEntityPostProcessingService
+public class EntityPostProcessingService
 {
-    private readonly IApplicationManager _application;
-    private readonly IFileReaderService _fileReader;
+    private readonly ApplicationManager _application;
+    private readonly FileReaderService _fileReader;
     private readonly ILogger<EntityPostProcessingService> _logger;
-    private readonly IPlayerService _playerService;
+    private readonly PlayerService _playerService;
 
-    public EntityPostProcessingService(ILogger<EntityPostProcessingService> logger, IFileReaderService fileReader,
-        IApplicationManager application, IPlayerService playerService)
+    public EntityPostProcessingService(ILogger<EntityPostProcessingService> logger, FileReaderService fileReader,
+        ApplicationManager application, PlayerService playerService)
     {
         _logger = logger;
         _fileReader = fileReader;
