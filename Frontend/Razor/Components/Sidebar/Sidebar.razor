@@ -6,6 +6,7 @@
 @using ForkFrontend.Logic.Services.Managers
 @using ForkFrontend.Model
 @using ForkFrontend.Model.Enums
+@using ForkFrontend.Razor.Components.Shared.Icons
 @using Index = Index
 @inject ILogger<Sidebar> Logger
 @inject IEntityConnectionService EntityConnection
@@ -31,14 +32,20 @@
 
         @* Controls *@
         <div class="flex justify-end gap-3 p-3">
-            <IconButton IconChar="'I'" IconSize="24" Size="45" OnClickMethod="() => { }"></IconButton> @*TODO CKE*@
-            <IconButton IconChar="'C'" IconSize="24" Size="45" OnClickMethod="OpenCreateEntityScreen"></IconButton>
+            <IconButton Size="45" OnClickMethod="() => { }"><Icon><ImportIcon Width="20" Height="20"/></Icon></IconButton> @*TODO CKE*@
+            <IconButton Size="45" OnClickMethod="OpenCreateEntityScreen"><Icon><CreateIcon Width="24" Height="24"/></Icon></IconButton>
         </div>
     </div>
 
-    <div class="flex flex-col">
-
-    </div>
+    @* For icon viewing
+    <div class="flex flex-1 flex-col">
+        <PaperTypeIcon Width="32" Height="32"></PaperTypeIcon>
+        <VanillaTypeIcon Width="32" Height="32"></VanillaTypeIcon>
+        <AddIcon Width="32" Height="32"></AddIcon>
+        <ImportIcon Width="32" Height="32"></ImportIcon>
+        <VelocityTypeIcon Width="32" Height="32"></VelocityTypeIcon>
+    </div> 
+    *@
 
     @* Fork Version Checker *@
     <div class="bg-new-panel flex px-4 py-8 items-center" style="height: 50px">
@@ -49,7 +56,7 @@
         @* TODO only show if update privilege is granted *@
         @if (true)
         {
-            <IconButton IconChar="'r'" IconSize="18" NoBackground="true" OnClickMethod="CheckForUpdate"></IconButton>
+            <IconButton NoBackground="true" OnClickMethod="CheckForUpdate"><Icon><RestartIcon Width="24" Height="24"/></Icon></IconButton>
         }
     </div>
 </div>
@@ -71,7 +78,7 @@
     private async Task CheckForUpdate(IconButton button)
     {
         await ToastManager.AddToast(new Toast(ToastLevel.Warning, $"Not implemented yet! ({_counter++})", TimeSpan.FromSeconds(5)));
-        Console.WriteLine(button.IconChar);
+        //Console.WriteLine(button.IconChar);
     }
 
     private Task OpenCreateEntityScreen(IconButton _)

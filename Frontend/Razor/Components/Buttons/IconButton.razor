@@ -1,20 +1,17 @@
-﻿<div style="@SizeString"
-     class="@(IsDisabled ? "opacity-25 cursor-not-allowed" : $"cursor-pointer hover:text-{HoverColor}")
+﻿@using ForkFrontend.Razor.Components.Shared.Icons
+<div style="@SizeString"
+class="@(IsDisabled ? "opacity-25 cursor-not-allowed" : $"cursor-pointer hover:text-{HoverColor}")
         @(NoBackground ? "text-new-offwhite" : "text-new-black bg-new-offwhite")
          flex justify-center items-center"
-     @onclick="ClickHandler">
-    <span class="icon" style="font-size: @IconSizeString">@IconChar</span>
+@onclick="ClickHandler">
+    @* <span class="icon" style="font-size: @IconSizeString">@IconChar</span> *@
+    @Icon
 </div>
 
 @code {
-
-    [Parameter] [EditorRequired] public char IconChar { get; set; }
-
-    [Parameter] [EditorRequired] public int IconSize { get; set; }
-
-    private string IconSizeString => $"{IconSize}px;";
-
     [Parameter] [EditorRequired] public EventCallback<IconButton> OnClickMethod { get; set; }
+
+    [Parameter] public RenderFragment? Icon { get; set; }
 
     [Parameter] public int? Size { get; set; }
 

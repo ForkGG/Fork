@@ -5,6 +5,7 @@
 @using ForkFrontend.Logic.Services.Managers
 @using ForkFrontend.Model.Enums
 @using ForkFrontend.Model.Forms
+@using ForkFrontend.Razor.Components.Shared.Icons
 @inherits AbstractScreenComponent
 
 @inject IEntityConnectionService EntityConnection;
@@ -52,7 +53,7 @@
                 </div>
             </div>
 
-            <IconButton IconChar="'C'" IconSize="24" Size="45" OnClickMethod="OnCreateEntity"></IconButton>
+            <IconButton Size="45" OnClickMethod="OnCreateEntity"><Icon><CreateIcon Height="24" Width="24"/></Icon></IconButton>
         </div>
     </EditForm>
 </div>
