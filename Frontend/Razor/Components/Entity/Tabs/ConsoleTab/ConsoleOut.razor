@@ -7,7 +7,7 @@
 
 @inject IJSRuntime Js
 @inject ILogger<ConsoleOut> Logger
-@inject IEntityConnectionService EntityConnection
+@inject EntityConnectionService EntityConnection
 
 <div class="flex-1 flex flex-col console-out-container">
     @*Controls*@
@@ -17,9 +17,13 @@
         <div class="flex gap-3 mr-5 items-center">
             @* TODO CKE Button click methods *@
             <IconButton Size="23" NoBackground="true"
-                        OnClickMethod="() => { }"><Icon></Icon></IconButton>
+                        OnClickMethod="() => { }">
+                <Icon></Icon>
+            </IconButton>
             <IconButton Size="23" NoBackground="true"
-                        OnClickMethod="() => { }"><Icon></Icon></IconButton>
+                        OnClickMethod="() => { }">
+                <Icon></Icon>
+            </IconButton>
         </div>
     </div>
 

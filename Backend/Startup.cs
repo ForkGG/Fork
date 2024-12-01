@@ -75,28 +75,29 @@ public class Startup
 
         // Singletons
         services.AddSingleton<ApplicationManager>();
-        services.AddSingleton< NotificationCenter>();
-        services.AddSingleton< TokenManager>();
-        services.AddSingleton< EntityManager>();
         services.AddSingleton<CommandService>();
+        services.AddSingleton<EntityManager>();
+        services.AddSingleton<NotificationCenter>();
+        services.AddSingleton<ServerVersionManager>();
+        services.AddSingleton<TokenManager>();
 
         // Scoped
         services.AddScoped<AuthenticationService>();
 
         // Transient
-        services.AddTransient< DownloadService>();
-        services.AddTransient< ConsoleService>();
-        services.AddTransient< ServerService>();
-        services.AddTransient< EntityService>();
-        services.AddTransient< FileWriterService>();
-        services.AddTransient< FileReaderService>();
-        services.AddTransient< EntityPostProcessingService>();
-        services.AddTransient< ApplicationStateService>();
-        services.AddTransient< PlayerService>();
-        services.AddTransient< ConsoleInterpreter>();
+        services.AddTransient<ApplicationStateService>();
+        services.AddTransient<ConsoleInterpreter>();
+        services.AddTransient<ConsoleService>();
+        services.AddTransient<DownloadService>();
+        services.AddTransient<EntityPostProcessingService>();
+        services.AddTransient<EntityService>();
+        services.AddTransient<FileReaderService>();
+        services.AddTransient<FileWriterService>();
+        services.AddTransient<PlayerService>();
+        services.AddTransient<ServerService>();
         // Transient adapters
-        services.AddTransient<MojangApiAdapter>();
         services.AddTransient<ForkApiAdapter>();
+        services.AddTransient<MojangApiAdapter>();
 
         services.AddSwaggerGen(c =>
         {

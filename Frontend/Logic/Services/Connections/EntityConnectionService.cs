@@ -7,7 +7,7 @@ using ForkFrontend.Logic.Services.Managers;
 
 namespace ForkFrontend.Logic.Services.Connections;
 
-public class EntityConnectionService : AbstractConnectionService, IEntityConnectionService
+public class EntityConnectionService : AbstractConnectionService
 {
     private const string URL_BASE = $"/{ApiVersion}/entity";
 

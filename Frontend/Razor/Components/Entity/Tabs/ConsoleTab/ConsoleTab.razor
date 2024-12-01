@@ -3,7 +3,7 @@
 @using ForkCommon.Model.Notifications.EntityNotifications
 @using ForkFrontend.Logic.Services.Managers
 @inherits EntityTab
-@inject IApplicationStateManager Application
+@inject ApplicationStateManager Application
 
 <div class="flex-1 bg-new-panel flex gap-4 p-4 overflow-hidden">
     @* Center Part *@
@@ -93,8 +93,8 @@
 
     [CascadingParameter] public EntityStateManager? EntityState { get; set; }
 
-    private int CpuPercentage { get; set; } = 0;
-    private int MemoryPercentage { get; set; } = 0;
+    private int CpuPercentage { get; set; }
+    private int MemoryPercentage { get; set; }
     private TimeSpan Uptime { get; set; } = TimeSpan.Zero;
 
     protected override void OnInitialized()

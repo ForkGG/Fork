@@ -9,7 +9,7 @@
 @using ForkFrontend.Razor.Components.Shared.Icons
 @using Index = Index
 @inject ILogger<Sidebar> Logger
-@inject IEntityConnectionService EntityConnection
+@inject EntityConnectionService EntityConnection
 @inject ToastManager ToastManager
 
 
@@ -32,8 +32,16 @@
 
         @* Controls *@
         <div class="flex justify-end gap-3 p-3">
-            <IconButton Size="45" OnClickMethod="() => { }"><Icon><ImportIcon Width="20" Height="20"/></Icon></IconButton> @*TODO CKE*@
-            <IconButton Size="45" OnClickMethod="OpenCreateEntityScreen"><Icon><CreateIcon Width="24" Height="24"/></Icon></IconButton>
+            <IconButton Size="45" OnClickMethod="() => { }">
+                <Icon>
+                    <ImportIcon Width="20" Height="20"/>
+                </Icon>
+            </IconButton> @*TODO CKE*@
+            <IconButton Size="45" OnClickMethod="OpenCreateEntityScreen">
+                <Icon>
+                    <CreateIcon Width="24" Height="24"/>
+                </Icon>
+            </IconButton>
         </div>
     </div>
 
@@ -56,7 +64,11 @@
         @* TODO only show if update privilege is granted *@
         @if (true)
         {
-            <IconButton NoBackground="true" OnClickMethod="CheckForUpdate"><Icon><RestartIcon Width="24" Height="24"/></Icon></IconButton>
+            <IconButton NoBackground="true" OnClickMethod="CheckForUpdate">
+                <Icon>
+                    <RestartIcon Width="24" Height="24"/>
+                </Icon>
+            </IconButton>
         }
     </div>
 </div>

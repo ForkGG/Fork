@@ -15,9 +15,9 @@ public partial class Index : ComponentBase
     // Screens can be shown instead of entities (add entity, Fork settings, ...)
     private SubScreen? _openScreen;
 
-    [Inject] private IApplicationConnectionService ApplicationConnection { get; set; } = default!;
-    [Inject] private IApplicationStateManager ApplicationStateManager { get; set; } = default!;
-    [Inject] private INotificationService NotificationService { get; set; } = default!;
+    [Inject] private ApplicationConnectionService ApplicationConnection { get; set; } = default!;
+    [Inject] private ApplicationStateManager ApplicationStateManager { get; set; } = default!;
+    [Inject] private NotificationService NotificationService { get; set; } = default!;
 
     public IEntity? SelectedEntity { get; set; }
 

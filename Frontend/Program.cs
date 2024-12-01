@@ -21,12 +21,12 @@ builder.Services.AddHttpClient<BackendClient>(client => client.BaseAddress = new
 builder.Services.AddHttpClient<LocalClient>(client =>
     client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 // All services are singletons so it's easier to use them and the whole Blazor App is one scope anyway
-builder.Services.AddSingleton<IApplicationConnectionService, ApplicationConnectionService>();
-builder.Services.AddSingleton<IEntityConnectionService, EntityConnectionService>();
-builder.Services.AddSingleton<ITranslationService, DefaultTranslationService>();
-builder.Services.AddSingleton<INotificationService, NotificationService>();
+builder.Services.AddSingleton<ApplicationConnectionService>();
+builder.Services.AddSingleton<EntityConnectionService>();
+builder.Services.AddSingleton<TranslationService>();
+builder.Services.AddSingleton<NotificationService>();
 
-builder.Services.AddSingleton<IApplicationStateManager, ApplicationStateManager>();
+builder.Services.AddSingleton<ApplicationStateManager>();
 builder.Services.AddSingleton<ToastManager>();
 
 

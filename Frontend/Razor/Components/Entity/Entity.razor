@@ -5,7 +5,7 @@
 @using ForkFrontend.Logic.Services.Managers
 @using ForkFrontend.Razor.Components.Shared.Icons
 @inject ILogger<Entity> Logger
-@inject IEntityConnectionService EntityConnection
+@inject EntityConnectionService EntityConnection
 
 <CascadingValue Value="Value">
     <div class="flex h-full gap-2 text-new-offwhite">
@@ -16,23 +16,31 @@
                 @* Entity Overview *@
                 <div class="flex-1 max-w-3xl p-2 bg-new-panel flex justify-between items-center">
                     <div class="flex gap-2 p-1">
-                         <IconButton @ref="_startButton" IsDisabled="Value?.Entity.Status != EntityStatus.Stopped"
+                        <IconButton @ref="_startButton" IsDisabled="Value?.Entity.Status != EntityStatus.Stopped"
                                     Size="24" HoverColor="status-green" OnClickMethod="StartServer">
-                            <Icon><StartIcon Width="16" Height="16" /></Icon>
+                            <Icon>
+                                <StartIcon Width="16" Height="16"/>
+                            </Icon>
                         </IconButton>
                         <IconButton @ref="_stopButton" IsDisabled="Value?.Entity.Status != EntityStatus.Started"
                                     Size="24" HoverColor="status-red" OnClickMethod="StopServer">
-                            <Icon><StopIcon Width="16" Height="16" /></Icon>
+                            <Icon>
+                                <StopIcon Width="16" Height="16"/>
+                            </Icon>
                         </IconButton>
                         <IconButton @ref="_restartButton" IsDisabled="Value?.Entity.Status != EntityStatus.Started"
                                     Size="24" HoverColor="status-orange" OnClickMethod="RestartServer">
-                            <Icon><RestartIcon Width="16" Height="16" /></Icon>
-                        </IconButton> 
+                            <Icon>
+                                <RestartIcon Width="16" Height="16"/>
+                            </Icon>
+                        </IconButton>
                     </div>
                     <span class="font-bold text-md text-new-offwhite whitespace-nowrap">@Value?.Entity</span>
                     <IconButton Size="30" NoBackground="true" HoverColor="status-red"
                                 OnClickMethod="DeleteServer">
-                                <Icon><DeleteIcon Width="24"/></Icon>
+                        <Icon>
+                            <DeleteIcon Width="24"/>
+                        </Icon>
                     </IconButton>
                 </div>
             </div>

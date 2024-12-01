@@ -9,8 +9,10 @@ using ForkFrontend.Model.Enums;
 
 namespace ForkFrontend.Logic.Services.Notifications;
 
-public class NotificationService : INotificationService
+public class NotificationService
 {
+    public delegate void WebsocketStatusChangedHandler(WebsocketStatus newStatus);
+
     private const int BUFFER_SIZE = 2048;
 
     private readonly CancellationTokenSource _cancellationTokenSource;
@@ -39,7 +41,7 @@ public class NotificationService : INotificationService
     }
 
     private List<INotificationHandler> RegisteredHandlers { get; }
-    public event INotificationService.WebsocketStatusChangedHandler? WebsocketStatusChanged;
+    public event WebsocketStatusChangedHandler? WebsocketStatusChanged;
 
     public void Register<T>(Func<T, Task> handler) where T : AbstractNotification
     {

@@ -1,7 +1,7 @@
 ﻿@using ForkCommon.Model.Entity.Transient.Console.Commands
 @using ForkFrontend.Logic.Services.Connections
 @using ForkFrontend.Logic.Services.Managers
-@inject IEntityConnectionService EntityConnection
+@inject EntityConnectionService EntityConnection
 
 <EditForm Model="@InputForm" OnSubmit="OnSubmit">
     <div class="console-in-container clipping flex h-12">

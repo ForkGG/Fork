@@ -5,8 +5,8 @@
 @using ForkFrontend.Logic.Services.Notifications
 @using ForkFrontend.Razor.Components.Shared.Icons
 @inject ILogger<SidebarEntity> Logger
-@inject INotificationService NotificationService
-@inject IEntityConnectionService EntityConnectionService
+@inject NotificationService NotificationService
+@inject EntityConnectionService EntityConnectionService
 
 <ContextMenu Id="@ContextMenuId">
     <ContextMenuItem OnClick="@DeleteEntity" Label="Delete"/>

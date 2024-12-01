@@ -11,9 +11,9 @@ namespace ForkFrontend.Logic.Services.Managers;
 
 public class EntityStateManager
 {
-    private readonly INotificationService _notificationService;
+    private readonly NotificationService _notificationService;
 
-    public EntityStateManager(IEntity entity, INotificationService notificationService)
+    public EntityStateManager(IEntity entity, NotificationService notificationService)
     {
         Entity = entity;
         _notificationService = notificationService;

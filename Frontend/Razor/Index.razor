@@ -1,6 +1,6 @@
 ﻿@page "/"
 @using ForkFrontend.Logic.Services.Managers
-@inject IApplicationStateManager ApplicationState
+@inject ApplicationStateManager ApplicationState
 
 <LoadingOverlay Visible="@ApplicationState.UiLoadingBlocked" TranslationPath="@ApplicationState.UiLoadingTextPath"/>
 <ToastDisplay/>

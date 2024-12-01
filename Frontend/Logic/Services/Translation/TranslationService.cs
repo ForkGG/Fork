@@ -3,13 +3,13 @@ using Newtonsoft.Json;
 
 namespace ForkFrontend.Logic.Services.Translation;
 
-public class DefaultTranslationService : ITranslationService
+public class TranslationService
 {
     private readonly string _language;
-    private readonly ILogger<DefaultTranslationService> _logger;
+    private readonly ILogger<TranslationService> _logger;
     private dynamic? _translationJson;
 
-    public DefaultTranslationService(ILogger<DefaultTranslationService> logger, LocalClient client)
+    public TranslationService(ILogger<TranslationService> logger, LocalClient client)
     {
         _logger = logger;
         //TODO Read language from settings

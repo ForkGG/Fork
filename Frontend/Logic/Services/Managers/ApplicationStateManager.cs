@@ -7,17 +7,23 @@ using ForkFrontend.Model.Enums;
 
 namespace ForkFrontend.Logic.Services.Managers;
 
-public class ApplicationStateManager : IApplicationStateManager
+public class ApplicationStateManager
 {
-    private readonly IApplicationConnectionService _applicationConnection;
+    public delegate void HandleAppStateChanged();
+
+    public delegate void HandleAppStatusChanged();
+
+    public delegate void HandleUiLoadingChanged();
+
+    private readonly ApplicationConnectionService _applicationConnection;
     private readonly ILogger<ApplicationStateManager> _logger;
-    private readonly INotificationService _notificationService;
+    private readonly NotificationService _notificationService;
 
     private bool _isStateReady;
     private WebsocketStatus _websocketStatus = WebsocketStatus.Disconnected;
 
     public ApplicationStateManager(ILogger<ApplicationStateManager> logger,
-        IApplicationConnectionService applicationConnection, INotificationService notificationService)
+        ApplicationConnectionService applicationConnection, NotificationService notificationService)
     {
         _logger = logger;
         _applicationConnection = applicationConnection;
@@ -42,9 +48,6 @@ public class ApplicationStateManager : IApplicationStateManager
 
     public bool UiLoadingBlocked { get; private set; }
     public string? UiLoadingTextPath { get; private set; }
-
-    public event IApplicationStateManager.HandleAppStatusChanged? AppStatusChanged;
-    public event IApplicationStateManager.HandleAppStateChanged? AppStateChanged;
     public bool IsApplicationReady => _isStateReady && WebsocketStatus == WebsocketStatus.Connected;
     public State ApplicationState { get; private set; }
     public string ForkExternalIp { get; private set; }
@@ -79,6 +82,9 @@ public class ApplicationStateManager : IApplicationStateManager
         }
     }
 
+    public event HandleAppStatusChanged? AppStatusChanged;
+    public event HandleAppStateChanged? AppStateChanged;
+
 
     public async Task UpdateState()
     {
@@ -108,7 +114,7 @@ public class ApplicationStateManager : IApplicationStateManager
         return result;
     }
 
-    public event IApplicationStateManager.HandleUiLoadingChanged? UiLoadingChanged;
+    public event HandleUiLoadingChanged? UiLoadingChanged;
 
     private void UpdateEntityManagers()
     {
