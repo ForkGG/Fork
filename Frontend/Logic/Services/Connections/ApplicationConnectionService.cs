@@ -6,7 +6,7 @@ using ForkFrontend.Logic.Services.Managers;
 
 namespace ForkFrontend.Logic.Services.Connections;
 
-public class ApplicationConnectionService : AbstractConnectionService, IApplicationConnectionService
+public class ApplicationConnectionService : AbstractConnectionService
 {
     public ApplicationConnectionService(ILogger<ApplicationConnectionService> logger, BackendClient client,
         ToastManager toastManager) : base(logger, client, toastManager)
