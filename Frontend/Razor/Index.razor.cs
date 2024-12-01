@@ -2,7 +2,6 @@ using ForkCommon.Model.Entity.Pocos;
 using ForkFrontend.Logic.Services.Connections;
 using ForkFrontend.Logic.Services.Managers;
 using ForkFrontend.Logic.Services.Notifications;
-using ForkFrontend.Razor.Components.Screens;
 using ForkFrontend.Razor.Components.Screens.CreateEntity;
 using Microsoft.AspNetCore.Components;
 
@@ -11,8 +10,11 @@ namespace ForkFrontend.Razor;
 // This Page controls the whole entity logic
 public partial class Index : ComponentBase
 {
+    private readonly Dictionary<string, SubScreen> subScreens = new();
+
     // Screens can be shown instead of entities (add entity, Fork settings, ...)
-    private AbstractScreenComponent? _openScreen;
+    private SubScreen? _openScreen;
+
     [Inject] private IApplicationConnectionService ApplicationConnection { get; set; } = default!;
     [Inject] private IApplicationStateManager ApplicationStateManager { get; set; } = default!;
     [Inject] private INotificationService NotificationService { get; set; } = default!;
@@ -21,7 +23,7 @@ public partial class Index : ComponentBase
 
     public void OpenAddEntityScreen()
     {
-        _openScreen = new CreateEntityScreen();
+        _openScreen = subScreens[nameof(CreateEntityScreen)];
         SelectedEntity = null;
         StateHasChanged();
     }
@@ -33,6 +35,7 @@ public partial class Index : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
+        InitSubScreens();
         ApplicationState.AppStatusChanged += StateHasChanged;
         ApplicationState.AppStateChanged += () =>
         {
@@ -57,5 +60,28 @@ public partial class Index : ComponentBase
         _openScreen = null;
         StateHasChanged();
         return Task.CompletedTask;
+    }
+
+    private Task SelectEntityById(ulong id)
+    {
+        SelectedEntity = ApplicationState.ApplicationState.Entities.FirstOrDefault(e => e.Id == id);
+        _openScreen = null;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    private void InitSubScreens()
+    {
+        subScreens.Add(nameof(CreateEntityScreen), new SubScreen
+        {
+            Type = typeof(CreateEntityScreen),
+            Parameters = { [nameof(CreateEntityScreen.SelectEntityById)] = SelectEntityById }
+        });
+    }
+
+    private class SubScreen
+    {
+        public required Type Type { get; set; }
+        public Dictionary<string, object>? Parameters { get; } = new();
     }
 }

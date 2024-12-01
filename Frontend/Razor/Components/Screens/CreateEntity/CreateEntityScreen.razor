@@ -53,13 +53,19 @@
                 </div>
             </div>
 
-            <IconButton Size="45" OnClickMethod="OnCreateEntity"><Icon><CreateIcon Height="24" Width="24"/></Icon></IconButton>
+            <IconButton Size="45" OnClickMethod="OnCreateEntity">
+                <Icon>
+                    <CreateIcon Height="24" Width="24"/>
+                </Icon>
+            </IconButton>
         </div>
     </EditForm>
 </div>
 
 @code {
     [CascadingParameter] Error Error { get; set; } = null!;
+
+    [Parameter] public required Func<ulong, Task> SelectEntityById { get; set; }
 
     private readonly CreateServerPayload _serverPayload = new();
 
@@ -89,6 +95,7 @@
     private async Task OnCreateEntity(IconButton _)
     {
         ulong newEntityId = await ApplicationState.RunWithLoadingText(Error.RunSafe(() => EntityConnection.CreateServerAsync(_serverPayload)), "common.global.loading.creatingEntity");
+        await SelectEntityById(newEntityId);
     }
 
     // TODO CKE make "Values" allow async enumerables properly
