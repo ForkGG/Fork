@@ -15,13 +15,14 @@
 <div @oncontextmenu="OnSelectEntity">
     <ContextMenuTrigger MenuId="@_contextMenuId">
         <div
-            class="@(IsSelected ? "bg-forkBlue-hover text-label-hover" : "text-label hover:text-label-hover") h-20 w-full flex items-center py-3 pl-5 cursor-pointer"
+            class="@(IsSelected ? "bg-forkBlue-hover text-label-hover" : "text-label hover:text-label-hover") h-20 w-full flex items-center py-3 pl-5 gap-3 cursor-pointer"
             @onclick="OnSelectEntity">
             @* Status *@
             <StatusIndicator Status="Value.Entity.Status ?? EntityStatus.Stopped"></StatusIndicator>
             @* Icon TODO CKE *@
-            <ArrowDownIcon Width="28" Height="28"/>
+            <VelocityTypeIcon Width="24" Height="24"/>
             <!--span class="icon px-3 text-2xl">2</!--span-->
+
             @* Content *@
             <div class="flex-1">
                 <p class="text-md">@Value.Entity.Name</p>

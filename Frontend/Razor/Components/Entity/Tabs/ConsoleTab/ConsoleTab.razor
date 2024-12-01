@@ -1,4 +1,5 @@
-﻿@using ForkCommon.Model.Entity.Pocos
+﻿@using ForkCommon.Model.Entity.Enums
+@using ForkCommon.Model.Entity.Pocos
 @using ForkCommon.Model.Notifications.EntityNotifications
 @using ForkFrontend.Logic.Services.Managers
 @inherits EntityTab
@@ -18,7 +19,7 @@
             @* Server Type *@
             <div class="flex h-full gap-2 text-sm ml-6">
                 <span class="">Type: </span>
-                <span class="monospace">Paper</span>
+                <span class="monospace">@EntityState?.Entity.Version?.Type</span>
             </div>
 
             @* Server Type *@
@@ -44,7 +45,7 @@
     </div>
 
     @* Hardware Stats *@
-    <div class="flex flex-col gap-4 overflow-auto scroll-hidden mt-7 items-center">
+    <div class="flex flex-col gap-4 overflow-auto scroll-hidden mt-7 items-center @(EntityState?.Entity.Status == EntityStatus.Stopped ? "opacity-20" : "")">
 
         <div class="flex flex-col w-24 items-center">
             <div class="flex items-center justify-center w-full bg-gradient-to-t from-percentage-p@(Math.Min(CpuPercentage - CpuPercentage % 10, 100))/10 to-percentage-p10/0 p-3 text-percentage-p@(Math.Min(CpuPercentage - CpuPercentage % 10, 100))">
