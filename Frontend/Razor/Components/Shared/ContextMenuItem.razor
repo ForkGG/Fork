@@ -1,5 +1,13 @@
-<Item>@ChildContent</Item>
+@using ForkFrontend.Razor.Components.Shared.Icons
+<Item OnClick="OnClick">
+    <div class="flex justify-between">
+        <p>@Label</p>
+        @Icon
+    </div>
+</Item>
 
 @code {
-    [Parameter] public required RenderFragment ChildContent { get; set; }
+    [Parameter] public EventCallback<ItemClickEventArgs> OnClick { get; set; }
+    [Parameter] public AbstractIcon? Icon { get; set; }
+    [Parameter] [EditorRequired] public required string Label { get; set; }
 }

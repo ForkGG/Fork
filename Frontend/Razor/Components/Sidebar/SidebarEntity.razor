@@ -1,47 +1,52 @@
 ﻿@using ForkCommon.Model.Entity.Enums
 @using ForkCommon.Model.Entity.Pocos
+@using ForkFrontend.Logic.Services.Connections
 @using ForkFrontend.Logic.Services.Managers
 @using ForkFrontend.Logic.Services.Notifications
 @using ForkFrontend.Razor.Components.Shared.Icons
 @inject ILogger<SidebarEntity> Logger
 @inject INotificationService NotificationService
+@inject IEntityConnectionService EntityConnectionService
 
-<ContextMenu Id="contextMenu">
-    <ContextMenuItem>test</ContextMenuItem>
+<ContextMenu Id="@_contextMenuId">
+    <ContextMenuItem OnClick="@DeleteEntity" Label="Delete"/>
 </ContextMenu>
 
 <div @oncontextmenu="OnSelectEntity">
-    <ContextMenuTrigger MenuId="contextMenu">
+    <ContextMenuTrigger MenuId="@_contextMenuId">
         <div
             class="@(IsSelected ? "bg-forkBlue-hover text-label-hover" : "text-label hover:text-label-hover") h-20 w-full flex items-center py-3 pl-5 cursor-pointer"
             @onclick="OnSelectEntity">
             @* Status *@
-            <StatusIndicator Status="Value!.Entity.Status ?? EntityStatus.Stopped"></StatusIndicator>
+            <StatusIndicator Status="Value.Entity.Status ?? EntityStatus.Stopped"></StatusIndicator>
             @* Icon TODO CKE *@
             <ArrowDownIcon Width="28" Height="28"/>
             <!--span class="icon px-3 text-2xl">2</!--span-->
             @* Content *@
             <div class="flex-1">
-                <p class="text-md">@Value?.Entity.Name</p>
-                @if (Value?.Entity is Server server)
+                <p class="text-md">@Value.Entity.Name</p>
+                @if (Value.Entity is Server server)
                 {
                     <p class="text-sm">@(server.ServerPlayers.Count(p => p.IsOnline)) / @(server.VanillaSettings?.MaxPlayers ?? 0)</p>
                 }
             </div>
             @* Selected Indicator *@
             <SelectedIndicatorVertical IsVisible="IsSelected" ParentHeight="72"
-                                       NegativeYMargins="3"></SelectedIndicatorVertical>
+                                       NegativeYMargins="3">
+            </SelectedIndicatorVertical>
         </div>
     </ContextMenuTrigger>
 </div>
 
 @code {
 
-    [Parameter] [EditorRequired] public EntityStateManager? Value { get; set; }
+    [Parameter] [EditorRequired] public required EntityStateManager Value { get; set; }
 
-    [Parameter] [EditorRequired] public EventCallback<IEntity> OnClickCallback { get; set; }
+    [Parameter] [EditorRequired] public required EventCallback<IEntity> OnClickCallback { get; set; }
 
     [Parameter] public bool IsSelected { get; set; }
+
+    private string _contextMenuId => $"contextMenu-{Value.Entity.Id}";
 
     protected override Task OnInitializedAsync()
     {
@@ -64,6 +69,11 @@
         {
             await OnClickCallback.InvokeAsync(Value?.Entity);
         }
+    }
+
+    private async Task DeleteEntity(ItemClickEventArgs e)
+    {
+        await EntityConnectionService.DeleteEntityAsync(Value.Entity.Id);
     }
 
 }
