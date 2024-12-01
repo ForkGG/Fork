@@ -1,5 +1,6 @@
 ﻿using ForkCommon.Model.Application;
 using ForkCommon.Model.Entity.Pocos;
+using ForkCommon.Model.Notifications.EntityNotifications;
 using ForkFrontend.Logic.Services.Connections;
 using ForkFrontend.Logic.Services.Notifications;
 using ForkFrontend.Model.Enums;
@@ -30,6 +31,13 @@ public class ApplicationStateManager : IApplicationStateManager
             WebsocketStatus = newStatus;
             await UpdateState();
         };
+        _notificationService.Register<EntityListUpdatedNotification>(notification =>
+        {
+            ApplicationState.Entities = notification.Entities;
+            UpdateEntityManagers();
+            AppStateChanged?.Invoke();
+            return Task.CompletedTask;
+        });
     }
 
     public event IApplicationStateManager.HandleAppStatusChanged? AppStatusChanged;
@@ -83,7 +91,9 @@ public class ApplicationStateManager : IApplicationStateManager
 
     private void UpdateEntityManagers()
     {
-        // TODO CKE do we need to remove some here? Thinking of including multiple States we might not
+        HashSet<ulong> entityIds = ApplicationState.Entities.Select(entity => entity.Id).ToHashSet();
+        foreach (ulong idToRemove in EntityStateManagersById.Keys.Where(k => !entityIds.Contains(k)).ToList())
+            EntityStateManagersById.Remove(idToRemove);
 
         foreach (IEntity entity in ApplicationState.Entities)
             if (EntityStateManagersById.ContainsKey(entity.Id))

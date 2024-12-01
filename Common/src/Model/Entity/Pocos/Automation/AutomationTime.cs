@@ -1,4 +1,5 @@
 ﻿using ForkCommon.Model.Entity.Enums;
+using Newtonsoft.Json;
 
 namespace ForkCommon.Model.Entity.Pocos.Automation;
 
@@ -13,5 +14,5 @@ public class AutomationTime
     public SimpleTime? Time { get; set; }
 
     public ulong ServerId { get; set; }
-    public Server? Server { get; set; }
+    [JsonIgnore] public Server? Server { get; set; }
 }

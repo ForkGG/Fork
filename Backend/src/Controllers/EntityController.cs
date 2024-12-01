@@ -41,9 +41,15 @@ public class EntityController : AbstractRestController
     public async Task<ulong> CreateServer([FromBody] CreateServerPayload abstractPayload)
     {
         //TODO CKE validation
-        return await _serverService.CreateServerAsync(abstractPayload.ServerName, abstractPayload.ServerVersion,
+        ulong result = await _serverService.CreateServerAsync(abstractPayload.ServerName, abstractPayload.ServerVersion,
             abstractPayload.VanillaSettings,
             abstractPayload.JavaSettings, abstractPayload.WorldPath);
+        if (result != 0)
+        {
+            await _entityService.UpdateEntityListAsync();
+        }
+
+        return result;
     }
 
     [HttpPost("{entityId}/delete")]
@@ -57,6 +63,7 @@ public class EntityController : AbstractRestController
         }
 
         await _entityService.DeleteEntityAsync(entity);
+        await _entityService.UpdateEntityListAsync();
         return Ok();
     }
 

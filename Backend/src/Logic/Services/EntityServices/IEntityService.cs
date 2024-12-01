@@ -12,4 +12,5 @@ public interface IEntityService
     public Task RestartEntityAsync(IEntity entity);
 
     public Task ChangeEntityStatusAsync(IEntity entity, EntityStatus newStatus);
+    public Task UpdateEntityListAsync();
 }
