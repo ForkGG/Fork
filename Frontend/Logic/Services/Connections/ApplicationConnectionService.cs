@@ -2,14 +2,14 @@
 using ForkCommon.Model.Application;
 using ForkCommon.Model.Application.Exceptions;
 using ForkFrontend.Logic.Services.HttpsClients;
+using ForkFrontend.Logic.Services.Managers;
 
 namespace ForkFrontend.Logic.Services.Connections;
 
 public class ApplicationConnectionService : AbstractConnectionService, IApplicationConnectionService
 {
-    public ApplicationConnectionService(ILogger<ApplicationConnectionService> logger, BackendClient client) : base(
-        logger,
-        client)
+    public ApplicationConnectionService(ILogger<ApplicationConnectionService> logger, BackendClient client,
+        ToastManager toastManager) : base(logger, client, toastManager)
     {
     }
 
@@ -19,9 +19,9 @@ public class ApplicationConnectionService : AbstractConnectionService, IApplicat
     /// </summary>
     public async Task<State> GetApplicationState()
     {
-        _logger.LogDebug("Loading main state");
+        Logger.LogDebug("Loading main state");
         // TODO make this generic
-        HttpResponseMessage responseMessage = await _client.GetAsync("/v1/application/state");
+        HttpResponseMessage responseMessage = await Client.GetAsync("/v1/application/state");
         string message = await responseMessage.Content.ReadAsStringAsync();
         try
         {
@@ -41,8 +41,8 @@ public class ApplicationConnectionService : AbstractConnectionService, IApplicat
 
     public async Task<string> GetIpAddress()
     {
-        _logger.LogDebug("Getting servers external Ip address");
-        HttpResponseMessage responseMessage = await _client.GetAsync("/v1/application/ip");
+        Logger.LogDebug("Getting servers external Ip address");
+        HttpResponseMessage responseMessage = await Client.GetAsync("/v1/application/ip");
         return await responseMessage.Content.ReadAsStringAsync();
     }
 }

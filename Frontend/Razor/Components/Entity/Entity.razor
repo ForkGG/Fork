@@ -17,17 +17,21 @@
                     <div class="flex gap-2 p-1">
                         <IconButton @ref="_startButton" IsDisabled="Value?.Entity.Status != EntityStatus.Stopped"
                                     Size="25" IconSize="11" IconChar="'s'" HoverColor="status-green"
-                                    OnClickMethod="StartServer"></IconButton>
+                                    OnClickMethod="StartServer">
+                        </IconButton>
                         <IconButton @ref="_stopButton" IsDisabled="Value?.Entity.Status != EntityStatus.Started"
                                     Size="25" IconSize="9" IconChar="'h'" HoverColor="status-red"
-                                    OnClickMethod="StopServer"></IconButton>
+                                    OnClickMethod="StopServer">
+                        </IconButton>
                         <IconButton @ref="_restartButton" IsDisabled="Value?.Entity.Status != EntityStatus.Started"
                                     Size="25" IconSize="13" IconChar="'r'" HoverColor="status-orange"
-                                    OnClickMethod="RestartServer"></IconButton>
+                                    OnClickMethod="RestartServer">
+                        </IconButton>
                     </div>
                     <span class="font-bold text-md text-new-offwhite whitespace-nowrap">@Value?.Entity</span>
                     <IconButton Size="30" NoBackground="true" IconChar="'D'" IconSize="19" HoverColor="status-red"
-                                OnClickMethod="DeleteServer"></IconButton>
+                                OnClickMethod="DeleteServer">
+                    </IconButton>
                 </div>
             </div>
             <div class="flex h-full">
@@ -134,7 +138,7 @@
     {
         try
         {
-            await EntityConnection.DeleteEntityAsync(Value!.Entity.Id);
+            await EntityConnection.DeleteEntityAsync(Value!.Entity);
         }
         catch (Exception e)
         {

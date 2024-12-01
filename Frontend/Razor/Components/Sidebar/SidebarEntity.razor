@@ -73,7 +73,7 @@
 
     private async Task DeleteEntity(ItemClickEventArgs e)
     {
-        await EntityConnectionService.DeleteEntityAsync(Value.Entity.Id);
+        await EntityConnectionService.DeleteEntityAsync(Value.Entity);
     }
 
 }

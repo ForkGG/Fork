@@ -1,7 +1,9 @@
-﻿using ForkCommon.Model.Entity.Transient.Console;
+﻿using ForkCommon.Model.Entity.Pocos;
+using ForkCommon.Model.Entity.Transient.Console;
 using ForkCommon.Model.Entity.Transient.Console.Commands;
 using ForkCommon.Model.Payloads.Entity;
 using ForkFrontend.Logic.Services.HttpsClients;
+using ForkFrontend.Logic.Services.Managers;
 
 namespace ForkFrontend.Logic.Services.Connections;
 
@@ -9,7 +11,8 @@ public class EntityConnectionService : AbstractConnectionService, IEntityConnect
 {
     private const string URL_BASE = $"/{ApiVersion}/entity";
 
-    public EntityConnectionService(ILogger<EntityConnectionService> logger, BackendClient client) : base(logger, client)
+    public EntityConnectionService(ILogger<EntityConnectionService> logger, BackendClient client,
+        ToastManager toastManager) : base(logger, client, toastManager)
     {
     }
 
@@ -27,7 +30,7 @@ public class EntityConnectionService : AbstractConnectionService, IEntityConnect
         catch (Exception e)
         {
             //TODO properly display errors
-            _logger.LogError(e, "Error while getting Console Output");
+            Logger.LogError(e, "Error while getting Console Output");
         }
 
         return new List<ConsoleMessage>();
@@ -44,7 +47,7 @@ public class EntityConnectionService : AbstractConnectionService, IEntityConnect
         catch (Exception e)
         {
             //TODO properly display errors
-            _logger.LogError(e, "Error while sending Console Input");
+            Logger.LogError(e, "Error while sending Console Input");
             return false;
         }
     }
@@ -52,12 +55,15 @@ public class EntityConnectionService : AbstractConnectionService, IEntityConnect
     public async Task<ulong> CreateServerAsync(CreateServerPayload createServerPayload)
     {
         HttpResponseMessage response = await PostAsJsonAsync($"{URL_BASE}/createserver", createServerPayload);
+        await ShowSuccessToast($"Created {createServerPayload.ServerName}");
         return ulong.Parse(await response.Content.ReadAsStringAsync());
     }
 
-    public async Task<bool> DeleteEntityAsync(ulong entityId)
+    public async Task<bool> DeleteEntityAsync(IEntity entity)
     {
-        HttpResponseMessage response = await PostAsJsonAsync($"{URL_BASE}/{entityId}/delete");
+        HttpResponseMessage response = await PostAsJsonAsync($"{URL_BASE}/{entity.Id}/delete");
+        await ShowSuccessOrErrorToast(response.IsSuccessStatusCode, $"Deleted {entity.ToString()}",
+            $"Failed to delete {entity.ToString()}");
         return response.IsSuccessStatusCode;
     }
 
