@@ -27,6 +27,7 @@ builder.Services.AddSingleton<ITranslationService, DefaultTranslationService>();
 builder.Services.AddSingleton<INotificationService, NotificationService>();
 
 builder.Services.AddSingleton<IApplicationStateManager, ApplicationStateManager>();
+builder.Services.AddSingleton<ToastManager>();
 
 
 await builder.Build().RunAsync();

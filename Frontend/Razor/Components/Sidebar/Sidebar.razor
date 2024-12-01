@@ -4,9 +4,12 @@
 @using ForkCommon.Model.Payloads.Entity
 @using ForkFrontend.Logic.Services.Connections
 @using ForkFrontend.Logic.Services.Managers
+@using ForkFrontend.Model
+@using ForkFrontend.Model.Enums
 @using Index = Index
 @inject ILogger<Sidebar> Logger
 @inject IEntityConnectionService EntityConnection
+@inject ToastManager ToastManager
 
 
 <div class="w-64 flex flex-col text-label">
@@ -20,7 +23,8 @@
                 @foreach (KeyValuePair<ulong, EntityStateManager> entityManager in EntityManagers)
                 {
                     <SidebarEntity Value="@entityManager.Value" OnClickCallback="OnSelectEntity"
-                                   IsSelected="@(SelectedEntity?.Id == entityManager.Key)"></SidebarEntity>
+                                   IsSelected="@(SelectedEntity?.Id == entityManager.Key)">
+                    </SidebarEntity>
                 }
             }
         </div>
@@ -41,7 +45,7 @@
         @* TODO only show if update privilege is granted *@
         @if (true)
         {
-            <IconButton IconChar="'r'" IconSize="18" NoBackground="true" OnClickMethod="TestClickHandler"></IconButton>
+            <IconButton IconChar="'r'" IconSize="18" NoBackground="true" OnClickMethod="CheckForUpdate"></IconButton>
         }
     </div>
 </div>
@@ -58,8 +62,11 @@
     [CascadingParameter(Name = nameof(SelectedEntity))]
     public IEntity? SelectedEntity { get; set; }
 
-    private void TestClickHandler(IconButton button)
+    private int _counter = 0;
+
+    private async Task CheckForUpdate(IconButton button)
     {
+        await ToastManager.AddToast(new Toast(ToastLevel.Warning, $"Not implemented yet! ({_counter++})", TimeSpan.FromSeconds(5)));
         Console.WriteLine(button.IconChar);
     }
 

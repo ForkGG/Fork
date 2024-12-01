@@ -1,0 +1,58 @@
+﻿.toast-element {
+    position: relative;
+}
+
+.toast-element.added {
+    -webkit-animation: fadeIn 500ms;
+    animation: fadein 500ms
+}
+
+.toast-element.removed {
+    -webkit-animation: fadeout 500ms;
+    animation: fadeout 500ms;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+    from {
+        right: -100px;
+        opacity: 0;
+    }
+    to {
+        right: 0;
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    from {
+        right: -100px;
+        opacity: 0;
+    }
+    to {
+        right: 0;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeout {
+    from {
+        right: 0;
+        opacity: 1;
+    }
+    to {
+        right: -100px;
+        opacity: 0;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        right: 0;
+        opacity: 1;
+    }
+    to {
+        right: -100px;
+        opacity: 0;
+    }
+}

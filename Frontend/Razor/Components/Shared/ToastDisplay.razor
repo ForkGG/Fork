@@ -1,0 +1,119 @@
+﻿@using ForkFrontend.Logic.Services.Managers
+@using ForkFrontend.Model
+@using ForkFrontend.Model.Enums
+@implements IDisposable
+@inject ToastManager ToastManager
+
+<div class="fixed bottom-0 right-0 z-50">
+    @foreach (Toast toast in _displayedToasts)
+    {
+        <div class="m-3 p-1 toast-element @ClassNameForDisplayStatus(_displayedToastRemovedByStatus[toast]) @ToastClasses(toast)">
+            @toast.Text
+        </div>
+    }
+</div>
+
+@code {
+
+    private enum DisplayStatus
+    {
+        Added,
+        Display,
+        Removed
+    }
+
+    private string ClassNameForDisplayStatus(DisplayStatus status)
+    {
+        return status switch
+        {
+            DisplayStatus.Added => " added",
+            DisplayStatus.Display => "",
+            DisplayStatus.Removed => " removed",
+            _ => ""
+        };
+    }
+
+    private string ToastClasses(Toast toast)
+    {
+        return toast.Level switch
+        {
+            // TODO Newt adjust to your liking using tailwind.config.js
+            ToastLevel.Success => " bg-status-green",
+            ToastLevel.Info => " bg-status-green",
+            ToastLevel.Warning => " bg-status-orange",
+            ToastLevel.Error => " bg-status-red",
+            _ => ""
+        };
+    }
+
+    private readonly Dictionary<Toast, DisplayStatus> _displayedToastRemovedByStatus = new();
+    private readonly List<Toast> _displayedToasts = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ToastManager.ToastsUpdated += UpdateToasts;
+    }
+
+    private void UpdateToasts()
+    {
+        Func<Task> func = async () =>
+        {
+            bool anyAdded = false;
+            foreach (Toast toast in ToastManager.Toasts)
+            {
+                if (!_displayedToasts.Contains(toast))
+                {
+                    _displayedToastRemovedByStatus.Add(toast, DisplayStatus.Added);
+                    _displayedToasts.Add(toast);
+                    anyAdded = true;
+                }
+            }
+
+            StateHasChanged();
+
+            if (anyAdded)
+            {
+                await Task.Delay(450);
+                foreach (Toast finishedAdding in _displayedToastRemovedByStatus.Where(entry => entry.Value == DisplayStatus.Added).ToDictionary().Keys)
+                {
+                    _displayedToastRemovedByStatus[finishedAdding] = DisplayStatus.Display;
+                }
+
+                StateHasChanged();
+            }
+
+            bool anyRemoved = false;
+            foreach (Toast toast in _displayedToastRemovedByStatus.Keys)
+            {
+                if (!ToastManager.Toasts.Contains(toast))
+                {
+                    // Toast removed -> remove it with animation
+                    _displayedToastRemovedByStatus[toast] = DisplayStatus.Removed;
+                    anyRemoved = true;
+                }
+            }
+
+            StateHasChanged();
+
+            if (anyRemoved)
+            {
+                await Task.Delay(450);
+                foreach (Toast toRemove in _displayedToastRemovedByStatus.Where(entry => entry.Value == DisplayStatus.Removed).ToDictionary().Keys)
+                {
+                    _displayedToastRemovedByStatus.Remove(toRemove);
+                    _displayedToasts.Remove(toRemove);
+                }
+
+                StateHasChanged();
+            }
+        };
+        func();
+    }
+
+    public void Dispose()
+    {
+        ToastManager.ToastsUpdated -= UpdateToasts;
+    }
+
+}
