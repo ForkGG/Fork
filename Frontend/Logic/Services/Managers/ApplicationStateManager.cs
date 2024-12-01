@@ -40,6 +40,9 @@ public class ApplicationStateManager : IApplicationStateManager
         });
     }
 
+    public bool UiLoadingBlocked { get; private set; }
+    public string? UiLoadingTextPath { get; private set; }
+
     public event IApplicationStateManager.HandleAppStatusChanged? AppStatusChanged;
     public event IApplicationStateManager.HandleAppStateChanged? AppStateChanged;
     public bool IsApplicationReady => _isStateReady && WebsocketStatus == WebsocketStatus.Connected;
@@ -88,6 +91,24 @@ public class ApplicationStateManager : IApplicationStateManager
         AppStatusChanged?.Invoke();
         AppStateChanged?.Invoke();
     }
+
+    public async Task<T> RunWithLoadingText<T>(Task<T> task)
+    {
+        return await RunWithLoadingText(task, "common.global.loading.default");
+    }
+
+    public async Task<T> RunWithLoadingText<T>(Task<T> task, string? textPath)
+    {
+        UiLoadingBlocked = true;
+        UiLoadingTextPath = textPath;
+        UiLoadingChanged?.Invoke();
+        T result = await task;
+        UiLoadingBlocked = false;
+        UiLoadingChanged?.Invoke();
+        return result;
+    }
+
+    public event IApplicationStateManager.HandleUiLoadingChanged? UiLoadingChanged;
 
     private void UpdateEntityManagers()
     {

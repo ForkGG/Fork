@@ -1,0 +1,14 @@
+﻿@if (Visible)
+{
+    <div class="fixed z-50 h-screen w-screen opacity-80 bg-new-black">
+        <div class="flex flex-col justify-center items-center w-full h-full">
+            <img style="width: 58px; height: 61px" alt="Loading animation" src="resources/img/loading.gif"/>
+            <Translated Path="@TranslationPath"/>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] [EditorRequired] public required bool Visible { get; set; }
+    [Parameter] public string TranslationPath { get; set; } = "common.global.loading.default";
+}

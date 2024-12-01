@@ -4,7 +4,7 @@
 @implements IDisposable
 @inject ToastManager ToastManager
 
-<div class="fixed bottom-0 right-0 z-50">
+<div class="fixed bottom-0 right-0 z-30">
     @foreach (Toast toast in _displayedToasts)
     {
         <div class="flex gap-3 m-3 px-3 py-2 items-center toast-element bg-opacity-10  @ClassNameForDisplayStatus(_displayedToastRemovedByStatus[toast]) @ToastClasses(toast)">

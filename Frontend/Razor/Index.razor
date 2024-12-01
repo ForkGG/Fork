@@ -2,6 +2,7 @@
 @using ForkFrontend.Logic.Services.Managers
 @inject IApplicationStateManager ApplicationState
 
+<LoadingOverlay Visible="@ApplicationState.UiLoadingBlocked" TranslationPath="@ApplicationState.UiLoadingTextPath"/>
 <ToastDisplay/>
 <div class="flex flex-1">
     @if (ApplicationState.IsApplicationReady)
@@ -52,3 +53,12 @@
     }
 
 </div>
+
+@code
+{
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ApplicationState.UiLoadingChanged += StateHasChanged;
+    }
+}

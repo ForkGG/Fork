@@ -55,14 +55,14 @@ public class EntityConnectionService : AbstractConnectionService, IEntityConnect
     public async Task<ulong> CreateServerAsync(CreateServerPayload createServerPayload)
     {
         HttpResponseMessage response = await PostAsJsonAsync($"{URL_BASE}/createserver", createServerPayload);
-        await ShowSuccessToast($"Created {createServerPayload.ServerName}");
+        ShowSuccessToast($"Created {createServerPayload.ServerName}");
         return ulong.Parse(await response.Content.ReadAsStringAsync());
     }
 
     public async Task<bool> DeleteEntityAsync(IEntity entity)
     {
         HttpResponseMessage response = await PostAsJsonAsync($"{URL_BASE}/{entity.Id}/delete");
-        await ShowSuccessOrErrorToast(response.IsSuccessStatusCode, $"Deleted {entity.ToString()}",
+        ShowSuccessOrErrorToast(response.IsSuccessStatusCode, $"Deleted {entity.ToString()}",
             $"Failed to delete {entity.ToString()}");
         return response.IsSuccessStatusCode;
     }

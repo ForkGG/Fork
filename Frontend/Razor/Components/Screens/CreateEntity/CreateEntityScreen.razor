@@ -2,11 +2,13 @@
 @using ForkCommon.Model.Entity.Pocos
 @using ForkCommon.Model.Payloads.Entity
 @using ForkFrontend.Logic.Services.Connections
+@using ForkFrontend.Logic.Services.Managers
 @using ForkFrontend.Model.Enums
 @using ForkFrontend.Model.Forms
 @inherits AbstractScreenComponent
 
 @inject IEntityConnectionService EntityConnection;
+@inject IApplicationStateManager ApplicationState;
 
 <div class="flex flex-col h-full">
 
@@ -35,7 +37,8 @@
                 <div class="flex gap-8">
                     <ForkText Name="ServerName" @bind-Value="_serverPayload.ServerName" Label="Server Name"></ForkText>
                     <ForkText Name="ServerName" @bind-Value="_serverPayload.VanillaSettings.LevelName"
-                              Label="World Name"></ForkText>
+                              Label="World Name">
+                    </ForkText>
                 </div>
                 <div class="flex gap-8">
                     <ForkSelect Name="Gamemode" @bind-Value="_serverPayload.VanillaSettings.CurrGamemode"
@@ -84,7 +87,7 @@
 
     private async Task OnCreateEntity(IconButton _)
     {
-        ulong newEntityId = await Error.RunSafe(() => EntityConnection.CreateServerAsync(_serverPayload));
+        ulong newEntityId = await ApplicationState.RunWithLoadingText(Error.RunSafe(() => EntityConnection.CreateServerAsync(_serverPayload)), "common.global.loading.creatingEntity");
     }
 
     // TODO CKE make "Values" allow async enumerables properly
