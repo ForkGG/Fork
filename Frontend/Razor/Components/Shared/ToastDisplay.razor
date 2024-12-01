@@ -7,8 +7,17 @@
 <div class="fixed bottom-0 right-0 z-50">
     @foreach (Toast toast in _displayedToasts)
     {
-        <div class="m-3 p-1 toast-element @ClassNameForDisplayStatus(_displayedToastRemovedByStatus[toast]) @ToastClasses(toast)">
-            @toast.Text
+        <div class="flex gap-3 m-3 px-3 py-2 items-center toast-element bg-opacity-10  @ClassNameForDisplayStatus(_displayedToastRemovedByStatus[toast]) @ToastClasses(toast)">
+
+            @* TODO CKE: Make the icons change according to Toast Level*@
+            <ForkFrontend.Razor.Components.Shared.Icons.WarningIcon Height="24" Width="24"></ForkFrontend.Razor.Components.Shared.Icons.WarningIcon>
+
+            <p class="font-bold">
+                @toast.Level:
+                <span class="font-normal">
+                    @toast.Text
+                </span>
+            </p>
         </div>
     }
 </div>
@@ -38,10 +47,10 @@
         return toast.Level switch
         {
             // TODO Newt adjust to your liking using tailwind.config.js
-            ToastLevel.Success => " bg-status-green",
-            ToastLevel.Info => " bg-status-green",
-            ToastLevel.Warning => " bg-status-orange",
-            ToastLevel.Error => " bg-status-red",
+            ToastLevel.Success => " bg-status-green text-status-green",
+            ToastLevel.Info => " bg-forkBlue-highlighted text-forkBlue-highlighted",
+            ToastLevel.Warning => " bg-status-orange text-status-orange",
+            ToastLevel.Error => " bg-status-red text-status-red",
             _ => ""
         };
     }
