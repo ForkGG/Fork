@@ -23,6 +23,7 @@ builder.Services.AddHttpClient<LocalClient>(client =>
 // All services are singletons so it's easier to use them and the whole Blazor App is one scope anyway
 builder.Services.AddSingleton<ApplicationConnectionService>();
 builder.Services.AddSingleton<EntityConnectionService>();
+builder.Services.AddSingleton<CreateEntityConnectionService>();
 builder.Services.AddSingleton<TranslationService>();
 builder.Services.AddSingleton<NotificationService>();
 

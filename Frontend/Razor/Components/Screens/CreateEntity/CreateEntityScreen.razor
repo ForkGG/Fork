@@ -1,4 +1,5 @@
-﻿@using ForkCommon.Model.Entity.Enums
+﻿@using ForkCommon.Model.Application.Exceptions
+@using ForkCommon.Model.Entity.Enums
 @using ForkCommon.Model.Entity.Pocos
 @using ForkCommon.Model.Payloads.Entity
 @using ForkFrontend.Logic.Services.Connections
@@ -10,6 +11,7 @@
 
 @inject EntityConnectionService EntityConnection;
 @inject ApplicationStateManager ApplicationState;
+@inject CreateEntityConnectionService CreateEntityConnection;
 
 <div class="flex flex-col h-full">
 
@@ -69,27 +71,27 @@
 
     private readonly CreateServerPayload _serverPayload = new();
 
-    private List<ForkFormEntity<ServerVersion, string>> Versions { get; set; } = new();
-    private VersionType _selectedVersionType = VersionType.Vanilla;
+    private List<ForkFormEntity<ServerVersion, string>>? Versions { get; set; } = new();
+    private VersionType? _selectedVersionType;
 
     private VersionType SelectedVersionType
     {
-        get => _selectedVersionType;
+        get => _selectedVersionType ?? VersionType.Vanilla;
         set
         {
             _selectedVersionType = value;
-            Versions = GetAvailableVersions(value);
-            _serverPayload.ServerVersion = Versions.First().ModelValue;
+            SetVersionsForType(value);
         }
     }
 
-    private List<ForkFormEntity<VersionType, string>> AvailableVersionTypes => GetAvailableVersionTypes();
+    private List<ForkFormEntity<VersionType, string>>? AvailableVersionTypes { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        Versions = GetAvailableVersions(_selectedVersionType);
-        _serverPayload.ServerVersion = Versions.First().ModelValue;
+        AvailableVersionTypes = await GetAvailableVersionTypes();
+        _selectedVersionType = AvailableVersionTypes.First().ModelValue;
+        Versions = await GetAvailableVersions(_selectedVersionType.Value);
     }
 
     private async Task OnCreateEntity(IconButton _)
@@ -98,38 +100,55 @@
         await SelectEntityById(newEntityId);
     }
 
+    private readonly Dictionary<VersionType, List<ServerVersion>> _cachedVersions = new();
+
     // TODO CKE make "Values" allow async enumerables properly
-    private List<ForkFormEntity<ServerVersion, string>> GetAvailableVersions(VersionType versionType)
+    // TODO CKE reload versions button (force reload from mojang,... server)
+    private async Task<List<ForkFormEntity<ServerVersion, string>>> GetAvailableVersions(VersionType versionType)
     {
-        //TODO CKE implement
-        List<ForkFormEntity<ServerVersion, string>> result = new();
-        ServerVersion version1 = new()
+        if (!_cachedVersions.ContainsKey(versionType))
         {
-            Id = 0,
-            Type = versionType,
-            Version = "1.10.2",
-            JarLink = "https://piston-data.mojang.com/v1/objects/15c777e2cfe0556eef19aab534b186c0c6f277e1/server.jar"
-        };
-        result.Add(new ForkFormEntity<ServerVersion, string>(version1, version1.Version));
-        ServerVersion version2 = new()
-        {
-            Id = 0,
-            Type = versionType,
-            Version = "1.10.1",
-            JarLink = "https://piston-data.mojang.com/v1/objects/15c777e2cfe0556eef19aab534b186c0c6f277e1/server.jar"
-        };
-        result.Add(new ForkFormEntity<ServerVersion, string>(version2, version2.Version));
-        return result;
+            List<ServerVersion>? versions = await CreateEntityConnection.GetServerVersionsForType(versionType);
+            if (versions == null)
+            {
+                throw new ForkException($"Failed to load available server versions for type {versionType}! Restart Fork and/or try again in a few minutes");
+            }
+
+            _cachedVersions[versionType] = versions;
+        }
+
+        return MapVersionsToFormEntities(_cachedVersions[versionType]);
     }
 
-    private List<ForkFormEntity<VersionType, string>> GetAvailableVersionTypes()
+    private void SetVersionsForType(VersionType type)
     {
-        List<ForkFormEntity<VersionType, string>> result = new()
+        Versions = null;
+        Func<Task> task = async () =>
         {
-            new ForkFormEntity<VersionType, string>(VersionType.Vanilla, "Vanilla"),
-            new ForkFormEntity<VersionType, string>(VersionType.Paper, "Paper")
+            Versions = await GetAvailableVersions(type);
+            _serverPayload.ServerVersion = Versions.First().ModelValue;
+            StateHasChanged();
         };
-        return result;
+        task();
+    }
+
+    private List<ForkFormEntity<ServerVersion, string>> MapVersionsToFormEntities(List<ServerVersion> versions)
+    {
+        return versions
+            .Where(version => version.Version != null)
+            .Select(version => new ForkFormEntity<ServerVersion, string>(version, version.Version!))
+            .ToList();
+    }
+
+    private async Task<List<ForkFormEntity<VersionType, string>>> GetAvailableVersionTypes()
+    {
+        List<VersionType>? versionTypes = await CreateEntityConnection.GetAvailableVersionTypes();
+        if (versionTypes == null)
+        {
+            throw new ForkException("Failed to load available server version types! Restart Fork and/or try again in a few minutes");
+        }
+
+        return versionTypes.Select(versionType => new ForkFormEntity<VersionType, string>(versionType, versionType.ToString())).ToList();
     }
 
     private List<ForkFormEntity<Gamemode, string>> GetAvailableGameModes()

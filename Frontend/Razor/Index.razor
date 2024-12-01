@@ -17,15 +17,14 @@
             <div class="flex-1">
                 @if (_openScreen != null)
                 {
-                    <ErrorBoundary>
+                    <ForkErrorBoundary>
                         <ChildContent>
                             <DynamicComponent Type="_openScreen.Type" Parameters="_openScreen.Parameters"/>
                         </ChildContent>
                         <ErrorContent>
                             <div>Error Content</div>
-                            <DynamicComponent Type="_openScreen.Type" Parameters="_openScreen.Parameters"/>
                         </ErrorContent>
-                    </ErrorBoundary>
+                    </ForkErrorBoundary>
                 }
                 @if (ApplicationState.EntityStateManagersById.Count > 0)
                 {
