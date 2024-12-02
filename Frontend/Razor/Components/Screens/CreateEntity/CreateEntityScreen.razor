@@ -6,7 +6,6 @@
 @using ForkFrontend.Logic.Services.Managers
 @using ForkFrontend.Model.Enums
 @using ForkFrontend.Model.Forms
-@using ForkFrontend.Razor.Components.Shared.Icons
 @inherits AbstractScreenComponent
 
 @inject EntityConnectionService EntityConnection;
@@ -22,40 +21,45 @@
             <div class="px-4 pb-10">
                 <div>
                     <ForkRadio Name="ServerType" @bind-Value="SelectedVersionType" TModelValue="VersionType"
-                               Values="AvailableVersionTypes" RadioType="RadioType.ButtonRow" Label="Server Type">
+                               Values="AvailableVersionTypes" RadioType="RadioType.ButtonRow" Label="Server Type"
+                               LoadingByValue="@ServerVersionsLoadingTasksByType.Select(v => new KeyValuePair<VersionType, bool>(v.Key, true)).ToDictionary()">
                     </ForkRadio>
                 </div>
 
                 <div>
                     <ForkSelect Name="ServerVersion" @bind-Value="_serverPayload.ServerVersion"
-                                TModelValue="ServerVersion"
+                                TModelValue="ServerVersion" Loading="@ServerVersionsLoadingTasksByType.ContainsKey(SelectedVersionType)"
                                 Values="Versions" Label="Choose Version">
                     </ForkSelect>
-
                 </div>
             </div>
 
             <span class="text-lg font-bold">Configure Basic Settings</span>
             <div class="px-4 pb-10">
                 <div class="flex gap-8">
-                    <ForkText Name="ServerName" @bind-Value="_serverPayload.ServerName" Label="Server Name"></ForkText>
+                    <ForkText Name="ServerName" @bind-Value="_serverPayload.ServerName" Label="Server Name"
+                              Loading="@ServerVersionsLoadingTasksByType.ContainsKey(SelectedVersionType)">
+                    </ForkText>
                     <ForkText Name="ServerName" @bind-Value="_serverPayload.VanillaSettings.LevelName"
+                              Loading="@ServerVersionsLoadingTasksByType.ContainsKey(SelectedVersionType)"
                               Label="World Name">
                     </ForkText>
                 </div>
                 <div class="flex gap-8">
                     <ForkSelect Name="Gamemode" @bind-Value="_serverPayload.VanillaSettings.CurrGamemode"
                                 TModelValue="Gamemode"
+                                Loading="@ServerVersionsLoadingTasksByType.ContainsKey(SelectedVersionType)"
                                 Values="GetAvailableGameModes()" Label="Gamemode">
                     </ForkSelect>
                     <ForkSelect Name="Gamemode" @bind-Value="_serverPayload.VanillaSettings.CurrDifficulty"
                                 TModelValue="Difficulty"
+                                Loading="@ServerVersionsLoadingTasksByType.ContainsKey(SelectedVersionType)"
                                 Values="GetAvailableDifficulties()" Label="Difficulty">
                     </ForkSelect>
                 </div>
             </div>
 
-            <IconButton Size="45" OnClickMethod="OnCreateEntity">
+            <IconButton Size="45" OnClickMethod="OnCreateEntity" IsDisabled="@ServerVersionsLoadingTasksByType.ContainsKey(SelectedVersionType)">
                 <Icon>
                     <CreateIcon Height="24" Width="24"/>
                 </Icon>
@@ -84,6 +88,9 @@
         }
     }
 
+    private bool VersionTypesLoading { get; set; }
+    private Dictionary<VersionType, Task<List<ServerVersion>?>> ServerVersionsLoadingTasksByType { get; } = new();
+
     private List<ForkFormEntity<VersionType, string>>? AvailableVersionTypes { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -108,13 +115,22 @@
     {
         if (!_cachedVersions.ContainsKey(versionType))
         {
-            List<ServerVersion>? versions = await CreateEntityConnection.GetServerVersionsForType(versionType);
-            if (versions == null)
+            if (ServerVersionsLoadingTasksByType.ContainsKey(versionType))
             {
-                throw new ForkException($"Failed to load available server versions for type {versionType}! Restart Fork and/or try again in a few minutes");
+                // Already loading -> NOOP
+                return MapVersionsToFormEntities(await ServerVersionsLoadingTasksByType[versionType] ?? []);
             }
 
-            _cachedVersions[versionType] = versions;
+            Task<List<ServerVersion>?> task = CreateEntityConnection.GetServerVersionsForType(versionType);
+            ServerVersionsLoadingTasksByType[versionType] = task;
+            StateHasChanged();
+
+            List<ServerVersion>? versions = await task;
+
+            _cachedVersions[versionType] = versions ?? throw new ForkException($"Failed to load available server versions for type {versionType}! Restart Fork and/or try again in a few minutes");
+
+            ServerVersionsLoadingTasksByType.Remove(versionType);
+            StateHasChanged();
         }
 
         return MapVersionsToFormEntities(_cachedVersions[versionType]);
@@ -142,11 +158,17 @@
 
     private async Task<List<ForkFormEntity<VersionType, string>>> GetAvailableVersionTypes()
     {
+        VersionTypesLoading = true;
+        StateHasChanged();
+
         List<VersionType>? versionTypes = await CreateEntityConnection.GetAvailableVersionTypes();
         if (versionTypes == null)
         {
             throw new ForkException("Failed to load available server version types! Restart Fork and/or try again in a few minutes");
         }
+
+        VersionTypesLoading = false;
+        StateHasChanged();
 
         return versionTypes.Select(versionType => new ForkFormEntity<VersionType, string>(versionType, versionType.ToString())).ToList();
     }

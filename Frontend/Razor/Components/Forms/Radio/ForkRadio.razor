@@ -1,4 +1,4 @@
-﻿@typeparam TModelValue
+﻿@typeparam TModelValue where TModelValue : notnull
 @inherits AbstractForkInput<TModelValue>
 @using System.Diagnostics.CodeAnalysis
 @using ForkFrontend.Model.Enums
@@ -16,14 +16,18 @@
                 <div>
                     <input type="radio" name="@Name" id="@($"{Name}{index}")" class="hidden"
                            @onchange="@(_ => CurrentValue = value.ModelValue)"/>
-                    <div class="flex  bg-new-offwhite ">
+                    <div class="flex bg-new-offwhite">
                         <label for="@($"{Name}{index}")"
-                               class="cursor-pointer px-4 py-0.5 @(CurrentValue != null && CurrentValue.Equals(value.ModelValue) ? "text-new-white" : "hover:text-new-white text-forkBlue")">
+                               class="flex gap-2 items-center justify-center cursor-pointer px-4 py-0.5 @(CurrentValue != null && CurrentValue.Equals(value.ModelValue) ? "text-new-white" : "hover:text-new-white text-forkBlue")">
                             @if (value.Icon != null)
                             {
                                 <span class="pr-2 font-normal icon">@value.Icon</span>
                             }
                             <span>@value.ViewValue</span>
+                            @if (LoadingByValue?.ContainsKey(value.ModelValue) == true && LoadingByValue[value.ModelValue])
+                            {
+                                <LoadingGifIcon Width="15"/>
+                            }
                         </label>
                     </div>
                 </div>
@@ -41,6 +45,10 @@
                     <input type="radio" name="@Name" id="@($"{Name}{index}")"
                            @onchange="@(_ => CurrentValue = value.ModelValue)"/>
                     <label for="@($"{Name}{index}")">@value.ViewValue</label>
+                    @if (LoadingByValue?.ContainsKey(value.ModelValue) == true && LoadingByValue[value.ModelValue])
+                    {
+                        <LoadingGifIcon Width="15"/>
+                    }
                 </div>
                 index++;
             }
@@ -54,6 +62,8 @@
     [Parameter] public List<ForkFormEntity<TModelValue, string>>? Values { get; set; }
 
     [Parameter] public RadioType RadioType { get; set; } = RadioType.Default;
+
+    [Parameter] public Dictionary<TModelValue, bool>? LoadingByValue { get; set; }
 
     protected override bool TryParseValueFromString(string? value, out TModelValue result, [NotNullWhen(false)] out string? validationErrorMessage)
     {

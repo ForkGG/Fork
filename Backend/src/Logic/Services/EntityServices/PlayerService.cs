@@ -100,7 +100,6 @@ public class PlayerService
         catch (ExternalServiceException e)
         {
             _logger.LogError(e, "Failed to get player by name");
-            return null;
         }
 
         // If the player is not in the Mojang API we handle him like an offline player

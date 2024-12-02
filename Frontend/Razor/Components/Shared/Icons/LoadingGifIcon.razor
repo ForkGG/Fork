@@ -1,0 +1,13 @@
+﻿@inherits AbstractIcon
+
+<img style="width: @GetWidth(); height: @GetHeight()" alt="Loading animation" src="resources/img/loading.gif"/>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        Height = (uint)Math.Round(Width * 1.05, 0);
+        base.OnInitialized();
+    }
+
+}

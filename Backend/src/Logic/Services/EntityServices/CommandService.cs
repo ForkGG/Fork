@@ -24,7 +24,7 @@ public class CommandService
         _application = application;
     }
 
-    public async Task<Command> GetCommandTreeForEntity(IEntity entity)
+    public async Task<Command?> GetCommandTreeForEntity(IEntity entity)
     {
         if (_commandsCache.ContainsKey(entity.Id))
         {
@@ -32,12 +32,16 @@ public class CommandService
         }
 
         _logger.LogDebug($"No commands cache for {entity.Id}. Generating...");
-        Command command = await ParseCommandsForEntity(entity);
-        _commandsCache.Add(entity.Id, command);
+        Command? command = await ParseCommandsForEntity(entity);
+        if (command != null)
+        {
+            _commandsCache.Add(entity.Id, command);
+        }
+
         return command;
     }
 
-    private async Task<Command> ParseCommandsForEntity(IEntity entity)
+    private async Task<Command?> ParseCommandsForEntity(IEntity entity)
     {
         string commandsJson = await GetCommandsJsonForEntity(entity);
         return commandsJson.FromJson<Command>();

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Fork.Logic.Managers;
 using ForkCommon.Model.Entity.Enums;
 using ForkCommon.Model.Entity.Pocos;
@@ -27,8 +28,9 @@ public class CreateEntityController : AbstractRestController
 
     [HttpGet("{versionType}/versions")]
     [Privileges(typeof(IPrivilege))]
-    public List<ServerVersion> GetVersionsForType([FromRoute] VersionType versionType)
+    public async Task<List<ServerVersion>> GetVersionsForType([FromRoute] VersionType versionType)
     {
+        await Task.Delay(5000); //TODO CKE
         return new List<ServerVersion>
         {
             new()

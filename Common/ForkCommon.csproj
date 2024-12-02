@@ -9,6 +9,7 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <LangVersion>latestmajor</LangVersion>
         <Nullable>enable</Nullable>
+        <WarningsAsErrors>Nullable</WarningsAsErrors>
 
 
         <!-- Violations of EditorRequired (RZ2012) are turned into true errors -->

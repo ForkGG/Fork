@@ -4,6 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <LangVersion>latestmajor</LangVersion>
         <Nullable>enable</Nullable>
+        <WarningsAsErrors>Nullable</WarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>

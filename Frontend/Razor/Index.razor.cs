@@ -75,13 +75,16 @@ public partial class Index : ComponentBase
         subScreens.Add(nameof(CreateEntityScreen), new SubScreen
         {
             Type = typeof(CreateEntityScreen),
-            Parameters = { [nameof(CreateEntityScreen.SelectEntityById)] = SelectEntityById }
+            Parameters = new Dictionary<string, object>
+            {
+                [nameof(CreateEntityScreen.SelectEntityById)] = SelectEntityById
+            }
         });
     }
 
     private class SubScreen
     {
         public required Type Type { get; set; }
-        public Dictionary<string, object>? Parameters { get; } = new();
+        public Dictionary<string, object>? Parameters { get; set; } = new();
     }
 }

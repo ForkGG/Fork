@@ -7,6 +7,7 @@
         <RunPostBuildEvent>Always</RunPostBuildEvent>
         <ApplicationIcon>wwwroot\favicon.ico</ApplicationIcon>
         <LangVersion>latestmajor</LangVersion>
+        <WarningsAsErrors>Nullable</WarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>

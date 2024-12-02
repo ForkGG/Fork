@@ -16,12 +16,12 @@
     [Parameter] public uint Height { get; set; } = 15;
     [Parameter] public uint Width { get; set; } = 15;
 
-    private string GetWidth()
+    protected string GetWidth()
     {
         return $"{Width}px";
     }
 
-    private string GetHeight()
+    protected string GetHeight()
     {
         return $"{Height}px";
     }

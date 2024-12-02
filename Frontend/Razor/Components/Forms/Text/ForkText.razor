@@ -1,14 +1,25 @@
 ﻿@inherits AbstractForkInput<string>
 
 <div class="mt-5">
-    <label for="@($"{Name}")" class="text-new-offwhite opacity-75">@Label</label>
-    <div class="px-3 py-2 ml-1 mt-1 bg-new-black w-max ">
-        <input type="text" name="@Name" id="@Name" @bind="CurrentValue"
-               class="bg-transparent focus:outline-none w-full text-new-offwhite text-opacity-75 outline-none"/>
-    </div>
+    @if (Loading)
+    {
+        <div class="animate-pulse">
+            <div class="bg-new-light_panel w-32 h-4 rounded mb-2"></div>
+            <div class="bg-new-light_panel w-40 h-8 rounded"></div>
+        </div>
+    }
+    else
+    {
+        <label for="@($"{Name}")" class="text-new-offwhite opacity-75">@Label</label>
+        <div class="px-3 py-2 ml-1 mt-1 bg-new-black w-max ">
+            <input type="text" name="@Name" id="@Name" @bind="CurrentValue"
+                   class="bg-transparent focus:outline-none w-full text-new-offwhite text-opacity-75 outline-none"/>
+        </div>
+    }
 </div>
 
 @code {
+    [Parameter] public bool Loading { get; set; }
 
     protected override bool TryParseValueFromString(string? value, out string result, out string validationErrorMessage)
     {

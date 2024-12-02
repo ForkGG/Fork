@@ -3,7 +3,16 @@
 @using ForkFrontend.Model.Forms
 @implements IValueListInput<TModelValue, string>
 
-    <div class="mt-5">
+<div class="mt-5">
+    @if (Loading)
+    {
+        <div class="animate-pulse">
+            <div class="bg-new-light_panel w-32 h-4 rounded mb-2"></div>
+            <div class="bg-new-light_panel w-24 h-8 rounded"></div>
+        </div>
+    }
+    else
+    {
         <label for="@Name" class="text-new-offwhite text-md opacity-75">@Label</label>
         <div class="select-wrapper mt-1 ml-1 w-max">
             @* Good enough option for now. Replace with fully custom select in the future *@
@@ -15,10 +24,12 @@
                 }
             </InputSelect>
         </div>
-    </div>
+    }
+</div>
 
 @code {
     [Parameter] public List<ForkFormEntity<TModelValue, string>>? Values { get; set; }
+    [Parameter] public bool Loading { get; set; }
 
     private int? SelectedHash
     {
