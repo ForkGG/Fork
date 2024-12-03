@@ -16,17 +16,21 @@
                 <div>
                     <input type="radio" name="@Name" id="@($"{Name}{index}")" class="hidden"
                            @onchange="@(_ => CurrentValue = value.ModelValue)"/>
-                    <div class="flex bg-new-offwhite">
+                    <div class="flex">
                         <label for="@($"{Name}{index}")"
-                               class="flex gap-2 items-center justify-center cursor-pointer px-4 py-0.5 @(CurrentValue != null && CurrentValue.Equals(value.ModelValue) ? "text-new-white" : "hover:text-new-white text-forkBlue")">
+                               class="flex gap-2 items-center justify-center cursor-pointer px-4 py-0.5 @(CurrentValue != null && CurrentValue.Equals(value.ModelValue) ? "text-new-white bg-forkBlue-highlighted" : "bg-new-light_panel hover:text-new-white")">
                             @if (value.Icon != null)
                             {
                                 <span class="pr-2 font-normal icon">@value.Icon</span>
                             }
-                            <span>@value.ViewValue</span>
                             @if (LoadingByValue?.ContainsKey(value.ModelValue) == true && LoadingByValue[value.ModelValue])
                             {
+                                <span>Loading @value.ViewValue...</span>
                                 <LoadingGifIcon Width="15"/>
+                            }
+                            else
+                            {
+                                <span>@value.ViewValue</span>
                             }
                         </label>
                     </div>

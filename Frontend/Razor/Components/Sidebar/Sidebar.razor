@@ -56,7 +56,10 @@
     *@
 
     @* Fork Version Checker *@
-    <div class="bg-new-panel flex px-4 py-8 items-center" style="height: 50px">
+    <div class="bg-new-panel flex gap-3 px-4 py-8 items-center" style="height: 50px">
+        <IconButton Size="45" OnClickMethod="() => { }" NoBackground="true">
+            <Icon><ForkSettingIcon Width="24" Height="24" /></Icon>
+        </IconButton>
         <div class="flex-1 flex flex-col">
             <span class="leading-none">v1.0.0</span>
             <span class="text-xs">You are up to date</span>
@@ -66,7 +69,7 @@
         {
             <IconButton NoBackground="true" OnClickMethod="CheckForUpdate">
                 <Icon>
-                    <RestartIcon Width="24" Height="24"/>
+                    <RestartIcon Width="20" Height="20"/>
                 </Icon>
             </IconButton>
         }
