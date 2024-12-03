@@ -9,13 +9,21 @@ namespace ForkFrontend.Razor.Components.Shared;
 
 public partial class ForkErrorBoundary : ErrorBoundary
 {
-    [Inject] public required ToastManager ToastManager { get; set; }
-    [Inject] public required ILogger<ForkErrorBoundary> Logger { get; set; }
+    [Inject] public required ToastManager ToastManager { private get; set; }
+    [Inject] public required ILogger<ForkErrorBoundary> Logger { private get; set; }
+
+    [Parameter] public bool FailSilently { private get; set; }
 
     protected override async Task OnErrorAsync(Exception exception)
     {
         if (exception is ForkException forkException)
         {
+            if (FailSilently)
+            {
+                Logger.LogWarning(forkException, "Silent app exception thrown");
+                return;
+            }
+
             Logger.LogError(forkException, "App exception thrown");
             await ToastManager.AddToast(new Toast(ToastLevel.Error, forkException.Message));
         }
@@ -23,6 +31,19 @@ public partial class ForkErrorBoundary : ErrorBoundary
         {
             Logger.LogError(exception, "Unexpected exception thrown");
             await ToastManager.AddToast(new Toast(ToastLevel.Error, $"Unexpected error occured: {exception.Message}"));
+        }
+    }
+
+    public async Task<T?> RunSavely<T>(Task<T> task)
+    {
+        try
+        {
+            return await task;
+        }
+        catch (Exception ex)
+        {
+            await OnErrorAsync(ex);
+            return default;
         }
     }
 }

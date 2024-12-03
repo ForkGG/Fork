@@ -1,5 +1,14 @@
 ﻿@inherits ErrorBoundary
 
+<CascadingValue Value="@(this)">
+    @Content
+</CascadingValue>
+
 @{
-    base.BuildRenderTree(__builder);
+    Content = builder => { base.BuildRenderTree(builder); };
+}
+
+@code
+{
+    private RenderFragment? Content { get; set; }
 }

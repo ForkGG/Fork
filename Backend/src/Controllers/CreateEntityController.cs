@@ -30,25 +30,6 @@ public class CreateEntityController : AbstractRestController
     [Privileges(typeof(IPrivilege))]
     public async Task<List<ServerVersion>> GetVersionsForType([FromRoute] VersionType versionType)
     {
-        await Task.Delay(5000); //TODO CKE
-        return new List<ServerVersion>
-        {
-            new()
-            {
-                Id = 0,
-                Type = versionType,
-                Version = "1.10.2",
-                JarLink =
-                    "https://piston-data.mojang.com/v1/objects/15c777e2cfe0556eef19aab534b186c0c6f277e1/server.jar"
-            },
-            new()
-            {
-                Id = 0,
-                Type = versionType,
-                Version = "1.10.1",
-                JarLink =
-                    "https://piston-data.mojang.com/v1/objects/15c777e2cfe0556eef19aab534b186c0c6f277e1/server.jar"
-            }
-        };
+        return await _serverVersionManager.GetServerVersionsForType(versionType);
     }
 }

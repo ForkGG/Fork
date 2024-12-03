@@ -108,10 +108,16 @@ public class ApplicationStateManager
         UiLoadingBlocked = true;
         UiLoadingTextPath = textPath;
         UiLoadingChanged?.Invoke();
-        T result = await task;
-        UiLoadingBlocked = false;
-        UiLoadingChanged?.Invoke();
-        return result;
+        try
+        {
+            T result = await task;
+            return result;
+        }
+        finally
+        {
+            UiLoadingBlocked = false;
+            UiLoadingChanged?.Invoke();
+        }
     }
 
     public event HandleUiLoadingChanged? UiLoadingChanged;

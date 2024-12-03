@@ -69,8 +69,6 @@
 </div>
 
 @code {
-    [CascadingParameter] Error Error { get; set; } = null!;
-
     [Parameter] public required Func<ulong, Task> SelectEntityById { get; set; }
 
     private readonly CreateServerPayload _serverPayload = new();
@@ -103,7 +101,14 @@
 
     private async Task OnCreateEntity(IconButton _)
     {
-        ulong newEntityId = await ApplicationState.RunWithLoadingText(Error.RunSafe(() => EntityConnection.CreateServerAsync(_serverPayload)), "common.global.loading.creatingEntity");
+        ulong newEntityId = await ApplicationState.RunWithLoadingText(
+            ErrorBoundary.RunSavely(EntityConnection.CreateServerAsync(_serverPayload)),
+            "common.global.loading.creatingEntity");
+        if (newEntityId == 0)
+        {
+            return;
+        }
+
         await SelectEntityById(newEntityId);
     }
 

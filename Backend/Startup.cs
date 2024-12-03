@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Fork.Adapters.Fork;
 using Fork.Adapters.Mojang;
+using Fork.Adapters.PaperMc;
 using Fork.Logic.Managers;
 using Fork.Logic.Notification;
 using Fork.Logic.Persistence;
@@ -73,7 +74,7 @@ public class Startup
         });
 
 
-        // Singletons
+        // Managers
         services.AddSingleton<ApplicationManager>();
         services.AddSingleton<CommandService>();
         services.AddSingleton<EntityManager>();
@@ -98,6 +99,7 @@ public class Startup
         // Transient adapters
         services.AddTransient<ForkApiAdapter>();
         services.AddTransient<MojangApiAdapter>();
+        services.AddTransient<PaperMcApiAdapter>();
 
         services.AddSwaggerGen(c =>
         {

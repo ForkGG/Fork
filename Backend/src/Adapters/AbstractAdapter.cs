@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Fork.Logic.Managers;
 using ForkCommon.Model.Application.Exceptions;
@@ -22,51 +22,70 @@ public abstract class AbstractAdapter
         UserAgent = applicationManager.UserAgent;
     }
 
-    /// <summary>
-    ///     Makes a GET request to the given path and returns the deserialized body as <see cref="T" />>
-    /// </summary>
-    protected async Task<T?> GetAsync<T>(string path)
+    protected async Task<T> GetAsync<T>(string path) where T : class
     {
-        string body = await GetBodyAsync(path);
-        return JsonConvert.DeserializeObject<T>(body);
+        return await GetAsync<T>(new Uri(path));
     }
 
-    // TODO CKE Add optional caching to requests
-    /// <summary>
-    ///     Makes a GET request to the given path and returns the body as string
-    /// </summary>
-    protected async Task<string> GetBodyAsync(string path)
+    protected async Task<T> GetAsync<T>(Uri uri) where T : class
     {
         try
         {
             using HttpClient client = new();
             client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", UserAgent);
             Stopwatch stopwatch = Stopwatch.StartNew();
-            HttpResponseMessage response = await client.GetAsync(path);
+            HttpResponseMessage response = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
             stopwatch.Stop();
             if (!response.IsSuccessStatusCode)
             {
-                Logger.LogWarning($"GET {path} -> {response.StatusCode}");
+                Logger.LogWarning($"GET {uri} -> {response.StatusCode}");
             }
 
-            Logger.LogDebug($"GET {path} -> {response.StatusCode} ({stopwatch.ElapsedMilliseconds}ms)");
+            Logger.LogDebug($"GET {uri} -> {response.StatusCode} ({stopwatch.ElapsedMilliseconds}ms)");
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                return await response.Content.ReadAsStringAsync();
+                if (typeof(T) == typeof(string))
+                {
+                    string result = await response.Content.ReadAsStringAsync();
+                    return result as T ?? throw new ProgrammingErrorException();
+                }
+
+                if (!typeof(T).IsPrimitive)
+                {
+                    JsonSerializer serializer = new();
+
+                    using StreamReader sr = new(await response.Content.ReadAsStreamAsync());
+                    await using JsonTextReader jsonTextReader = new(sr);
+                    T? result = serializer.Deserialize<T>(jsonTextReader);
+
+                    if (result == null)
+                    {
+                        if (Nullable.GetUnderlyingType(typeof(T)) != null)
+                        {
+                            // Null is allowed by the type!
+                            return null!;
+                        }
+
+                        throw new ForkException(
+                            "Failed to parse response from external service. Please report this to the Fork team.");
+                    }
+
+                    return result;
+                }
+
+                throw new ProgrammingErrorException("Response type is not supported!");
             }
 
-            if (response.StatusCode == HttpStatusCode.NoContent)
-            {
-                return "";
-            }
-
-            throw new ExternalServiceException($"External service returned status {response.StatusCode} on {path}");
+            Logger.LogError($"External service returned status {response.StatusCode} on {uri}");
+            throw new ExternalServiceException(
+                "External service is not available at the moment. Please try again in a few minutes.");
         }
         catch (Exception e)
         {
-            throw new ExternalException(
-                $"Calling an external service on {path} threw an exception:\n{e.Message}\n{e.StackTrace}");
+            Logger.LogError(e, $"Calling an external service on {uri} threw an exception");
+            throw new ExternalServiceException(
+                "External service is not available at the moment. Please try again in a few minutes.");
         }
     }
 }

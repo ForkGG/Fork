@@ -1,12 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Fork.Logic.Managers;
+using Fork.Logic.Model.MinecraftVersionModels;
 using Fork.Logic.Model.Web.Mojang;
 using Fork.Util.ExtensionMethods;
+using ForkCommon.Model.Application.Exceptions;
+using ForkCommon.Model.Entity.Enums;
+using ForkCommon.Model.Entity.Pocos;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SixLabors.ImageSharp;
@@ -92,5 +98,33 @@ public class MojangApiAdapter : AbstractAdapter
 
         imageStream.Position = 0;
         return imageStream.ConvertToBase64();
+    }
+
+    /**
+     * Loads all vanilla versions from Mojangs server (release and snapshot)
+     */
+    public async Task<List<ServerVersion>> LoadVanillaVersions()
+    {
+        Uri uri = new("https://launchermeta.mojang.com/mc/game/version_manifest.json");
+        Manifest manifest = await GetAsync<Manifest>(uri);
+
+        return manifest.versions
+            .Where(version => version.type is Manifest.VersionType.release or Manifest.VersionType.snapshot)
+            .Select(version => new ServerVersion
+            {
+                Type = version.type == Manifest.VersionType.release ? VersionType.Vanilla : VersionType.VanillaSnapshot,
+                Version = version.id,
+                JarLink = version.url
+            }).ToList();
+    }
+
+    public async Task<string> GetDownloadUrlForPaperServerVersion(ServerVersion serverVersion)
+    {
+        Assert.NotNull(serverVersion.JarLink);
+        Assert.IsTrue(serverVersion.JarLink!.EndsWith(".json"));
+
+        VersionDetails details = await GetAsync<VersionDetails>(serverVersion.JarLink);
+
+        return details.downloads.server.url;
     }
 }

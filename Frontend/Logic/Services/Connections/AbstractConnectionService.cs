@@ -31,7 +31,7 @@ public abstract class AbstractConnectionService
     protected async Task<T?> GetFromJsonAsync<T>(string url)
     {
         HttpResponseMessage response = await Client.GetAsync(url);
-        HandleServerError(response);
+        await HandleServerError(response);
         string content = await response.Content.ReadAsStringAsync();
         return content.FromJson<T>();
     }

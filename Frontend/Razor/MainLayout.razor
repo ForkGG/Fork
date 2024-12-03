@@ -2,11 +2,15 @@
 
 <div class="w-screen h-screen bg-new-black text-new-offwhite gap-2 flex flex-col select-none overflow-auto" style="min-width: 1080px; min-height: 720px;">
 
-    <Error @ref="ErrorComponent">
-        @Body
-    </Error>
+    <ForkErrorBoundary>
+        <ChildContent>
+            @Body
+        </ChildContent>
+        <ErrorContent>
+            @Body
+        </ErrorContent>
+    </ForkErrorBoundary>
 </div>
 
 @code {
-    private Error? ErrorComponent { get; set; }
 }

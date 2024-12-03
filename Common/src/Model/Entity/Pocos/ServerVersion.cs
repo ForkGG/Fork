@@ -24,6 +24,14 @@ public class ServerVersion
     public VersionType Type { get; set; }
     public string? Version { get; set; }
     public int Build { get; set; } = 0;
+
+    /**
+     * JarLink to the server.jar file
+     * <br />
+     * WARNING:
+     * - For Vanilla/VanillaSnapshot this is just a link to the json containing the download URL (i.e. https://piston-meta.mojang.com/v1/packages/a3bcba436caa849622fd7e1e5b89489ed6c9ac63/1.21.4.json)
+     * - For Paper Versions this is not set, but needs to be requested when downloading (depending on build number)
+     */
     public string? JarLink { get; set; }
 
     [NotMapped] public bool IsProxy => Type == VersionType.Waterfall;
@@ -35,6 +43,11 @@ public class ServerVersion
     public override string ToString()
     {
         return Version ?? "";
+    }
+
+    public ServerVersion Clone()
+    {
+        return MemberwiseClone() as ServerVersion ?? throw new InvalidOperationException();
     }
 
     public int CompareTo(object? obj)

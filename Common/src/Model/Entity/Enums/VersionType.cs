@@ -3,6 +3,7 @@
 public enum VersionType
 {
     Vanilla,
+    VanillaSnapshot,
     Paper,
     Spigot,
     Waterfall,

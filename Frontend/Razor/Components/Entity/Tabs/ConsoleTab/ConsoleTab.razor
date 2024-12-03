@@ -36,7 +36,14 @@
         @* Console In *@
         @if (EntityState?.Entity.Version?.IsEqualOrGreaterThan(ServerVersion.Version1_13) ?? false)
         {
-            <AutocompleteConsoleIn/>
+            <ForkErrorBoundary FailSilently="true">
+                <ChildContent>
+                    <AutocompleteConsoleIn/>
+                </ChildContent>
+                <ErrorContent>
+                    <ConsoleIn></ConsoleIn>
+                </ErrorContent>
+            </ForkErrorBoundary>
         }
         else
         {

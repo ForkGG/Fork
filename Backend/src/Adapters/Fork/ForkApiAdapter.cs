@@ -18,18 +18,18 @@ public class ForkApiAdapter : AbstractAdapter
     {
         if (await IsApiAvailable())
         {
-            return await GetBodyAsync(API_BASE + "ip");
+            return await GetAsync<string>(API_BASE + "ip");
         }
 
         // Fallback in case of API outage
-        return await GetBodyAsync("https://ipv4.icanhazip.com/");
+        return await GetAsync<string>("https://ipv4.icanhazip.com/");
     }
 
     private async Task<bool> IsApiAvailable()
     {
         try
         {
-            string response = await GetBodyAsync(API_BASE + "status");
+            string response = await GetAsync<string>(API_BASE + "status");
             return response == "ONLINE";
         }
         catch (ExternalServiceException e)
