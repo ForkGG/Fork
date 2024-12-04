@@ -1,4 +1,5 @@
 ﻿using ForkCommon.Model.Entity.Pocos;
+using ForkCommon.Model.Entity.Pocos.ServerSettings;
 using ForkCommon.Model.Entity.Transient.Console;
 using ForkCommon.Model.Entity.Transient.Console.Commands;
 using ForkCommon.Model.Payloads.Entity;
@@ -88,5 +89,10 @@ public class EntityConnectionService : AbstractConnectionService
     public async Task<Command?> GetCommandsAsync(ulong entityId)
     {
         return await GetFromJsonAsync<Command>($"{URL_BASE}/{entityId}/commands");
+    }
+
+    public async Task<List<AbstractSettings>?> GetSettingsAsync(ulong entityId)
+    {
+        return await GetFromJsonAsync<List<AbstractSettings>>($"{URL_BASE}/{entityId}/settings");
     }
 }

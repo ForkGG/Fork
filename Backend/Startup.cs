@@ -96,6 +96,7 @@ public class Startup
         services.AddTransient<FileWriterService>();
         services.AddTransient<PlayerService>();
         services.AddTransient<ServerService>();
+        services.AddTransient<EntitySettingsService>();
         // Transient adapters
         services.AddTransient<ForkApiAdapter>();
         services.AddTransient<MojangApiAdapter>();

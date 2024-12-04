@@ -1,0 +1,62 @@
+﻿@using ForkCommon.Model.Entity.Pocos
+@using ForkCommon.Model.Entity.Pocos.ServerSettings
+@using ForkFrontend.Logic.Services.Connections
+@using ForkFrontend.Logic.Services.Managers
+@inject EntityConnectionService EntityConnectionService;
+
+<div class="flex flex-1 gap-2">
+    @* Presentation *@
+    <div class="flex-1 bg-new-panel p-4">
+        @if (_selectedSettings != null)
+        {
+            <DynamicComponent Type="@GetTypeForSettings(_selectedSettings)"/>
+        }
+    </div>
+
+    @* Settings Selection *@
+    <div class="w-60 bg-new-panel">
+        @foreach (AbstractSettings settings in _settingsList)
+        {
+            <div class="p-4 @(_selectedSettings == settings ? "bg-forkBlue-hover text-label-hover" : "text-label hover:text-label-hover")"
+                 @onclick="() => _selectedSettings = settings">
+                @settings.Name
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] public required ForkErrorBoundary ErrorBoundary { get; set; }
+
+    [CascadingParameter] public required EntityStateManager EntityState { get; set; }
+
+    private IEntity Entity => EntityState.Entity;
+
+    private AbstractSettings? _selectedSettings;
+    private List<AbstractSettings> _settingsList = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        List<AbstractSettings>? settings = await ErrorBoundary.RunSavely(EntityConnectionService.GetSettingsAsync(Entity.Id));
+        if (settings == null || settings.Count == 0)
+        {
+            _selectedSettings = null;
+            _settingsList = [];
+            return;
+        }
+
+        _settingsList = settings;
+        _selectedSettings = _settingsList[0];
+    }
+
+    private Type GetTypeForSettings(AbstractSettings settings)
+    {
+        if (settings is VanillaSettings)
+        {
+            return typeof(VanillaSettingsTab);
+        }
+
+        return typeof(DefaultSettingsTab);
+    }
+
+}

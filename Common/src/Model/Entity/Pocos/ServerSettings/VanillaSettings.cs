@@ -10,16 +10,16 @@ namespace ForkCommon.Model.Entity.Pocos.ServerSettings;
 public class VanillaSettings : AbstractSettings
 {
     [JsonConstructor]
-    private VanillaSettings() : base(new Dictionary<string, string>())
+    private VanillaSettings() : base("server.properties", new Dictionary<string, string>())
     {
     }
 
-    public VanillaSettings(string levelname) : base(new Dictionary<string, string>())
+    public VanillaSettings(string levelname) : base("server.properties", new Dictionary<string, string>())
     {
         InitializeValues(levelname);
     }
 
-    public VanillaSettings(Dictionary<string, string> settingsDictionary) : base(
+    public VanillaSettings(Dictionary<string, string> settingsDictionary) : base("server.properties",
         new Dictionary<string, string>(settingsDictionary))
     {
         if (settingsDictionary.ContainsKey("LevelName"))

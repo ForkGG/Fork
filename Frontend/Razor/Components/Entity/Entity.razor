@@ -3,7 +3,7 @@
 @using ForkCommon.Model.Notifications.EntityNotifications
 @using ForkFrontend.Logic.Services.Connections
 @using ForkFrontend.Logic.Services.Managers
-@using ForkFrontend.Razor.Components.Shared.Icons
+@using ForkFrontend.Razor.Components.Entity.Tabs.SettingsTab
 @inject ILogger<Entity> Logger
 @inject EntityConnectionService EntityConnection
 
@@ -16,26 +16,26 @@
                 @* Entity Overview *@
                 <div class="flex-1 max-w-3xl p-2 bg-new-panel flex justify-between items-center">
                     <div class="flex gap-2 p-1">
-                        <IconButton @ref="_startButton" IsDisabled="Value?.Entity.Status != EntityStatus.Stopped"
+                        <IconButton @ref="_startButton" IsDisabled="Value.Entity.Status != EntityStatus.Stopped"
                                     Size="24" HoverColor="status-green" OnClickMethod="StartServer">
                             <Icon>
                                 <StartIcon Width="16" Height="16"/>
                             </Icon>
                         </IconButton>
-                        <IconButton @ref="_stopButton" IsDisabled="Value?.Entity.Status != EntityStatus.Started"
+                        <IconButton @ref="_stopButton" IsDisabled="Value.Entity.Status != EntityStatus.Started"
                                     Size="24" HoverColor="status-red" OnClickMethod="StopServer">
                             <Icon>
                                 <StopIcon Width="16" Height="16"/>
                             </Icon>
                         </IconButton>
-                        <IconButton @ref="_restartButton" IsDisabled="Value?.Entity.Status != EntityStatus.Started"
+                        <IconButton @ref="_restartButton" IsDisabled="Value.Entity.Status != EntityStatus.Started"
                                     Size="24" HoverColor="status-orange" OnClickMethod="RestartServer">
                             <Icon>
                                 <RestartIcon Width="16" Height="16"/>
                             </Icon>
                         </IconButton>
                     </div>
-                    <span class="font-bold text-md text-new-offwhite whitespace-nowrap">@Value?.Entity.Name - @Value?.Entity.Version</span>
+                    <span class="font-bold text-md text-new-offwhite whitespace-nowrap">@Value.Entity.Name - @Value?.Entity.Version</span>
                     <IconButton Size="30" NoBackground="true" HoverColor="status-red"
                                 OnClickMethod="DeleteServer">
                         <Icon>
@@ -48,7 +48,7 @@
                 @* Navigation *@
                 <IconTabControl OnTabSelected="EntityTabSelected" IsVertical="true">
                     <IconTab RelatedType="typeof(ConsoleTab)"><Icon><TerminalIcon Width="16" Height="16"/></Icon></IconTab>
-                    <IconTab ><Icon><SettingIcon Width="16" Height="16"/></Icon></IconTab>
+                    <IconTab RelatedType="typeof(SettingsTab)"><Icon><SettingIcon Width="16" Height="16"/></Icon></IconTab>
                     <IconTab ><Icon><WorldIcon Width="16" Height="16"/></Icon></IconTab>
                     <IconTab ><Icon><PluginIcon Width="16" Height="16"/></Icon></IconTab>
                 </IconTabControl>
@@ -61,7 +61,7 @@
         </div>
 
         @* Player list *@
-        @if (SelectedEntityTabType == typeof(ConsoleTab) && Value?.Entity is Server)
+        @if (SelectedEntityTabType == typeof(ConsoleTab) && Value.Entity is Server)
         {
             <div class="w-60 flex flex-col mt-2">
                 @* Top Bar *@
@@ -84,7 +84,9 @@
 
 @code {
 
-    [Parameter] [EditorRequired] public EntityStateManager? Value { get; set; }
+    [CascadingParameter] public required ForkErrorBoundary ErrorBoundary { get; set; }
+
+    [Parameter] [EditorRequired] public required EntityStateManager Value { get; set; }
 
     private Type? SelectedEntityTabType { get; set; }
     private Type? SelectedPlayerListTabType { get; set; }
@@ -95,7 +97,7 @@
 
     protected override void OnInitialized()
     {
-        Value!.EntityStatusChangedNotificationHandler.After += HandleEntityStatusChange;
+        Value.EntityStatusChangedNotificationHandler.After += HandleEntityStatusChange;
     }
 
     private void EntityTabSelected(IconTab tab)
@@ -110,50 +112,22 @@
 
     private async Task StartServer(IconButton button)
     {
-        try
-        {
-            await EntityConnection.StartEntityAsync(Value!.Entity.Id);
-        }
-        catch (Exception e)
-        {
-            Logger.LogError(e, $"Error while starting server {Value?.Entity.Name}");
-        }
+        await ErrorBoundary.RunSavely(EntityConnection.StartEntityAsync(Value.Entity.Id));
     }
 
     private async Task StopServer(IconButton button)
     {
-        try
-        {
-            await EntityConnection.StopEntityAsync(Value!.Entity.Id);
-        }
-        catch (Exception e)
-        {
-            Logger.LogError(e, $"Error while stopping server {Value?.Entity.Name}");
-        }
+        await ErrorBoundary.RunSavely(EntityConnection.StopEntityAsync(Value.Entity.Id));
     }
 
     private async Task RestartServer(IconButton button)
     {
-        try
-        {
-            await EntityConnection.RestartEntityAsync(Value!.Entity.Id);
-        }
-        catch (Exception e)
-        {
-            Logger.LogError(e, $"Error while restarting server {Value?.Entity.Name}");
-        }
+        await ErrorBoundary.RunSavely(EntityConnection.RestartEntityAsync(Value.Entity.Id));
     }
 
     private async Task DeleteServer(IconButton button)
     {
-        try
-        {
-            await EntityConnection.DeleteEntityAsync(Value!.Entity);
-        }
-        catch (Exception e)
-        {
-            Logger.LogError(e, $"Error while deleting server {Value?.Entity.Name}");
-        }
+        await ErrorBoundary.RunSavely(EntityConnection.DeleteEntityAsync(Value.Entity));
     }
 
     private Task HandleEntityStatusChange(EntityStatusChangedNotification notification)

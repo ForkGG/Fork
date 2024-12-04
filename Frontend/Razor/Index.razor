@@ -4,7 +4,7 @@
 
 <LoadingOverlay Visible="@ApplicationState.UiLoadingBlocked" TranslationPath="@ApplicationState.UiLoadingTextPath"/>
 <ToastDisplay/>
-<div class="flex flex-1">
+<div class="flex flex-col flex-1">
     @if (ApplicationState.IsApplicationReady)
     {
         <div class="flex flex-1 gap-2 overflow-hidden">
