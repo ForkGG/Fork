@@ -35,7 +35,7 @@
                             </Icon>
                         </IconButton>
                     </div>
-                    <span class="font-bold text-md text-new-offwhite whitespace-nowrap">@Value.Entity.Name - @Value?.Entity.Version</span>
+                    <span class="font-bold text-md text-new-offwhite whitespace-nowrap">@Value.Entity.Name - @Value.Entity.Version</span>
                     <IconButton Size="30" NoBackground="true" HoverColor="status-red"
                                 OnClickMethod="DeleteServer">
                         <Icon>
@@ -47,10 +47,26 @@
             <div class="flex h-full">
                 @* Navigation *@
                 <IconTabControl OnTabSelected="EntityTabSelected" IsVertical="true">
-                    <IconTab RelatedType="typeof(ConsoleTab)"><Icon><TerminalIcon Width="16" Height="16"/></Icon></IconTab>
-                    <IconTab RelatedType="typeof(SettingsTab)"><Icon><SettingIcon Width="16" Height="16"/></Icon></IconTab>
-                    <IconTab ><Icon><WorldIcon Width="16" Height="16"/></Icon></IconTab>
-                    <IconTab ><Icon><PluginIcon Width="16" Height="16"/></Icon></IconTab>
+                    <IconTab RelatedType="typeof(ConsoleTab)">
+                        <Icon>
+                            <TerminalIcon Width="16" Height="16"/>
+                        </Icon>
+                    </IconTab>
+                    <IconTab RelatedType="typeof(SettingsTab)">
+                        <Icon>
+                            <SettingIcon Width="16" Height="16"/>
+                        </Icon>
+                    </IconTab>
+                    <IconTab>
+                        <Icon>
+                            <WorldIcon Width="16" Height="16"/>
+                        </Icon>
+                    </IconTab>
+                    <IconTab>
+                        <Icon>
+                            <PluginIcon Width="16" Height="16"/>
+                        </Icon>
+                    </IconTab>
                 </IconTabControl>
                 @* Content *@
                 @if (SelectedEntityTabType != null)
