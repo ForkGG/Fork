@@ -4,13 +4,21 @@
 @inject EntityConnectionService EntityConnection
 
 <EditForm Model="@InputForm" OnSubmit="OnSubmit">
-    <div class="console-in-container clipping flex h-12">
+    @* <div class="console-in-container clipping flex h-12">
         <Checkbox class="self-start" @bind-Value="@InputForm.SayMode" DisplayName="Chat"></Checkbox>
         <div class="flex-1 flex mx-6 self-center">
             <span class="text-label mr-1 monospace">@Prefix</span>
             <input class="flex-1 w-full bg-transparent text-text monospace outline-none" @bind="InputForm.Input"
                    @oninput="OnChange"/>
         </div>
+    </div> *@
+    <div class="flex flex-col gap-2">
+        <div class="bg-new-black p-3 flex flex-1">
+            <span class="text-new-offwhite mr-1">@Prefix</span>
+            <Textfield class="flex-1" @bind-Value="InputForm.Input"
+                       @oninput="OnChange"></Textfield>
+        </div>
+        <Checkbox @bind-Value="@InputForm.SayMode" DisplayName="Chat"></Checkbox>
     </div>
 </EditForm>
 

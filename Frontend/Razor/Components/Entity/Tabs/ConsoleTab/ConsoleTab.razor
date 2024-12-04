@@ -9,23 +9,24 @@
     @* Center Part *@
     <div class="flex-1 flex flex-col gap-2">
 
-        <div class="flex opacity-75 min-h-4">
+        <div class="flex opacity-75 min-h-4 gap-6">
             @* IP *@
-            <div class="flex h-full gap-2 text-sm">
-                <span class="">IP Address: </span>
+            <div class="flex items-center h-full text-sm gap-2">
+                <GlobeIcon Width="16" Height="16"></GlobeIcon>
                 <span class="monospace">@BuildIpString()</span>
             </div>
 
             @* Server Type *@
-            <div class="flex h-full gap-2 text-sm ml-6">
-                <span class="">Type: </span>
+            <div class="flex items-center h-full text-sm gap-2">
+                <CubeTransparentIcon Width="16" Height="16"></CubeTransparentIcon>
                 <span class="monospace">@EntityState?.Entity.Version?.Type</span>
             </div>
 
             @* Server Type *@
-            <div class="flex h-full gap-2 text-sm ml-6">
-                <span class="">Restarts in: </span>
-                <span class="monospace">10h 1m</span>
+            <div class="flex items-center h-full text-sm gap-2">
+                <RestartAltIcon Width="16" Height="16"></RestartAltIcon>
+
+                <span class="monospace">in 10h 1m</span>
             </div>
         </div>
 
