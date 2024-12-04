@@ -47,10 +47,10 @@
             <div class="flex h-full">
                 @* Navigation *@
                 <IconTabControl OnTabSelected="EntityTabSelected" IsVertical="true">
-                    <IconTab RelatedType="typeof(ConsoleTab)" IconCharacter="'T'"></IconTab>
-                    <IconTab IconCharacter="'S'"></IconTab>
-                    <IconTab IconCharacter="'P'"></IconTab>
-                    <IconTab IconCharacter="'W'"></IconTab>
+                    <IconTab RelatedType="typeof(ConsoleTab)"><Icon><TerminalIcon Width="16" Height="16"/></Icon></IconTab>
+                    <IconTab ><Icon><SettingIcon Width="16" Height="16"/></Icon></IconTab>
+                    <IconTab ><Icon><WorldIcon Width="16" Height="16"/></Icon></IconTab>
+                    <IconTab ><Icon><PluginIcon Width="16" Height="16"/></Icon></IconTab>
                 </IconTabControl>
                 @* Content *@
                 @if (SelectedEntityTabType != null)

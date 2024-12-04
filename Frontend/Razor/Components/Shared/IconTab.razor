@@ -2,14 +2,17 @@
 Should be used with `IconTabControl`
 *@
 <div class="cursor-pointer size-12 bg-new-panel text-new-offwhite  @(IsActive ? "" : "opacity-30 hover:opacity-100")" @onclick="OnClick">
-    <div class="p-2 flex justify-center items-center">
-        <span class="text-xl icon">@IconCharacter</span>
+    <div class="p-2 flex justify-center items-center w-full h-full">
+        @* <span class="text-xl icon">@IconCharacter</span> *@
+        @Icon
     </div>
 </div>
 
 @code {
 
     [CascadingParameter] private IconTabControl? Parent { get; set; }
+
+    [Parameter] public RenderFragment? Icon { get; set; }
 
     [Parameter] public char IconCharacter { get; set; }
 

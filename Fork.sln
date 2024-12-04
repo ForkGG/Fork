@@ -1,5 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35521.163 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fork", "Backend\Fork.csproj", "{4107AF58-6DA4-4377-A100-05ADF9899A3D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForkCommon", "Common\ForkCommon.csproj", "{3CB4852E-7F8C-4F26-A990-D8F98A8821FD}"
@@ -24,5 +27,8 @@ Global
 		{25D095F0-9294-479E-8D61-FF1E2F60D23D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25D095F0-9294-479E-8D61-FF1E2F60D23D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25D095F0-9294-479E-8D61-FF1E2F60D23D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
