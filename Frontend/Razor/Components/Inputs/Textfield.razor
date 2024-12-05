@@ -4,9 +4,9 @@
 <label class="@CssClass">
     @if (DisplayName != null)
     {
-        <span>@DisplayName</span>
+        <span class="text-xs font-bold uppercase tracking-wider opacity-50">@DisplayName</span>
     }
-    <input class="w-full bg-transparent text-new-offwhite outline-none" @bind="CurrentValue"/>
+    <input class="w-full bg-transparent outline-none" @bind="CurrentValue"/>
 </label>
 
 @code {

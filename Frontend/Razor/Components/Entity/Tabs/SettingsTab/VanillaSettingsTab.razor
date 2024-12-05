@@ -1,5 +1,28 @@
-﻿<h3>VanillaSettingsTab</h3>
+﻿<div class="grid grid-cols-2 gap-3">
+    <div class="flex flex-col">
+        <span class="text-lg font-bold">Basics</span>
+        <div class="p-3 flex flex-col gap-3">
+            <Textfield @bind-Value="serverName" DisplayName="SERVER NAME" class="bg-new-black px-3 py-1 text-new-offwhite/70"></Textfield>
+            <Textfield @bind-Value="motd" DisplayName="MESSAGE OF THE DAY" class="bg-status-orange/5 px-3 py-1 text-new-offwhite/70"></Textfield>
+            <Checkbox @bind-Value="hardcoreMode" DisplayName="Hardcore" class="bg-status-orange/5"></Checkbox>
+            <Checkbox @bind-Value="hardcoreMode" DisplayName="Online Mode"></Checkbox>
+            <Checkbox @bind-Value="hardcoreMode" DisplayName="Enable Whitelist"></Checkbox>
+        </div>
+    </div>
 
+    <div class="flex flex-col">
+        <span class="text-lg font-bold ">World</span>
+    </div>
+    <span class="text-lg font-bold ">Performance</span>
+    <span class="text-lg font-bold ">Players</span>
+    <span class="text-lg font-bold ">Spawn</span>
+    <span class="text-lg font-bold ">Network</span>
+    <span class="text-lg font-bold ">Gameplay</span>
+    <span class="text-lg font-bold ">Logging</span>
+
+</div>
 @code {
-    
+    private string serverName = "Vanilla";
+    private string motd = "Fork Server &a1.0.0";
+    private bool hardcoreMode;
 }
