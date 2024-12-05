@@ -3,8 +3,8 @@
         <span class="text-lg font-bold">Basics</span>
         <div class="p-3 flex flex-col gap-3">
             <Textfield @bind-Value="serverName" DisplayName="SERVER NAME" class="bg-new-black px-3 py-1 text-new-offwhite/70"></Textfield>
-            <Textfield @bind-Value="motd" DisplayName="MESSAGE OF THE DAY" class="bg-status-orange/5 px-3 py-1 text-new-offwhite/70"></Textfield>
-            <Checkbox @bind-Value="hardcoreMode" DisplayName="Hardcore" class="bg-status-orange/5"></Checkbox>
+            <Textfield @bind-Value="motd" DisplayName="MESSAGE OF THE DAY" class="bg-new-black px-3 py-1 text-new-offwhite/70 border-l-2 border-forkBlue-highlighted"></Textfield>
+            <Checkbox @bind-Value="hardcoreMode" DisplayName="Hardcore" class="border-l-2 border-forkBlue-highlighted pl-1"></Checkbox>
             <Checkbox @bind-Value="hardcoreMode" DisplayName="Online Mode"></Checkbox>
             <Checkbox @bind-Value="hardcoreMode" DisplayName="Enable Whitelist"></Checkbox>
         </div>
