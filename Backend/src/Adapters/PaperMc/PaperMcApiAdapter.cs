@@ -15,7 +15,7 @@ public class PaperMcApiAdapter(ILogger<PaperMcApiAdapter> logger, ApplicationMan
 {
     public async Task<List<ServerVersion>> LoadPaperServerVersions()
     {
-        Uri uri = new("https://papermc.io/api/v2/projects/paper");
+        Uri uri = new("https://api.papermc.io/v2/projects/paper");
         PaperMcVersionList versionList = await GetAsync<PaperMcVersionList>(uri);
 
         return versionList.versions
@@ -33,11 +33,11 @@ public class PaperMcApiAdapter(ILogger<PaperMcApiAdapter> logger, ApplicationMan
         string? version = serverVersion.Version;
         Assert.NotNull(version);
 
-        string url = "https://papermc.io/api/v2/projects/paper/versions/" + version;
+        string url = "https://api.papermc.io/v2/projects/paper/versions/" + version;
         PaperMcVersion paperMcVersion = await GetAsync<PaperMcVersion>(url);
         int latestBuild = paperMcVersion.builds.Last();
 
         return
-            $"https://papermc.io/api/v2/projects/paper/versions/{version}/builds/{latestBuild}/downloads/paper-{version}-{latestBuild}.jar";
+            $"https://api.papermc.io/v2/projects/paper/versions/{version}/builds/{latestBuild}/downloads/paper-{version}-{latestBuild}.jar";
     }
 }
