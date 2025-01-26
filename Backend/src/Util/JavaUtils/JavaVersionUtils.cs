@@ -16,7 +16,7 @@ public class JavaVersionUtils
         {
             //TODO get default path from settings
             //javaPath = AppSettingsSerializer.Instance.AppSettings.DefaultJavaPath;
-            javaPath = "java ";
+            javaPath = "java";
         }
 
         return CheckForPathJava(javaPath);
