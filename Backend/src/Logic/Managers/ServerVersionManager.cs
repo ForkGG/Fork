@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Fork.Adapters.Mojang;
 using Fork.Adapters.PaperMc;
 using Fork.Adapters.Waterfall;
+using Fork.Adapters.Purpur;
 using ForkCommon.Model.Application.Exceptions;
 using ForkCommon.Model.Entity.Enums;
 using ForkCommon.Model.Entity.Pocos;
@@ -16,7 +17,13 @@ public class ServerVersionManager(IServiceProvider serviceProvider)
 {
     private readonly Dictionary<VersionType, VersionCacheEntry> _versionCache = new();
     private readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(120);
-    public readonly List<VersionType> SupportedVersionTypes = new() { VersionType.Vanilla, VersionType.Paper, VersionType.Waterfall };
+    public readonly List<VersionType> SupportedVersionTypes = new()
+    {
+      VersionType.Vanilla,
+      VersionType.Paper,
+      VersionType.Waterfall,
+      VersionType.Purpur
+    };
 
     public async Task<List<ServerVersion>> GetServerVersionsForType(VersionType versionType)
     {
@@ -78,6 +85,12 @@ public class ServerVersionManager(IServiceProvider serviceProvider)
             return await waterfallMcApiAdapter.LoadWaterfallServerVersions();
         }
 
+        if (versionType == VersionType.Purpur)
+        {
+            PurpurApiAdapter waterfallMcApiAdapter = scope.ServiceProvider.GetRequiredService<PurpurApiAdapter>();
+            return await waterfallMcApiAdapter.LoadPurpurServerVersions();
+        }
+
         throw new ForkException("Versions of type " + versionType +
                                 "are not currently supported! Report this to the Fork team.");
     }
@@ -95,6 +108,8 @@ public class ServerVersionManager(IServiceProvider serviceProvider)
                 return await PreparePaperVersionForDownload(serverVersion);
             case VersionType.Waterfall:
                 return await PrepareWaterfallVersionForDownload(serverVersion);
+            case VersionType.Purpur:
+                return await PreparePurpurVersionForDownload(serverVersion);
             default:
                 throw new ProgrammingErrorException();
         }
@@ -127,6 +142,16 @@ public class ServerVersionManager(IServiceProvider serviceProvider)
 
         WaterfallApiAdapter paperMcApiAdapter = scope.ServiceProvider.GetRequiredService<WaterfallApiAdapter>();
         serverVersion.JarLink = await paperMcApiAdapter.GetDownloadUrlForWaterfallServerVersion(serverVersion);
+        return serverVersion;
+    }
+
+    private async Task<ServerVersion> PreparePurpurVersionForDownload(ServerVersion serverVersion)
+    {
+        Assert.IsTrue(serverVersion.Type == VersionType.Purpur);
+        using IServiceScope scope = serviceProvider.CreateScope();
+
+        PurpurApiAdapter paperMcApiAdapter = scope.ServiceProvider.GetRequiredService<PurpurApiAdapter>();
+        serverVersion.JarLink = await paperMcApiAdapter.GetDownloadUrlForPurpurServerVersion(serverVersion);
         return serverVersion;
     }
 

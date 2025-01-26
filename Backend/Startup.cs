@@ -4,6 +4,7 @@ using Fork.Adapters.Fork;
 using Fork.Adapters.Mojang;
 using Fork.Adapters.PaperMc;
 using Fork.Adapters.Waterfall;
+using Fork.Adapters.Purpur;
 using Fork.Logic.Managers;
 using Fork.Logic.Notification;
 using Fork.Logic.Persistence;
@@ -103,6 +104,7 @@ public class Startup
         services.AddTransient<MojangApiAdapter>();
         services.AddTransient<PaperMcApiAdapter>();
         services.AddTransient<WaterfallApiAdapter>();
+        services.AddTransient<PurpurApiAdapter>();
 
         services.AddSwaggerGen(c =>
         {
