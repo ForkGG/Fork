@@ -32,6 +32,10 @@
             {
                 <WaterfallTypeIcon Width="24" Height="24"/>
             }
+            @if (Value.Entity.Version?.Type == VersionType.Purpur)
+            {
+                <PurpurTypeIcon Width="24" Height="24"/>
+            }
 
             <!--span class="icon px-3 text-2xl">2</!--span-->
 

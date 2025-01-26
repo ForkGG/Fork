@@ -7,5 +7,6 @@ public enum VersionType
     Paper,
     Spigot,
     Waterfall,
-    BungeeCord
+    BungeeCord,
+    Purpur
 }
