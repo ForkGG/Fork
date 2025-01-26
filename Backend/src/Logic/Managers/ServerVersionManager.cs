@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Fork.Adapters.Mojang;
 using Fork.Adapters.PaperMc;
+using Fork.Adapters.Waterfall;
 using ForkCommon.Model.Application.Exceptions;
 using ForkCommon.Model.Entity.Enums;
 using ForkCommon.Model.Entity.Pocos;
@@ -15,7 +16,7 @@ public class ServerVersionManager(IServiceProvider serviceProvider)
 {
     private readonly Dictionary<VersionType, VersionCacheEntry> _versionCache = new();
     private readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(120);
-    public readonly List<VersionType> SupportedVersionTypes = new() { VersionType.Vanilla, VersionType.Paper };
+    public readonly List<VersionType> SupportedVersionTypes = new() { VersionType.Vanilla, VersionType.Paper, VersionType.Waterfall };
 
     public async Task<List<ServerVersion>> GetServerVersionsForType(VersionType versionType)
     {
@@ -71,6 +72,12 @@ public class ServerVersionManager(IServiceProvider serviceProvider)
             return await paperMcApiAdapter.LoadPaperServerVersions();
         }
 
+        if (versionType == VersionType.Waterfall)
+        {
+            WaterfallApiAdapter waterfallMcApiAdapter = scope.ServiceProvider.GetRequiredService<WaterfallApiAdapter>();
+            return await waterfallMcApiAdapter.LoadWaterfallServerVersions();
+        }
+
         throw new ForkException("Versions of type " + versionType +
                                 "are not currently supported! Report this to the Fork team.");
     }
@@ -86,6 +93,8 @@ public class ServerVersionManager(IServiceProvider serviceProvider)
                 return await PrepareVanillaVersionForDownload(serverVersion);
             case VersionType.Paper:
                 return await PreparePaperVersionForDownload(serverVersion);
+            case VersionType.Waterfall:
+                return await PrepareWaterfallVersionForDownload(serverVersion);
             default:
                 throw new ProgrammingErrorException();
         }
@@ -108,6 +117,16 @@ public class ServerVersionManager(IServiceProvider serviceProvider)
 
         PaperMcApiAdapter paperMcApiAdapter = scope.ServiceProvider.GetRequiredService<PaperMcApiAdapter>();
         serverVersion.JarLink = await paperMcApiAdapter.GetDownloadUrlForPaperServerVersion(serverVersion);
+        return serverVersion;
+    }
+
+    private async Task<ServerVersion> PrepareWaterfallVersionForDownload(ServerVersion serverVersion)
+    {
+        Assert.IsTrue(serverVersion.Type == VersionType.Waterfall);
+        using IServiceScope scope = serviceProvider.CreateScope();
+
+        WaterfallApiAdapter paperMcApiAdapter = scope.ServiceProvider.GetRequiredService<WaterfallApiAdapter>();
+        serverVersion.JarLink = await paperMcApiAdapter.GetDownloadUrlForWaterfallServerVersion(serverVersion);
         return serverVersion;
     }
 
