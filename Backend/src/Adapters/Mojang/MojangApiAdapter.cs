@@ -20,7 +20,7 @@ using SixLabors.ImageSharp.Processing;
 
 namespace Fork.Adapters.Mojang;
 
-public class MojangApiAdapter : AbstractAdapter
+public class MojangApiAdapter : AbstractAdapter, IMojangApiAdapter
 {
     public MojangApiAdapter(ILogger<MojangApiAdapter> logger, ApplicationManager applicationManager) : base(logger,
         applicationManager)

@@ -37,9 +37,17 @@ The SQLite database is stored at `%APPDATA%\ForkApp\persistence\app.db` on Windo
 
 ### Tests
 ```bash
-dotnet test --no-build --verbosity normal
+dotnet test Fork.sln                                         # Run all tests
+dotnet test Fork.sln --filter "FullyQualifiedName~PlayerService"  # Run specific tests
+dotnet test "Common.Tests/ForkCommon.Tests.csproj"           # Common models only
+dotnet test "Backend.Tests/Fork.Backend.Tests.csproj"        # Backend logic only
 ```
-There are currently no test projects in the repo.
+
+Two test projects exist:
+- **`Common.Tests/`** (`ForkCommon.Tests.csproj`) — Pure model tests: `ServerVersion`, `VanillaSettings`, `Server`
+- **`Backend.Tests/`** (`Fork.Backend.Tests.csproj`) — Business logic: `EntityManager` player list operations, `FileWriterService`, `FileReaderService`, `PlayerService`
+
+Stack: **xUnit + FluentAssertions + Moq + EF Core InMemory**
 
 ### Code Quality
 Qodana (JetBrains) is used for static analysis via CI. Config in `qodana.yaml`.

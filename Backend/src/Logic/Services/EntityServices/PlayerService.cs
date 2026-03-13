@@ -18,10 +18,10 @@ public class PlayerService
 {
     private readonly ApplicationDbContext _applicationDbContext;
     private readonly ILogger<PlayerService> _logger;
-    private readonly MojangApiAdapter _mojangApi;
+    private readonly IMojangApiAdapter _mojangApi;
 
     public PlayerService(ILogger<PlayerService> logger, ApplicationDbContext applicationDbContext,
-        MojangApiAdapter mojangApi)
+        IMojangApiAdapter mojangApi)
     {
         _logger = logger;
         _applicationDbContext = applicationDbContext;

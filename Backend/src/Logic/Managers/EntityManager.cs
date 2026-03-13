@@ -116,7 +116,7 @@ public class EntityManager
 
         // Send notification
         UpdatePlayerNotification notification = new(server.Id, player);
-        NotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<NotificationCenter>();
+        INotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
         await notificationCenter.BroadcastNotification(notification);
     }
 
@@ -160,7 +160,7 @@ public class EntityManager
 
         UpdateWhitelistPlayerNotification notification = new(server.Id, updateType, player);
         using IServiceScope scope = _scopeFactory.CreateScope();
-        NotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<NotificationCenter>();
+        INotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
         await notificationCenter.BroadcastNotification(notification);
     }
 
@@ -203,7 +203,7 @@ public class EntityManager
 
         UpdateBanlistPlayerNotification notification = new(server.Id, updateType, player);
         using IServiceScope scope = _scopeFactory.CreateScope();
-        NotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<NotificationCenter>();
+        INotificationCenter notificationCenter = scope.ServiceProvider.GetRequiredService<INotificationCenter>();
         await notificationCenter.BroadcastNotification(notification);
     }
 

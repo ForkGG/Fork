@@ -81,6 +81,7 @@ public class Startup
         services.AddSingleton<CommandService>();
         services.AddSingleton<EntityManager>();
         services.AddSingleton<NotificationCenter>();
+        services.AddSingleton<INotificationCenter>(sp => sp.GetRequiredService<NotificationCenter>());
         services.AddSingleton<ServerVersionManager>();
         services.AddSingleton<TokenManager>();
 
@@ -102,6 +103,7 @@ public class Startup
         // Transient adapters
         services.AddTransient<ForkApiAdapter>();
         services.AddTransient<MojangApiAdapter>();
+        services.AddTransient<IMojangApiAdapter>(sp => sp.GetRequiredService<MojangApiAdapter>());
         services.AddTransient<PaperMcApiAdapter>();
         services.AddTransient<WaterfallApiAdapter>();
         services.AddTransient<PurpurApiAdapter>();
