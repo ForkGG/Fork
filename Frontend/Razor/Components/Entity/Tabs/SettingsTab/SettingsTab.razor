@@ -19,7 +19,7 @@
     </div>
 
     @* Presentation *@
-    <div class="flex-1 bg-new-panel p-4">
+    <div class="flex-1 bg-new-panel p-4 overflow-y-auto min-h-0">
         @if (_selectedSettings != null)
         {
             <DynamicComponent Type="@GetTypeForSettings(_selectedSettings)" Parameters="_selectedSettingsParameters"/>

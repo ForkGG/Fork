@@ -7,3 +7,9 @@ UpgradeLog.htm
 NihilusInstaller
 *.user
 Properties/PublishProfiles
+
+# Claude Code
+.claude/node_modules/
+.claude/package-lock.json
+.claude/screenshots/
+.claude/settings.local.json

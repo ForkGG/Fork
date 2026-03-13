@@ -1,4 +1,5 @@
-@inherits AbstractForkInput<int>
+@typeparam TModelValue
+@inherits AbstractForkInput<TModelValue>
 
 <div class="mt-5">
     @if (Loading)
@@ -21,21 +22,26 @@
 @code {
     [Parameter] public bool Loading { get; set; }
 
-    protected override bool TryParseValueFromString(string? value, out int result, out string validationErrorMessage)
+    protected override bool TryParseValueFromString(string? value, out TModelValue result,
+        out string validationErrorMessage)
     {
-        bool parsed = int.TryParse(value, out result);
-        if (!parsed)
+        if (typeof(TModelValue) == typeof(int) && int.TryParse(value, out int intVal))
         {
-            validationErrorMessage = "Value must be an integer.";
-            result = 0;
-        }
-        else
-        {
+            result = (TModelValue)(object)intVal;
             validationErrorMessage = "";
+            CurrentValue = result;
+            return true;
         }
-
-        CurrentValue = result;
-        return parsed;
+        if (typeof(TModelValue) == typeof(long) && long.TryParse(value, out long longVal))
+        {
+            result = (TModelValue)(object)longVal;
+            validationErrorMessage = "";
+            CurrentValue = result;
+            return true;
+        }
+        result = default!;
+        validationErrorMessage = "Value must be a number.";
+        return false;
     }
 
 }

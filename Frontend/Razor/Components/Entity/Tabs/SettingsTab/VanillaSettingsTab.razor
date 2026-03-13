@@ -1,4 +1,4 @@
-﻿@using ForkCommon.Model.Entity.Enums
+@using ForkCommon.Model.Entity.Enums
 @using ForkCommon.Model.Entity.Pocos.Settings
 <div class="grid grid-cols-1 2xl:grid-cols-2 gap-3">
     <div class="flex flex-col">
@@ -19,19 +19,108 @@
         <span class="text-lg font-bold ">Server Appearance</span>
         <div class="p-3 flex flex-col gap-3">
             <Textfield @bind-Value="Settings.Motd" DisplayName="MESSAGE OF THE DAY"
-                       class="bg-new-black px-3 py-1 text-new-offwhite/70 border-l-2 border-forkBlue-highlighted"></Textfield>
-            <Checkbox @bind-Value="Settings.Hardcore" DisplayName="Hardcore"
-                      class="border-l-2 border-forkBlue-highlighted pl-1"></Checkbox>
+                       class="bg-new-black px-3 py-1 text-new-offwhite/70"></Textfield>
+            <Checkbox @bind-Value="Settings.Hardcore" DisplayName="Hardcore"></Checkbox>
             <Checkbox @bind-Value="Settings.OnlineMode" DisplayName="Online Mode"></Checkbox>
             <Checkbox @bind-Value="Settings.Whitelist" DisplayName="Enable Whitelist"></Checkbox>
+            <Checkbox @bind-Value="Settings.EnforceWhitelist" DisplayName="Enforce Whitelist"/>
         </div>
     </div>
-    <span class="text-lg font-bold ">Performance</span>
-    <span class="text-lg font-bold ">Players</span>
-    <span class="text-lg font-bold ">Spawn</span>
-    <span class="text-lg font-bold ">Network</span>
-    <span class="text-lg font-bold ">Gameplay</span>
-    <span class="text-lg font-bold ">Logging</span>
+
+    <div class="flex flex-col">
+        <span class="text-lg font-bold">World</span>
+        <div class="p-3 flex flex-col gap-3">
+            <ForkSelect @bind-Value="Settings.CurrLevelType" DisplayName="Level Type" TModelValue="LevelType"/>
+            <ForkText @bind-Value="Settings.LevelSeed" DisplayName="Level Seed"/>
+            <ForkText @bind-Value="Settings.GeneratorSettings" DisplayName="Generator Settings"/>
+        </div>
+    </div>
+
+    <div class="flex flex-col">
+        <span class="text-lg font-bold">Performance</span>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            <div>
+                <ForkNumber @bind-Value="Settings.ViewDistance" DisplayName="View Distance"/>
+                <ForkNumber @bind-Value="Settings.MaxBuildHeight" DisplayName="Max Build Height"/>
+                <ForkNumber TModelValue="long" @bind-Value="Settings.MaxTickTime" DisplayName="Max Tick Time (ms)"/>
+                <ForkNumber TModelValue="long" @bind-Value="Settings.MaxWorldSize" DisplayName="Max World Size"/>
+                <ForkNumber @bind-Value="Settings.EntityBroadcastRangePercentage" DisplayName="Entity Broadcast Range %"/>
+            </div>
+            <div class="flex flex-col gap-3 mt-5">
+                <Checkbox @bind-Value="Settings.SyncChunkWrites" DisplayName="Sync Chunk Writes"/>
+                <Checkbox @bind-Value="Settings.EnableJmxMonitoring" DisplayName="Enable JMX Monitoring"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col">
+        <span class="text-lg font-bold">Players</span>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            <div>
+                <ForkNumber @bind-Value="Settings.OpPermissionLevel" DisplayName="Op Permission Level"/>
+                <ForkNumber TModelValue="long" @bind-Value="Settings.PlayerIdleTimeout" DisplayName="Player Idle Timeout (min)"/>
+            </div>
+            <div class="flex flex-col gap-3 mt-5">
+                <Checkbox @bind-Value="Settings.ForceGamemode" DisplayName="Force Gamemode"/>
+                <Checkbox @bind-Value="Settings.SpawnNpcs" DisplayName="Spawn NPCs"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col">
+        <span class="text-lg font-bold">Spawn</span>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            <div>
+                <ForkNumber @bind-Value="Settings.SpawnProtection" DisplayName="Spawn Protection Radius"/>
+            </div>
+            <div class="flex flex-col gap-3 mt-5">
+                <Checkbox @bind-Value="Settings.SpawnMonsters" DisplayName="Spawn Monsters"/>
+                <Checkbox @bind-Value="Settings.SpawnAnimals" DisplayName="Spawn Animals"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col">
+        <span class="text-lg font-bold">Network</span>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            <div>
+                <ForkText @bind-Value="Settings.ServerIp" DisplayName="Server IP Binding"/>
+                <ForkNumber @bind-Value="Settings.NetworkCompressionThreshold" DisplayName="Compression Threshold"/>
+                <ForkNumber @bind-Value="Settings.RateLimit" DisplayName="Rate Limit"/>
+                <ForkNumber @bind-Value="Settings.QueryPort" DisplayName="Query Port"/>
+                <ForkNumber @bind-Value="Settings.RconPort" DisplayName="RCON Port"/>
+                <ForkText @bind-Value="Settings.RconPassword" DisplayName="RCON Password"/>
+            </div>
+            <div class="flex flex-col gap-3 mt-5">
+                <Checkbox @bind-Value="Settings.EnableQuery" DisplayName="Enable Query"/>
+                <Checkbox @bind-Value="Settings.EnableRcon" DisplayName="Enable RCON"/>
+                <Checkbox @bind-Value="Settings.EnableStatus" DisplayName="Enable Status"/>
+                <Checkbox @bind-Value="Settings.UseNativeTransport" DisplayName="Use Native Transport"/>
+                <Checkbox @bind-Value="Settings.PreventProxyConnections" DisplayName="Prevent Proxy Connections"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col">
+        <span class="text-lg font-bold">Gameplay</span>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            <div>
+                <ForkText @bind-Value="Settings.ResourcePack" DisplayName="Resource Pack URL"/>
+                <ForkText @bind-Value="Settings.ResourcePackSha1" DisplayName="Resource Pack SHA1"/>
+            </div>
+            <div class="flex flex-col gap-3 mt-5">
+                <Checkbox @bind-Value="Settings.AllowNether" DisplayName="Allow Nether"/>
+                <Checkbox @bind-Value="Settings.AllowFlight" DisplayName="Allow Flight"/>
+                <Checkbox @bind-Value="Settings.Pvp" DisplayName="PvP"/>
+                <Checkbox @bind-Value="Settings.GenerateStructures" DisplayName="Generate Structures"/>
+                <Checkbox @bind-Value="Settings.EnableCommandBlock" DisplayName="Enable Command Block"/>
+                <Checkbox @bind-Value="Settings.BcastConsoleToOps" DisplayName="Broadcast Console to Ops"/>
+                <Checkbox @bind-Value="Settings.BcastRconToOps" DisplayName="Broadcast RCON to Ops"/>
+                <Checkbox @bind-Value="Settings.SnooperEnabled" DisplayName="Snooper Enabled"/>
+                <Checkbox @bind-Value="Settings.RequireResourcePack" DisplayName="Require Resource Pack"/>
+            </div>
+        </div>
+    </div>
 
 </div>
 
