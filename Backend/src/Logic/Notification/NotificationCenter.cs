@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Fleck;
+using Fork.Logic.Commands;
 using Fork.Logic.Managers;
 using ForkCommon.ExtensionMethods;
 using ForkCommon.Model.Notifications;
@@ -22,13 +23,16 @@ namespace Fork.Logic.Notification;
 /// </summary>
 public class NotificationCenter : INotificationCenter
 {
+    private readonly CommandCenter _commandCenter;
     private readonly ILogger<NotificationCenter> _logger;
     private readonly Dictionary<IWebSocketConnection, IReadOnlySet<IPrivilege>?> _privilegesByConnection;
     private readonly WebSocketServer _server;
     private readonly TokenManager _tokenManager;
 
-    public NotificationCenter(ILogger<NotificationCenter> logger, TokenManager tokenManager)
+    public NotificationCenter(ILogger<NotificationCenter> logger, TokenManager tokenManager,
+        CommandCenter commandCenter)
     {
+        _commandCenter = commandCenter;
         _logger = logger;
         _tokenManager = tokenManager;
 
@@ -56,14 +60,24 @@ public class NotificationCenter : INotificationCenter
                 _logger.LogInformation($"Websocket connection closed: {socket.ConnectionInfo.Headers}");
                 _privilegesByConnection.Remove(socket);
             };
-            socket.OnMessage = message =>
+            socket.OnMessage = async message =>
             {
                 if (!_privilegesByConnection.ContainsKey(socket))
                 {
                     socket.Close(1);
+                    return;
                 }
 
-                _privilegesByConnection[socket] = _tokenManager.GetPrivilegesForToken(message);
+                if (_privilegesByConnection[socket] == null)
+                {
+                    // First message = auth token
+                    _privilegesByConnection[socket] = _tokenManager.GetPrivilegesForToken(message);
+                }
+                else
+                {
+                    // Subsequent messages = commands
+                    await _commandCenter.HandleCommandAsync(message, _privilegesByConnection[socket]!);
+                }
             };
             socket.OnBinary = bytes => { _logger.LogWarning("Received binary WebSocket message (Not supported!)"); };
         });

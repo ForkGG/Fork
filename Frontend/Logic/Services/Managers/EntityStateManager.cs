@@ -28,6 +28,7 @@ public class EntityStateManager
             UpdateBanlistPlayerNotificationHandler = new UpdateBanlistPlayerNotificationHandler(server);
             UpdatePlayerNotificationHandler = new UpdatePlayerNotificationHandler(server);
             UpdateWhitelistPlayerNotificationHandler = new UpdateWhitelistPlayerNotificationHandler(server);
+            VanillaSettingsChangedNotificationHandler = new VanillaSettingsChangedNotificationHandler(server);
         }
         else
         {
@@ -50,6 +51,7 @@ public class EntityStateManager
     public UpdateBanlistPlayerNotificationHandler UpdateBanlistPlayerNotificationHandler { get; }
     public UpdatePlayerNotificationHandler UpdatePlayerNotificationHandler { get; }
     public UpdateWhitelistPlayerNotificationHandler UpdateWhitelistPlayerNotificationHandler { get; }
+    public VanillaSettingsChangedNotificationHandler? VanillaSettingsChangedNotificationHandler { get; }
 
     /// <summary>
     ///     This replaces the instance of the entity!
@@ -76,6 +78,8 @@ public class EntityStateManager
             _notificationService.Register<UpdatePlayerNotification>(UpdatePlayerNotificationHandler.HandleNotification);
             _notificationService.Register<UpdateWhitelistPlayerNotification>(UpdateWhitelistPlayerNotificationHandler
                 .HandleNotification);
+            _notificationService.Register<VanillaSettingsChangedNotification>(
+                VanillaSettingsChangedNotificationHandler!.HandleNotification);
         }
     }
 }

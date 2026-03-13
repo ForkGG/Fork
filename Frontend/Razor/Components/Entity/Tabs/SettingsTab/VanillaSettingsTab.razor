@@ -1,16 +1,21 @@
+@using ForkCommon.Model.Commands.Entity
 @using ForkCommon.Model.Entity.Enums
+@using ForkCommon.Model.Entity.Pocos
 @using ForkCommon.Model.Entity.Pocos.Settings
+@using ForkCommon.Model.Notifications.EntityNotifications
+@using ForkFrontend.Logic.Services.Managers
+@using ForkFrontend.Logic.Services.Notifications
 <div class="grid grid-cols-1 2xl:grid-cols-2 gap-3">
     <div class="flex flex-col">
         <span class="text-lg font-bold">Basics</span>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <div>
-                <ForkSelect @bind-Value="Settings.CurrGamemode" DisplayName="Gamemode" TModelValue="Gamemode"/>
-                <ForkSelect @bind-Value="Settings.CurrDifficulty" DisplayName="Difficulty" TModelValue="Difficulty"/>
+                <ForkSelect @bind-Value="Settings.CurrGamemode" @bind-Value:after="OnSettingChanged" DisplayName="Gamemode" TModelValue="Gamemode"/>
+                <ForkSelect @bind-Value="Settings.CurrDifficulty" @bind-Value:after="OnSettingChanged" DisplayName="Difficulty" TModelValue="Difficulty"/>
             </div>
             <div>
-                <ForkNumber @bind-Value="Settings.MaxPlayers" DisplayName="Player Slots"/>
-                <ForkNumber @bind-Value="Settings.ServerPort" DisplayName="Server Port"/>
+                <ForkNumber @bind-Value="Settings.MaxPlayers" @bind-Value:after="OnSettingChanged" DisplayName="Player Slots"/>
+                <ForkNumber @bind-Value="Settings.ServerPort" @bind-Value:after="OnSettingChanged" DisplayName="Server Port"/>
             </div>
         </div>
     </div>
@@ -18,21 +23,21 @@
     <div class="flex flex-col">
         <span class="text-lg font-bold ">Server Appearance</span>
         <div class="p-3 flex flex-col gap-3">
-            <Textfield @bind-Value="Settings.Motd" DisplayName="MESSAGE OF THE DAY"
+            <Textfield @bind-Value="Settings.Motd" @bind-Value:after="OnSettingChanged" DisplayName="MESSAGE OF THE DAY"
                        class="bg-new-black px-3 py-1 text-new-offwhite/70"></Textfield>
-            <Checkbox @bind-Value="Settings.Hardcore" DisplayName="Hardcore"></Checkbox>
-            <Checkbox @bind-Value="Settings.OnlineMode" DisplayName="Online Mode"></Checkbox>
-            <Checkbox @bind-Value="Settings.Whitelist" DisplayName="Enable Whitelist"></Checkbox>
-            <Checkbox @bind-Value="Settings.EnforceWhitelist" DisplayName="Enforce Whitelist"/>
+            <Checkbox @bind-Value="Settings.Hardcore" @bind-Value:after="OnSettingChanged" DisplayName="Hardcore"></Checkbox>
+            <Checkbox @bind-Value="Settings.OnlineMode" @bind-Value:after="OnSettingChanged" DisplayName="Online Mode"></Checkbox>
+            <Checkbox @bind-Value="Settings.Whitelist" @bind-Value:after="OnSettingChanged" DisplayName="Enable Whitelist"></Checkbox>
+            <Checkbox @bind-Value="Settings.EnforceWhitelist" @bind-Value:after="OnSettingChanged" DisplayName="Enforce Whitelist"/>
         </div>
     </div>
 
     <div class="flex flex-col">
         <span class="text-lg font-bold">World</span>
         <div class="p-3 flex flex-col gap-3">
-            <ForkSelect @bind-Value="Settings.CurrLevelType" DisplayName="Level Type" TModelValue="LevelType"/>
-            <ForkText @bind-Value="Settings.LevelSeed" DisplayName="Level Seed"/>
-            <ForkText @bind-Value="Settings.GeneratorSettings" DisplayName="Generator Settings"/>
+            <ForkSelect @bind-Value="Settings.CurrLevelType" @bind-Value:after="OnSettingChanged" DisplayName="Level Type" TModelValue="LevelType"/>
+            <ForkText @bind-Value="Settings.LevelSeed" @bind-Value:after="OnSettingChanged" DisplayName="Level Seed"/>
+            <ForkText @bind-Value="Settings.GeneratorSettings" @bind-Value:after="OnSettingChanged" DisplayName="Generator Settings"/>
         </div>
     </div>
 
@@ -40,15 +45,15 @@
         <span class="text-lg font-bold">Performance</span>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <div>
-                <ForkNumber @bind-Value="Settings.ViewDistance" DisplayName="View Distance"/>
-                <ForkNumber @bind-Value="Settings.MaxBuildHeight" DisplayName="Max Build Height"/>
-                <ForkNumber TModelValue="long" @bind-Value="Settings.MaxTickTime" DisplayName="Max Tick Time (ms)"/>
-                <ForkNumber TModelValue="long" @bind-Value="Settings.MaxWorldSize" DisplayName="Max World Size"/>
-                <ForkNumber @bind-Value="Settings.EntityBroadcastRangePercentage" DisplayName="Entity Broadcast Range %"/>
+                <ForkNumber @bind-Value="Settings.ViewDistance" @bind-Value:after="OnSettingChanged" DisplayName="View Distance"/>
+                <ForkNumber @bind-Value="Settings.MaxBuildHeight" @bind-Value:after="OnSettingChanged" DisplayName="Max Build Height"/>
+                <ForkNumber TModelValue="long" @bind-Value="Settings.MaxTickTime" @bind-Value:after="OnSettingChanged" DisplayName="Max Tick Time (ms)"/>
+                <ForkNumber TModelValue="long" @bind-Value="Settings.MaxWorldSize" @bind-Value:after="OnSettingChanged" DisplayName="Max World Size"/>
+                <ForkNumber @bind-Value="Settings.EntityBroadcastRangePercentage" @bind-Value:after="OnSettingChanged" DisplayName="Entity Broadcast Range %"/>
             </div>
             <div class="flex flex-col gap-3 mt-5">
-                <Checkbox @bind-Value="Settings.SyncChunkWrites" DisplayName="Sync Chunk Writes"/>
-                <Checkbox @bind-Value="Settings.EnableJmxMonitoring" DisplayName="Enable JMX Monitoring"/>
+                <Checkbox @bind-Value="Settings.SyncChunkWrites" @bind-Value:after="OnSettingChanged" DisplayName="Sync Chunk Writes"/>
+                <Checkbox @bind-Value="Settings.EnableJmxMonitoring" @bind-Value:after="OnSettingChanged" DisplayName="Enable JMX Monitoring"/>
             </div>
         </div>
     </div>
@@ -57,12 +62,12 @@
         <span class="text-lg font-bold">Players</span>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <div>
-                <ForkNumber @bind-Value="Settings.OpPermissionLevel" DisplayName="Op Permission Level"/>
-                <ForkNumber TModelValue="long" @bind-Value="Settings.PlayerIdleTimeout" DisplayName="Player Idle Timeout (min)"/>
+                <ForkNumber @bind-Value="Settings.OpPermissionLevel" @bind-Value:after="OnSettingChanged" DisplayName="Op Permission Level"/>
+                <ForkNumber TModelValue="long" @bind-Value="Settings.PlayerIdleTimeout" @bind-Value:after="OnSettingChanged" DisplayName="Player Idle Timeout (min)"/>
             </div>
             <div class="flex flex-col gap-3 mt-5">
-                <Checkbox @bind-Value="Settings.ForceGamemode" DisplayName="Force Gamemode"/>
-                <Checkbox @bind-Value="Settings.SpawnNpcs" DisplayName="Spawn NPCs"/>
+                <Checkbox @bind-Value="Settings.ForceGamemode" @bind-Value:after="OnSettingChanged" DisplayName="Force Gamemode"/>
+                <Checkbox @bind-Value="Settings.SpawnNpcs" @bind-Value:after="OnSettingChanged" DisplayName="Spawn NPCs"/>
             </div>
         </div>
     </div>
@@ -71,11 +76,11 @@
         <span class="text-lg font-bold">Spawn</span>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <div>
-                <ForkNumber @bind-Value="Settings.SpawnProtection" DisplayName="Spawn Protection Radius"/>
+                <ForkNumber @bind-Value="Settings.SpawnProtection" @bind-Value:after="OnSettingChanged" DisplayName="Spawn Protection Radius"/>
             </div>
             <div class="flex flex-col gap-3 mt-5">
-                <Checkbox @bind-Value="Settings.SpawnMonsters" DisplayName="Spawn Monsters"/>
-                <Checkbox @bind-Value="Settings.SpawnAnimals" DisplayName="Spawn Animals"/>
+                <Checkbox @bind-Value="Settings.SpawnMonsters" @bind-Value:after="OnSettingChanged" DisplayName="Spawn Monsters"/>
+                <Checkbox @bind-Value="Settings.SpawnAnimals" @bind-Value:after="OnSettingChanged" DisplayName="Spawn Animals"/>
             </div>
         </div>
     </div>
@@ -84,19 +89,19 @@
         <span class="text-lg font-bold">Network</span>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <div>
-                <ForkText @bind-Value="Settings.ServerIp" DisplayName="Server IP Binding"/>
-                <ForkNumber @bind-Value="Settings.NetworkCompressionThreshold" DisplayName="Compression Threshold"/>
-                <ForkNumber @bind-Value="Settings.RateLimit" DisplayName="Rate Limit"/>
-                <ForkNumber @bind-Value="Settings.QueryPort" DisplayName="Query Port"/>
-                <ForkNumber @bind-Value="Settings.RconPort" DisplayName="RCON Port"/>
-                <ForkText @bind-Value="Settings.RconPassword" DisplayName="RCON Password"/>
+                <ForkText @bind-Value="Settings.ServerIp" @bind-Value:after="OnSettingChanged" DisplayName="Server IP Binding"/>
+                <ForkNumber @bind-Value="Settings.NetworkCompressionThreshold" @bind-Value:after="OnSettingChanged" DisplayName="Compression Threshold"/>
+                <ForkNumber @bind-Value="Settings.RateLimit" @bind-Value:after="OnSettingChanged" DisplayName="Rate Limit"/>
+                <ForkNumber @bind-Value="Settings.QueryPort" @bind-Value:after="OnSettingChanged" DisplayName="Query Port"/>
+                <ForkNumber @bind-Value="Settings.RconPort" @bind-Value:after="OnSettingChanged" DisplayName="RCON Port"/>
+                <ForkText @bind-Value="Settings.RconPassword" @bind-Value:after="OnSettingChanged" DisplayName="RCON Password"/>
             </div>
             <div class="flex flex-col gap-3 mt-5">
-                <Checkbox @bind-Value="Settings.EnableQuery" DisplayName="Enable Query"/>
-                <Checkbox @bind-Value="Settings.EnableRcon" DisplayName="Enable RCON"/>
-                <Checkbox @bind-Value="Settings.EnableStatus" DisplayName="Enable Status"/>
-                <Checkbox @bind-Value="Settings.UseNativeTransport" DisplayName="Use Native Transport"/>
-                <Checkbox @bind-Value="Settings.PreventProxyConnections" DisplayName="Prevent Proxy Connections"/>
+                <Checkbox @bind-Value="Settings.EnableQuery" @bind-Value:after="OnSettingChanged" DisplayName="Enable Query"/>
+                <Checkbox @bind-Value="Settings.EnableRcon" @bind-Value:after="OnSettingChanged" DisplayName="Enable RCON"/>
+                <Checkbox @bind-Value="Settings.EnableStatus" @bind-Value:after="OnSettingChanged" DisplayName="Enable Status"/>
+                <Checkbox @bind-Value="Settings.UseNativeTransport" @bind-Value:after="OnSettingChanged" DisplayName="Use Native Transport"/>
+                <Checkbox @bind-Value="Settings.PreventProxyConnections" @bind-Value:after="OnSettingChanged" DisplayName="Prevent Proxy Connections"/>
             </div>
         </div>
     </div>
@@ -105,19 +110,19 @@
         <span class="text-lg font-bold">Gameplay</span>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <div>
-                <ForkText @bind-Value="Settings.ResourcePack" DisplayName="Resource Pack URL"/>
-                <ForkText @bind-Value="Settings.ResourcePackSha1" DisplayName="Resource Pack SHA1"/>
+                <ForkText @bind-Value="Settings.ResourcePack" @bind-Value:after="OnSettingChanged" DisplayName="Resource Pack URL"/>
+                <ForkText @bind-Value="Settings.ResourcePackSha1" @bind-Value:after="OnSettingChanged" DisplayName="Resource Pack SHA1"/>
             </div>
             <div class="flex flex-col gap-3 mt-5">
-                <Checkbox @bind-Value="Settings.AllowNether" DisplayName="Allow Nether"/>
-                <Checkbox @bind-Value="Settings.AllowFlight" DisplayName="Allow Flight"/>
-                <Checkbox @bind-Value="Settings.Pvp" DisplayName="PvP"/>
-                <Checkbox @bind-Value="Settings.GenerateStructures" DisplayName="Generate Structures"/>
-                <Checkbox @bind-Value="Settings.EnableCommandBlock" DisplayName="Enable Command Block"/>
-                <Checkbox @bind-Value="Settings.BcastConsoleToOps" DisplayName="Broadcast Console to Ops"/>
-                <Checkbox @bind-Value="Settings.BcastRconToOps" DisplayName="Broadcast RCON to Ops"/>
-                <Checkbox @bind-Value="Settings.SnooperEnabled" DisplayName="Snooper Enabled"/>
-                <Checkbox @bind-Value="Settings.RequireResourcePack" DisplayName="Require Resource Pack"/>
+                <Checkbox @bind-Value="Settings.AllowNether" @bind-Value:after="OnSettingChanged" DisplayName="Allow Nether"/>
+                <Checkbox @bind-Value="Settings.AllowFlight" @bind-Value:after="OnSettingChanged" DisplayName="Allow Flight"/>
+                <Checkbox @bind-Value="Settings.Pvp" @bind-Value:after="OnSettingChanged" DisplayName="PvP"/>
+                <Checkbox @bind-Value="Settings.GenerateStructures" @bind-Value:after="OnSettingChanged" DisplayName="Generate Structures"/>
+                <Checkbox @bind-Value="Settings.EnableCommandBlock" @bind-Value:after="OnSettingChanged" DisplayName="Enable Command Block"/>
+                <Checkbox @bind-Value="Settings.BcastConsoleToOps" @bind-Value:after="OnSettingChanged" DisplayName="Broadcast Console to Ops"/>
+                <Checkbox @bind-Value="Settings.BcastRconToOps" @bind-Value:after="OnSettingChanged" DisplayName="Broadcast RCON to Ops"/>
+                <Checkbox @bind-Value="Settings.SnooperEnabled" @bind-Value:after="OnSettingChanged" DisplayName="Snooper Enabled"/>
+                <Checkbox @bind-Value="Settings.RequireResourcePack" @bind-Value:after="OnSettingChanged" DisplayName="Require Resource Pack"/>
             </div>
         </div>
     </div>
@@ -126,5 +131,35 @@
 
 @code {
     [Parameter] public required VanillaSettings Settings { get; set; }
+    [CascadingParameter] public required EntityStateManager EntityState { get; set; }
+    [Inject] public required NotificationService NotificationService { get; set; }
 
+    private CancellationTokenSource? _debounceCts;
+
+    protected override void OnInitialized()
+    {
+        if (EntityState.VanillaSettingsChangedNotificationHandler != null)
+        {
+            EntityState.VanillaSettingsChangedNotificationHandler.After += OnSettingsChangedFromNotification;
+        }
+    }
+
+    private async Task OnSettingChanged()
+    {
+        _debounceCts?.Cancel();
+        _debounceCts = new CancellationTokenSource();
+        try
+        {
+            await Task.Delay(500, _debounceCts.Token);
+            await NotificationService.SendCommandAsync(
+                new SaveVanillaSettingsCommand { EntityId = EntityState.Entity.Id, Settings = Settings });
+        }
+        catch (TaskCanceledException) { /* debounced */ }
+    }
+
+    private async Task OnSettingsChangedFromNotification(VanillaSettingsChangedNotification _)
+    {
+        if (EntityState.Entity is Server s) Settings = s.VanillaSettings!;
+        await InvokeAsync(StateHasChanged);
+    }
 }

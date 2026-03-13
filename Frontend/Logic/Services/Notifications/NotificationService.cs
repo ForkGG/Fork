@@ -3,6 +3,7 @@ using System.Net.WebSockets;
 using System.Runtime.CompilerServices;
 using System.Text;
 using ForkCommon.ExtensionMethods;
+using ForkCommon.Model.Commands;
 using ForkCommon.Model.Notifications;
 using ForkFrontend.Model;
 using ForkFrontend.Model.Enums;
@@ -143,6 +144,12 @@ public class NotificationService
                 break;
             }
         }
+    }
+
+    public async Task SendCommandAsync<T>(T command) where T : AbstractCommand
+    {
+        if (WebsocketStatus != WebsocketStatus.Connected) return;
+        await SendMessageAsync(command.ToJson(), CancellationToken.None);
     }
 
     private async Task SendMessageAsync(string message, CancellationToken cancellationToken)

@@ -5,6 +5,7 @@ using Fork.Adapters.Mojang;
 using Fork.Adapters.PaperMc;
 using Fork.Adapters.Purpur;
 using Fork.Adapters.Waterfall;
+using Fork.Logic.Commands;
 using Fork.Logic.Managers;
 using Fork.Logic.Notification;
 using Fork.Logic.Persistence;
@@ -78,6 +79,7 @@ public class Startup
 
         // Managers
         services.AddSingleton<ApplicationManager>();
+        services.AddSingleton<CommandCenter>();
         services.AddSingleton<CommandService>();
         services.AddSingleton<EntityManager>();
         services.AddSingleton<NotificationCenter>();
